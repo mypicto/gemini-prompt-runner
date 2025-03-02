@@ -8,14 +8,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function insertPromptIntoTextarea(prompt) {
     console.log('Inserting prompt into textarea:', prompt);
-    const textareaXPath = '/html/body/chat-app/main/side-navigation-v2/mat-sidenav-container/mat-sidenav-content/div/div[2]/chat-window/div/input-container/div/input-area-v2/input-area-content/div/div/div[2]/div/div/rich-textarea/div[1]/p';
-    const textareaElement = document.evaluate(textareaXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    const richTextareaElement = document.querySelector('rich-textarea');
+    if (richTextareaElement) {
+      const textareaXPath = './/div/p';
+      const textareaElement = document.evaluate(textareaXPath, richTextareaElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
     
-    if (textareaElement) {
-      textareaElement.textContent = prompt;
-      // textareaElement.dispatchEvent(new Event('input', { bubbles: true }));
+      if (textareaElement) {
+        textareaElement.textContent = prompt;
+        // textareaElement.dispatchEvent(new Event('input', { bubbles: true }));
+      } else {
+        console.error('Textarea not found.');
+      }
     } else {
-      console.error('Textarea not found.');
+      console.error('Rich-textarea not found.');
     }
   }
 
@@ -26,13 +31,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const observer = new MutationObserver((mutationsList, observer) => {
       for (const mutation of mutationsList) {
         if (mutation.type === 'childList') {
-          const textareaXPath = '/html/body/chat-app/main/side-navigation-v2/mat-sidenav-container/mat-sidenav-content/div/div[2]/chat-window/div/input-container/div/input-area-v2/input-area-content/div/div/div[2]/div/div/rich-textarea/div[1]/p';
-          const textareaElement = document.evaluate(textareaXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-          if (textareaElement) {
-            insertPromptIntoTextarea(prompt);
-            // clickSendButton();
-            observer.disconnect(); // Stop observing once the element is found
-            break;
+          const richTextareaElement = document.querySelector('rich-textarea');
+          if (richTextareaElement) {
+            const textareaXPath = './/div/p';
+            const textareaElement = document.evaluate(textareaXPath, richTextareaElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            if (textareaElement) {
+              insertPromptIntoTextarea(prompt);
+              clickSendButton();
+              observer.disconnect(); // Stop observing once the element is found
+              break;
+            }
           }
         }
       }
@@ -42,19 +50,47 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function clickSendButton() {
-    const sendButtonXPath = '/html/body/chat-app/main/side-navigation-v2/mat-sidenav-container/mat-sidenav-content/div/div[2]/chat-window/div/input-container/div/input-area-v2/input-area-content/div/div/div[3]/div/div[2]/button';
-    const sendButtonElement = document.evaluate(sendButtonXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    
-    if (sendButtonElement) {
-        const event = new MouseEvent('click', {
-          view: window,
-          bubbles: true,
-          cancelable: true
-        });
-        sendButtonElement.dispatchEvent(event);
-      console.log('Send button clicked.');
+    const inputAreaContentElement = document.querySelector('input-area-content');
+    if (inputAreaContentElement) {
+      const sendButtonXPath = 'div/div/div[3]/div/div[2]/button';
+      const sendButtonElement = document.evaluate(sendButtonXPath, inputAreaContentElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+      
+      if (sendButtonElement) {
+        const checkAndClick = () => {
+          if (sendButtonElement.getAttribute('aria-disabled') === 'false') {
+            const event = new MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: true
+            });
+            sendButtonElement.dispatchEvent(event);
+            console.log('Send button clicked.');
+          } else {
+            console.log('Waiting for send button to be enabled...');
+            const observer = new MutationObserver((mutationsList, observer) => {
+              for (const mutation of mutationsList) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'aria-disabled' && sendButtonElement.getAttribute('aria-disabled') === 'false') {
+                  observer.disconnect();
+                  const event = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true
+                  });
+                  sendButtonElement.dispatchEvent(event);
+                  console.log('Send button clicked.');
+                  break;
+                }
+              }
+            });
+            observer.observe(sendButtonElement, { attributes: true });
+          }
+        };
+        checkAndClick();
+      } else {
+        console.error('Send button not found.');
+      }
     } else {
-      console.error('Send button not found.');
+      console.error('Input-area-content not found.');
     }
   }
 });

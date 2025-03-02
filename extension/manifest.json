@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "gemini-prompt-runner",
+  "name": "Gemini Prompt Runner",
   "version": "1.0",
-  "description": "Automatically retrieves the 'q' query parameter and inputs it into the Gemini app's text area.",
+  "description": "クエリパラメータ 'q' に指定されてプロンプトを自動で実行します.",
   "permissions": [
     "activeTab",
     "scripting"

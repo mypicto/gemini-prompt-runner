@@ -1,26 +1,20 @@
-# Gemini Prompt Runner Chrome Extension
+# Gemini Prompt Runner Chrome 拡張機能
 
-This Chrome extension automatically retrieves the 'q' query parameter from the URL and inputs it into the Gemini app's text area.
+このChrome拡張機能は、GeminiアプリのURLからクエリパラメータ`q`に指定されたプロンプトを自動で実行します。
 
-## Installation
+## 動作環境
 
-1. Clone or download this repository to your local machine.
-2. Open Chrome and navigate to `chrome://extensions/`.
-3. Enable "Developer mode" by toggling the switch in the top right corner.
-4. Click on "Load unpacked" and select the directory where you downloaded this extension.
+* Google Chrome
+* Microsoft Edge
+* Opera
+* Brave
+* Arc
+* 他、Chromium 派生のブラウザ
 
-## Usage
+## インストール
 
-- Navigate to a page with the Gemini app.
-- Ensure the URL contains a 'q' query parameter (e.g., `https://example.com/?q=your-prompt`).
-- The extension will automatically input the query parameter into the Gemini app's text area.
+1. このリポジトリをローカルマシンにクローンまたはダウンロードします。
+1. Chromeで拡張機能を管理(`chrome://extensions/`) にアクセスします。
+1. 右上の「デベロッパーモード」を有効にします。
+1. 「パッケージ化されていない拡張機能を読み込む」をクリックし、先ほど保存した拡張機能のディレクトリ内の `extension` フォルダを選択します。
 
-## Error Handling
-
-- If the 'q' query parameter is not found, an error will be logged in the console.
-- If the text area is not found, an error will be logged in the console.
-
-## Future Enhancements
-
-- Improve error handling and user feedback.
-- Add support for additional query parameters.

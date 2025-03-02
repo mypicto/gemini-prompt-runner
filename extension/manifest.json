@@ -12,7 +12,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*/*"],
+      "matches": ["*://gemini.google.com/*"],
       "js": ["content.js"],
       "run_at": "document_start"
     }

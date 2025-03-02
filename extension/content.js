@@ -69,6 +69,21 @@ class SendButtonView {
   }
 }
 
+class QueryParameter {
+  static getParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+  }
+
+  static removeParameters(name) {
+    const url = new URL(window.location);
+    const params = url.searchParams;
+    params.delete(name);
+    const newUrl = url.origin + url.pathname + (params.toString() ? '?' + params.toString() : '');
+    window.history.replaceState({}, '', newUrl);
+  }
+}
+
 class Application {
   constructor() {
     this.textareaView = new TextareaView();
@@ -77,16 +92,11 @@ class Application {
 
   init() {
     document.addEventListener('DOMContentLoaded', () => {
-      const prompt = this.getQueryParameter('q');
+      const prompt = QueryParameter.getParameter('q');
       if (prompt && prompt.trim() !== "") {
         this.observeTextareaAndInsertPrompt(prompt);
       }
     });
-  }
-
-  getQueryParameter(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name);
   }
 
   observeTextareaAndInsertPrompt(prompt) {
@@ -99,6 +109,9 @@ class Application {
             const sendButtonElement = this.sendButtonView.findSendButtonElement();
             if (sendButtonElement) {
               this.sendButtonView.checkAndClickSendButton(sendButtonElement);
+              setTimeout(() => {
+                QueryParameter.removeParameters('q');
+              }, 5000);
             }
             observer.disconnect();
             break;

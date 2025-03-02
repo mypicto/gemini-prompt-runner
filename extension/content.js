@@ -1,96 +1,117 @@
-console.log('Content script loaded.');
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM content loaded.');
-  function getQueryParameter(name) {
+function setupObserverWithTimeout(observer, timeoutDuration = 10000) {
+  // Set a timeout to disconnect the observer after the specified duration if not already disconnected
+  const timeoutId = setTimeout(() => {
+    console.error('Observer did not disconnect within the specified timeout.');
+    observer.disconnect();
+  }, timeoutDuration);
+
+  // Clear the timeout if the observer disconnects
+  const originalDisconnect = observer.disconnect.bind(observer);
+  observer.disconnect = () => {
+    clearTimeout(timeoutId);
+    originalDisconnect();
+  };
+}
+
+class TextareaView {
+  findTextareaElement() {
+    const TEXTAREA_XPATH = './/div/p';
+    const richTextareaElement = document.querySelector('rich-textarea');
+    if (richTextareaElement) {
+      return document.evaluate(TEXTAREA_XPATH, richTextareaElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    };
+    return null;
+  };
+
+  insertPromptIntoTextarea(textareaElement, prompt) {
+    if (textareaElement) {
+      textareaElement.textContent = prompt;
+    }
+  }
+}
+
+class SendButtonView {
+  findSendButtonElement() {
+    const inputAreaContentElement = document.querySelector('input-area-content');
+    if (inputAreaContentElement) {
+      const SEND_BUTTON_XPATH = 'div/div/div[3]/div/div[2]/button';
+      return document.evaluate(SEND_BUTTON_XPATH, inputAreaContentElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    }
+    return null;
+  }
+
+  checkAndClickSendButton(sendButtonElement) {
+    if (sendButtonElement.getAttribute('aria-disabled') === 'false') {
+      this.clickButton(sendButtonElement);
+    } else {
+      const observer = new MutationObserver((mutationsList, observer) => {
+        for (const mutation of mutationsList) {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'aria-disabled' && sendButtonElement.getAttribute('aria-disabled') === 'false') {
+            observer.disconnect();
+            this.clickButton(sendButtonElement);
+            break;
+          }
+        }
+      });
+      observer.observe(sendButtonElement, { attributes: true });
+
+      setupObserverWithTimeout(observer, 10000);
+    }
+  }
+
+  clickButton(buttonElement) {
+    const event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true
+    });
+    buttonElement.dispatchEvent(event);
+  }
+}
+
+class Application {
+  constructor() {
+    this.textareaView = new TextareaView();
+    this.sendButtonView = new SendButtonView();
+  }
+
+  init() {
+    document.addEventListener('DOMContentLoaded', () => {
+      const prompt = this.getQueryParameter('q');
+      if (prompt && prompt.trim() !== "") {
+        this.observeTextareaAndInsertPrompt(prompt);
+      }
+    });
+  }
+
+  getQueryParameter(name) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(name);
   }
 
-  function insertPromptIntoTextarea(prompt) {
-    console.log('Inserting prompt into textarea:', prompt);
-    const richTextareaElement = document.querySelector('rich-textarea');
-    if (richTextareaElement) {
-      const textareaXPath = './/div/p';
-      const textareaElement = document.evaluate(textareaXPath, richTextareaElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    
-      if (textareaElement) {
-        textareaElement.textContent = prompt;
-        // textareaElement.dispatchEvent(new Event('input', { bubbles: true }));
-      } else {
-        console.error('Textarea not found.');
-      }
-    } else {
-      console.error('Rich-textarea not found.');
-    }
-  }
-
-  const prompt = getQueryParameter('q');
-  console.log('Prompt:', prompt);
-  if (prompt && prompt.trim() !== "") {
-    // Use MutationObserver to detect when the textarea is added
+  observeTextareaAndInsertPrompt(prompt) {
     const observer = new MutationObserver((mutationsList, observer) => {
       for (const mutation of mutationsList) {
         if (mutation.type === 'childList') {
-          const richTextareaElement = document.querySelector('rich-textarea');
-          if (richTextareaElement) {
-            const textareaXPath = './/div/p';
-            const textareaElement = document.evaluate(textareaXPath, richTextareaElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            if (textareaElement) {
-              insertPromptIntoTextarea(prompt);
-              clickSendButton();
-              observer.disconnect(); // Stop observing once the element is found
-              break;
+          const textareaElement = this.textareaView.findTextareaElement();
+          if (textareaElement) {
+            this.textareaView.insertPromptIntoTextarea(textareaElement, prompt);
+            const sendButtonElement = this.sendButtonView.findSendButtonElement();
+            if (sendButtonElement) {
+              this.sendButtonView.checkAndClickSendButton(sendButtonElement);
             }
+            observer.disconnect();
+            break;
           }
         }
       }
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
-  }
 
-  function clickSendButton() {
-    const inputAreaContentElement = document.querySelector('input-area-content');
-    if (inputAreaContentElement) {
-      const sendButtonXPath = 'div/div/div[3]/div/div[2]/button';
-      const sendButtonElement = document.evaluate(sendButtonXPath, inputAreaContentElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-      
-      if (sendButtonElement) {
-        const checkAndClick = () => {
-          if (sendButtonElement.getAttribute('aria-disabled') === 'false') {
-            const event = new MouseEvent('click', {
-              view: window,
-              bubbles: true,
-              cancelable: true
-            });
-            sendButtonElement.dispatchEvent(event);
-            console.log('Send button clicked.');
-          } else {
-            console.log('Waiting for send button to be enabled...');
-            const observer = new MutationObserver((mutationsList, observer) => {
-              for (const mutation of mutationsList) {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'aria-disabled' && sendButtonElement.getAttribute('aria-disabled') === 'false') {
-                  observer.disconnect();
-                  const event = new MouseEvent('click', {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true
-                  });
-                  sendButtonElement.dispatchEvent(event);
-                  console.log('Send button clicked.');
-                  break;
-                }
-              }
-            });
-            observer.observe(sendButtonElement, { attributes: true });
-          }
-        };
-        checkAndClick();
-      } else {
-        console.error('Send button not found.');
-      }
-    } else {
-      console.error('Input-area-content not found.');
-    }
+    setupObserverWithTimeout(observer, 10000);
   }
-});
+}
+
+const app = new Application();
+app.init();

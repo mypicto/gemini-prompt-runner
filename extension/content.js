@@ -1,5 +1,5 @@
-class TextareaView {
-  async findTextareaElement() {
+class Textarea {
+  async #findElement() {
     const TEXTAREA_XPATH = './/div/p';
     const startTime = Date.now();
     while (true) {
@@ -17,15 +17,14 @@ class TextareaView {
     }
   };
 
-  insertPromptIntoTextarea(textareaElement, prompt) {
-    if (textareaElement) {
-      textareaElement.textContent = prompt;
-    }
+  async setPrompt(prompt) {
+    const element = await this.#findElement();
+    element.textContent = prompt;
   }
 }
 
-class SendButtonView {
-  findSendButtonElement() {
+class SubmitButton {
+  #findElement() {
     const inputAreaContentElement = document.querySelector('input-area-content');
     if (inputAreaContentElement) {
       const SEND_BUTTON_XPATH = 'div/div/div[3]/div/div[2]/button';
@@ -34,13 +33,13 @@ class SendButtonView {
     return null;
   }
 
-  async findActiveSendButtonElement() {
+  async #findActiveElement() {
     const startTime = Date.now();
     while (true) {
       if (Date.now() - startTime > 1000) {
         throw new Error("Timeout: Active send button not found within 5 seconds");
       }
-      const element = this.findSendButtonElement();
+      const element = this.#findElement();
       if (element && element.getAttribute('aria-disabled') === 'false') {
         return element;
       }
@@ -48,7 +47,7 @@ class SendButtonView {
     }
   }
 
-  clickButton(buttonElement) {
+  #click(buttonElement) {
     const event = new MouseEvent('click', {
       view: window,
       bubbles: true,
@@ -56,10 +55,17 @@ class SendButtonView {
     });
     buttonElement.dispatchEvent(event);
   }
+
+  async submit() {
+    const element = await this.#findActiveElement();
+    if (element) {
+      this.#click(element);
+    }
+  }
 }
 
-class ModelSelectorView {
-  async findListButtonElement() {
+class ModelSelector {
+  async #findListElement() {
     const startTime = Date.now();
     while (Date.now() - startTime < 1000) {
       const element = document.querySelector('button.gds-mode-switch-button');
@@ -70,7 +76,7 @@ class ModelSelectorView {
     }
   }
 
-  async findModelButtonElement(modelIndex) {
+  async #findItemElement(modelIndex) {
     const startTime = Date.now();
     while (Date.now() - startTime < 1000) {
       const elements = document.querySelectorAll('button.bard-mode-list-button');
@@ -85,7 +91,7 @@ class ModelSelectorView {
     return null;
   }
 
-  clickButton(buttonElement) {
+  #click(buttonElement) {
     const event = new MouseEvent('click', {
       view: window,
       bubbles: true,
@@ -95,16 +101,16 @@ class ModelSelectorView {
   }
 
   async selectModel(modelIndex) {
-    const listButton = await this.findListButtonElement();
-    if (!listButton) {
+    const list = await this.#findListElement();
+    if (!list) {
       return
     }
-    this.clickButton(listButton);
-    const modelButton = await this.findModelButtonElement(modelIndex);
-    if (!modelButton) {
+    this.#click(list);
+    const item = await this.#findItemElement(modelIndex);
+    if (!item) {
       return
     }
-    this.clickButton(modelButton);
+    this.#click(item);
   }
 }
 
@@ -145,9 +151,9 @@ class QueryParameter {
 
 class Application {
   constructor() {
-    this.textareaView = new TextareaView();
-    this.modelButtonView = new ModelSelectorView();
-    this.sendButtonView = new SendButtonView();
+    this.textarea = new Textarea();
+    this.modelSelector = new ModelSelector();
+    this.submitButton = new SubmitButton();
   }
 
   init() {
@@ -172,15 +178,13 @@ class Application {
   async operateGemini(prompt, modelIndex, isRun) {
     const hasPrompt = prompt && prompt.trim() !== "";
     if (hasPrompt) {
-      const textareaElement = await this.textareaView.findTextareaElement();
-      this.textareaView.insertPromptIntoTextarea(textareaElement, prompt);
+      await this.textarea.setPrompt(prompt);
     }
     if (modelIndex !== null) {
-      await this.modelButtonView.selectModel(modelIndex);
+      await this.modelSelector.selectModel(modelIndex);
     }
     if (isRun && hasPrompt) {
-      const sendButtonElement = await this.sendButtonView.findActiveSendButtonElement();
-      this.sendButtonView.clickButton(sendButtonElement);
+      await this.submitButton.submit();
     }
   }
 }

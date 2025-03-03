@@ -1,20 +1,19 @@
 class TextareaView {
   async findTextareaElement() {
     const TEXTAREA_XPATH = './/div/p';
-    let textarea = null;
     const startTime = Date.now();
     while (true) {
-      if (Date.now() - startTime > 5000) {
+      if (Date.now() - startTime > 1000) {
         throw new Error("Timeout: Textarea not found within 5 seconds");
       }
       const richTextareaElement = document.querySelector('rich-textarea');
       if (richTextareaElement) {
-        textarea = document.evaluate(TEXTAREA_XPATH, richTextareaElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        const textarea = document.evaluate(TEXTAREA_XPATH, richTextareaElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
         if (textarea) {
           return textarea;
         }
       }
-      await new Promise(resolve => setTimeout(resolve, 100)); // 100ms待機
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
   };
 
@@ -36,17 +35,16 @@ class SendButtonView {
   }
 
   async findActiveSendButtonElement() {
-    let element = null;
     const startTime = Date.now();
     while (true) {
-      if (Date.now() - startTime > 5000) {
+      if (Date.now() - startTime > 1000) {
         throw new Error("Timeout: Active send button not found within 5 seconds");
       }
-      element = this.findSendButtonElement();
-      if (element && element.getAttribute('aria-disabled') !== 'false') {
+      const element = this.findSendButtonElement();
+      if (element && element.getAttribute('aria-disabled') === 'false') {
         return element;
       }
-      await new Promise(resolve => setTimeout(resolve, 100)); // 100ms待機
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
   }
 
@@ -57,6 +55,58 @@ class SendButtonView {
       cancelable: true
     });
     buttonElement.dispatchEvent(event);
+  }
+}
+
+class ModelSelectorView {
+  async findListButtonElement() {
+    const startTime = Date.now();
+    while (Date.now() - startTime < 1000) {
+      const element = document.querySelector('button.gds-mode-switch-button');
+      if (element) {
+        return element;
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  }
+
+  async findModelButtonElement(modelIndex) {
+    const startTime = Date.now();
+    while (Date.now() - startTime < 1000) {
+      const elements = document.querySelectorAll('button.bard-mode-list-button');
+      console.log(elements);
+      if (elements.length > modelIndex) {
+        const element = elements[modelIndex];
+        console.log(element);
+        if (element && element.getAttribute('aria-disabled') === 'false') {
+          return element;
+        }
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    return null;
+  }
+
+  clickButton(buttonElement) {
+    const event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true
+    });
+    buttonElement.dispatchEvent(event);
+  }
+
+  async selectModel(modelIndex) {
+    const listButton = await this.findListButtonElement();
+    if (!listButton) {
+      return
+    }
+    this.clickButton(listButton);
+    const modelButton = await this.findModelButtonElement(modelIndex);
+    if (!modelButton) {
+      return
+    }
+    this.clickButton(modelButton);
   }
 }
 
@@ -87,6 +137,7 @@ class QueryParameter {
 class Application {
   constructor() {
     this.textareaView = new TextareaView();
+    this.modelButtonView = new ModelSelectorView();
     this.sendButtonView = new SendButtonView();
   }
 
@@ -123,6 +174,7 @@ class Application {
   async insertPrompt(prompt, isRun) {
     const textareaElement = await this.textareaView.findTextareaElement();
     this.textareaView.insertPromptIntoTextarea(textareaElement, prompt);
+    // await this.modelButtonView.selectModel(3);
     if (isRun) {
       const sendButtonElement = await this.sendButtonView.findActiveSendButtonElement();
       this.sendButtonView.clickButton(sendButtonElement);

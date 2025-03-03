@@ -1,6 +1,6 @@
-# Gemini Prompt Runner Chrome 拡張機能
+# Gemini Prompt Runner
 
-このChrome拡張機能は、GeminiアプリのURLからクエリパラメータ`q`に指定されたプロンプトを自動で実行します。
+この拡張機能は、URL パラメータを使って自動的にGeminiのWebアプリを操作します。
 
 ## 動作環境
 
@@ -13,8 +13,20 @@
 
 ## インストール
 
-1. このリポジトリをローカルマシンにクローンまたはダウンロードします。
-1. Chromeで拡張機能を管理(`chrome://extensions/`) にアクセスします。
-1. 右上の「デベロッパーモード」を有効にします。
-1. 「パッケージ化されていない拡張機能を読み込む」をクリックし、先ほど保存した拡張機能のディレクトリ内の `extension` フォルダを選択します。
+1. [Releases](https://github.com/mypicto/gemini-prompt-runner/releases/latest) から最新版の crx ファイルをダウンロードし、ローカルに保存します。
+2. Chromeで拡張機能を管理([chrome://extensions/](chrome://extensions/)) にアクセスします。
+3. 右上の「デベロッパーモード」を有効にします。
+4. ダウンロードした crx ファイルをブラウザにドラッグ&ドロップしてインストールします。
+
+## 使い方
+
+| パラメータ | 説明 | 値 |
+| --- | --- | --- |
+| `q` | プロンプトの文字列 | URLエンコードされたテキスト |
+| `m` | 選択するモデルのインデックス | 0 から始まる整数（UI上での表示順） |
+| `run` | プロンプトを自動的に送信するか | `true/false` または `0/1` |
+
+### 使用例
+
+https://gemini.google.com/app?m=3&q=%E4%BB%95%E4%BA%8B%E3%81%A7%E5%BD%B9%E7%AB%8B%E3%81%A4Gemini%E3%81%AE%E6%B4%BB%E7%94%A8%E6%96%B9%E6%B3%95%E3%82%923%E3%81%A4%E7%B4%B9%E4%BB%8B%E3%81%99%E3%82%8B%E3%80%82&run=1
 

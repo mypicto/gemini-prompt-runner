@@ -129,9 +129,9 @@ class QueryParameter {
     return null;
   }
 
-  static getRunFlag() {
+  static IsConfirm() {
     const urlParams = new URLSearchParams(window.location.search);
-    const value = urlParams.get('run');
+    const value = urlParams.get('confirm');
     if (value === 'true' || value === '1') {
       return true;
     }
@@ -143,7 +143,7 @@ class QueryParameter {
     const params = url.searchParams;
     params.delete('q');
     params.delete('m');
-    params.delete('run');
+    params.delete('confirm');
     const newUrl = url.origin + url.pathname + (params.toString() ? '?' + params.toString() : '');
     window.history.replaceState({}, '', newUrl);
   }
@@ -160,8 +160,8 @@ class Application {
     document.addEventListener('DOMContentLoaded', async () => {
       const prompt = QueryParameter.getPrompt();
       const modelIndex = QueryParameter.getModelIndex();
-      const isRun = QueryParameter.getRunFlag();
-      await this.operateGemini(prompt, modelIndex, isRun);
+      const isConfirm = QueryParameter.IsConfirm();
+      await this.operateGemini(prompt, modelIndex, isConfirm);
       setTimeout(() => {
         QueryParameter.removeParameters();
       }, 5000);
@@ -173,9 +173,9 @@ class Application {
    * 
    * @param {string} prompt - 挿入するプロンプトの文字列
    * @param {number} modelIndex - 選択するモデルのインデックス
-   * @param {boolean} isRun - プロンプト挿入後に送信ボタンをクリックするかどうかのフラグ
+   * @param {boolean} isConfirm - プロンプトを送信する前に確認するかどうか（自動送信OFF）
    */
-  async operateGemini(prompt, modelIndex, isRun) {
+  async operateGemini(prompt, modelIndex, isConfirm) {
     const hasPrompt = prompt && prompt.trim() !== "";
     if (hasPrompt) {
       await this.textarea.setPrompt(prompt);
@@ -183,7 +183,7 @@ class Application {
     if (modelIndex !== null) {
       await this.modelSelector.selectModel(modelIndex);
     }
-    if (isRun && hasPrompt) {
+    if (!isConfirm && hasPrompt) {
       await this.submitButton.submit();
     }
   }

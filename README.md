@@ -14,7 +14,7 @@
 ## インストール
 
 1. [Releases](https://github.com/mypicto/gemini-prompt-runner/releases/latest) から最新版の crx ファイルをダウンロードし、ローカルに保存。
-2. Chromeで拡張機能を管理([chrome://extensions/](chrome://extensions/)) にアクセス
+2. Chromeで拡張機能を管理(`chrome://extensions/`) にアクセス
 3. 右上の「デベロッパーモード」を有効にする
 4. ダウンロードした crx ファイルをブラウザにドラッグ&ドロップ
 5. 拡張機能を追加ボタンを押下

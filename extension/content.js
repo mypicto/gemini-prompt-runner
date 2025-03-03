@@ -74,10 +74,8 @@ class ModelSelectorView {
     const startTime = Date.now();
     while (Date.now() - startTime < 1000) {
       const elements = document.querySelectorAll('button.bard-mode-list-button');
-      console.log(elements);
       if (elements.length > modelIndex) {
         const element = elements[modelIndex];
-        console.log(element);
         if (element && element.getAttribute('aria-disabled') === 'false') {
           return element;
         }
@@ -115,6 +113,16 @@ class QueryParameter {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('q');
   }
+
+  static getModelIndex() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const value = urlParams.get('m');
+    if (value) {
+      return parseInt(value, 10);
+    }
+    return null;
+  }
+
   static getRunFlag() {
     const urlParams = new URLSearchParams(window.location.search);
     const value = urlParams.get('run');
@@ -128,6 +136,7 @@ class QueryParameter {
     const url = new URL(window.location);
     const params = url.searchParams;
     params.delete('q');
+    params.delete('m');
     params.delete('run');
     const newUrl = url.origin + url.pathname + (params.toString() ? '?' + params.toString() : '');
     window.history.replaceState({}, '', newUrl);
@@ -142,40 +151,34 @@ class Application {
   }
 
   init() {
-    document.addEventListener('DOMContentLoaded', () => {
-      const prompt = QueryParameter.getPrompt();
-      const isRun = QueryParameter.getRunFlag();
-      if (prompt && prompt.trim() !== "") {
-        this.observeAndHandleDomMutations(prompt, isRun);
-      }
-    });
-  }
-
-  init() {
     document.addEventListener('DOMContentLoaded', async () => {
       const prompt = QueryParameter.getPrompt();
+      const modelIndex = QueryParameter.getModelIndex();
       const isRun = QueryParameter.getRunFlag();
-      if (prompt && prompt.trim() !== "") {
-        await this.insertPrompt(prompt, isRun);
-        setTimeout(() => {
-          QueryParameter.removeParameters();
-        }, 5000);
-      }
+      await this.operateGemini(prompt, modelIndex, isRun);
+      setTimeout(() => {
+        QueryParameter.removeParameters();
+      }, 5000);
     });
   }
 
   /**
-   * 指定されたプロンプトをテキストエリアに挿入し、実行フラグに応じて送信ボタンを操作します。
+   * パラメータに従っtGeminiを操作します。
    * 
    * @param {string} prompt - 挿入するプロンプトの文字列
+   * @param {number} modelIndex - 選択するモデルのインデックス
    * @param {boolean} isRun - プロンプト挿入後に送信ボタンをクリックするかどうかのフラグ
-   * @returns {boolean} - 処理が完了したかどうか
    */
-  async insertPrompt(prompt, isRun) {
-    const textareaElement = await this.textareaView.findTextareaElement();
-    this.textareaView.insertPromptIntoTextarea(textareaElement, prompt);
-    // await this.modelButtonView.selectModel(3);
-    if (isRun) {
+  async operateGemini(prompt, modelIndex, isRun) {
+    const hasPrompt = prompt && prompt.trim() !== "";
+    if (hasPrompt) {
+      const textareaElement = await this.textareaView.findTextareaElement();
+      this.textareaView.insertPromptIntoTextarea(textareaElement, prompt);
+    }
+    if (modelIndex !== null) {
+      await this.modelButtonView.selectModel(modelIndex);
+    }
+    if (isRun && hasPrompt) {
       const sendButtonElement = await this.sendButtonView.findActiveSendButtonElement();
       this.sendButtonView.clickButton(sendButtonElement);
     }

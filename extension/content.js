@@ -1,26 +1,21 @@
-function setupObserverWithTimeout(observer, timeoutDuration = 10000) {
-  // Set a timeout to disconnect the observer after the specified duration if not already disconnected
-  const timeoutId = setTimeout(() => {
-    console.error('Observer did not disconnect within the specified timeout.');
-    observer.disconnect();
-  }, timeoutDuration);
-
-  // Clear the timeout if the observer disconnects
-  const originalDisconnect = observer.disconnect.bind(observer);
-  observer.disconnect = () => {
-    clearTimeout(timeoutId);
-    originalDisconnect();
-  };
-}
-
 class TextareaView {
-  findTextareaElement() {
+  async findTextareaElement() {
     const TEXTAREA_XPATH = './/div/p';
-    const richTextareaElement = document.querySelector('rich-textarea');
-    if (richTextareaElement) {
-      return document.evaluate(TEXTAREA_XPATH, richTextareaElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    };
-    return null;
+    let textarea = null;
+    const startTime = Date.now();
+    while (true) {
+      if (Date.now() - startTime > 5000) {
+        throw new Error("Timeout: Textarea not found within 5 seconds");
+      }
+      const richTextareaElement = document.querySelector('rich-textarea');
+      if (richTextareaElement) {
+        textarea = document.evaluate(TEXTAREA_XPATH, richTextareaElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        if (textarea) {
+          return textarea;
+        }
+      }
+      await new Promise(resolve => setTimeout(resolve, 100)); // 100ms待機
+    }
   };
 
   insertPromptIntoTextarea(textareaElement, prompt) {
@@ -40,16 +35,19 @@ class SendButtonView {
     return null;
   }
 
-  findActiveSendButtonElement() {
-    const element = this.findSendButtonElement();
-    if (element && element.getAttribute('aria-disabled') === 'false') {
-      return element
-    } 
-    return null;
-  }
-
-  checkAndClickSendButton(sendButtonElement) {
-    this.clickButton(sendButtonElement);
+  async findActiveSendButtonElement() {
+    let element = null;
+    const startTime = Date.now();
+    while (true) {
+      if (Date.now() - startTime > 5000) {
+        throw new Error("Timeout: Active send button not found within 5 seconds");
+      }
+      element = this.findSendButtonElement();
+      if (element && element.getAttribute('aria-disabled') !== 'false') {
+        return element;
+      }
+      await new Promise(resolve => setTimeout(resolve, 100)); // 100ms待機
+    }
   }
 
   clickButton(buttonElement) {
@@ -102,24 +100,17 @@ class Application {
     });
   }
 
-  observeAndHandleDomMutations(prompt, isRun) {
-    const observer = new MutationObserver((mutationsList, observer) => {
-      for (const mutation of mutationsList) {
-        if (mutation.type === 'childList' || mutation.type === 'attributes') {
-          let isCompleted = this.insertPrompt(prompt, isRun);
-          if (isCompleted) {
-            observer.disconnect();
-            setTimeout(() => {
-              QueryParameter.removeParameters();
-            }, 5000);
-          }
-        }
+  init() {
+    document.addEventListener('DOMContentLoaded', async () => {
+      const prompt = QueryParameter.getPrompt();
+      const isRun = QueryParameter.getRunFlag();
+      if (prompt && prompt.trim() !== "") {
+        await this.insertPrompt(prompt, isRun);
+        setTimeout(() => {
+          QueryParameter.removeParameters();
+        }, 5000);
       }
     });
-
-    observer.observe(document.body, { childList: true, attributes: true });
-
-    setupObserverWithTimeout(observer, 10000);
   }
 
   /**
@@ -129,21 +120,13 @@ class Application {
    * @param {boolean} isRun - プロンプト挿入後に送信ボタンをクリックするかどうかのフラグ
    * @returns {boolean} - 処理が完了したかどうか
    */
-  insertPrompt(prompt, isRun) {
-    const textareaElement = this.textareaView.findTextareaElement();
-    if (!textareaElement) {
-      return false;
-    }
+  async insertPrompt(prompt, isRun) {
+    const textareaElement = await this.textareaView.findTextareaElement();
     this.textareaView.insertPromptIntoTextarea(textareaElement, prompt);
     if (isRun) {
-      const sendButtonElement = this.sendButtonView.findActiveSendButtonElement();
-      if (!sendButtonElement) {
-        return false;
-      }
-      console.log('has send button');
-      this.sendButtonView.checkAndClickSendButton(sendButtonElement);
+      const sendButtonElement = await this.sendButtonView.findActiveSendButtonElement();
+      this.sendButtonView.clickButton(sendButtonElement);
     }
-    return true
   }
 }
 

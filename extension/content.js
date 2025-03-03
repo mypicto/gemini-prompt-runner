@@ -40,23 +40,16 @@ class SendButtonView {
     return null;
   }
 
-  checkAndClickSendButton(sendButtonElement) {
-    if (sendButtonElement.getAttribute('aria-disabled') === 'false') {
-      this.clickButton(sendButtonElement);
-    } else {
-      const observer = new MutationObserver((mutationsList, observer) => {
-        for (const mutation of mutationsList) {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'aria-disabled' && sendButtonElement.getAttribute('aria-disabled') === 'false') {
-            observer.disconnect();
-            this.clickButton(sendButtonElement);
-            break;
-          }
-        }
-      });
-      observer.observe(sendButtonElement, { attributes: true });
+  findActiveSendButtonElement() {
+    const element = this.findSendButtonElement();
+    if (element && element.getAttribute('aria-disabled') === 'false') {
+      return element
+    } 
+    return null;
+  }
 
-      setupObserverWithTimeout(observer, 10000);
-    }
+  checkAndClickSendButton(sendButtonElement) {
+    this.clickButton(sendButtonElement);
   }
 
   clickButton(buttonElement) {
@@ -70,15 +63,24 @@ class SendButtonView {
 }
 
 class QueryParameter {
-  static getParameter(name) {
+  static getPrompt() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name);
+    return urlParams.get('q');
+  }
+  static getRunFlag() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const value = urlParams.get('run');
+    if (value === 'true' || value === '1') {
+      return true;
+    }
+    return false;
   }
 
-  static removeParameters(name) {
+  static removeParameters() {
     const url = new URL(window.location);
     const params = url.searchParams;
-    params.delete(name);
+    params.delete('q');
+    params.delete('run');
     const newUrl = url.origin + url.pathname + (params.toString() ? '?' + params.toString() : '');
     window.history.replaceState({}, '', newUrl);
   }
@@ -92,37 +94,56 @@ class Application {
 
   init() {
     document.addEventListener('DOMContentLoaded', () => {
-      const prompt = QueryParameter.getParameter('q');
+      const prompt = QueryParameter.getPrompt();
+      const isRun = QueryParameter.getRunFlag();
       if (prompt && prompt.trim() !== "") {
-        this.observeTextareaAndInsertPrompt(prompt);
+        this.observeAndHandleDomMutations(prompt, isRun);
       }
     });
   }
 
-  observeTextareaAndInsertPrompt(prompt) {
+  observeAndHandleDomMutations(prompt, isRun) {
     const observer = new MutationObserver((mutationsList, observer) => {
       for (const mutation of mutationsList) {
-        if (mutation.type === 'childList') {
-          const textareaElement = this.textareaView.findTextareaElement();
-          if (textareaElement) {
-            this.textareaView.insertPromptIntoTextarea(textareaElement, prompt);
-            const sendButtonElement = this.sendButtonView.findSendButtonElement();
-            if (sendButtonElement) {
-              this.sendButtonView.checkAndClickSendButton(sendButtonElement);
-              setTimeout(() => {
-                QueryParameter.removeParameters('q');
-              }, 5000);
-            }
+        if (mutation.type === 'childList' || mutation.type === 'attributes') {
+          let isCompleted = this.insertPrompt(prompt, isRun);
+          if (isCompleted) {
             observer.disconnect();
-            break;
+            setTimeout(() => {
+              QueryParameter.removeParameters();
+            }, 5000);
           }
         }
       }
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, { childList: true, attributes: true });
 
     setupObserverWithTimeout(observer, 10000);
+  }
+
+  /**
+   * 指定されたプロンプトをテキストエリアに挿入し、実行フラグに応じて送信ボタンを操作します。
+   * 
+   * @param {string} prompt - 挿入するプロンプトの文字列
+   * @param {boolean} isRun - プロンプト挿入後に送信ボタンをクリックするかどうかのフラグ
+   * @returns {boolean} - 処理が完了したかどうか
+   */
+  insertPrompt(prompt, isRun) {
+    const textareaElement = this.textareaView.findTextareaElement();
+    if (!textareaElement) {
+      return false;
+    }
+    this.textareaView.insertPromptIntoTextarea(textareaElement, prompt);
+    if (isRun) {
+      const sendButtonElement = this.sendButtonView.findActiveSendButtonElement();
+      if (!sendButtonElement) {
+        return false;
+      }
+      console.log('has send button');
+      this.sendButtonView.checkAndClickSendButton(sendButtonElement);
+    }
+    return true
   }
 }
 

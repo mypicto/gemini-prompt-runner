@@ -1,19 +1,48 @@
-class Textarea {
-  async #findElement() {
-    const TEXTAREA_XPATH = './/div/p';
+class ElementFinder {
+  static async findElement(selector, timeout = 1000) {
     const startTime = Date.now();
-    while (Date.now() - startTime < 1000) {
-      const richTextareaElement = document.querySelector('rich-textarea');
-      if (richTextareaElement) {
-        const textarea = document.evaluate(TEXTAREA_XPATH, richTextareaElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-        if (textarea) {
-          return textarea;
-        }
+    while (Date.now() - startTime < timeout) {
+      const element = document.querySelector(selector);
+      if (element) {
+        return element;
       }
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-    throw new Error("Timeout: Textarea not found within 5 seconds");
-  };
+    throw new Error(`Timeout: Element with selector "${selector}" not found within ${timeout} ms`);
+  }
+
+  static async findElements(selector, timeout = 1000) {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeout) {
+      const elements = document.querySelectorAll(selector);
+      if (elements.length > 0) {
+        return elements;
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    throw new Error(`Timeout: Elements with selector "${selector}" not found within ${timeout} ms`);
+  }
+
+  static async findElementByXPath(xpath, contextNode = document, timeout = 1000) {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeout) {
+      const result = document.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+      const element = result.singleNodeValue;
+      if (element) {
+        return element;
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    throw new Error(`Timeout: Element with XPath "${xpath}" not found within ${timeout} ms`);
+  }
+}
+
+class Textarea {
+  async #findElement() {
+    const TEXTAREA_XPATH = './/div/p';
+    const richTextareaElement = await ElementFinder.findElement('rich-textarea.text-input-field_textarea');
+    return await ElementFinder.findElementByXPath(TEXTAREA_XPATH, richTextareaElement);
+  }
 
   async setPrompt(prompt) {
     const element = await this.#findElement();
@@ -23,15 +52,7 @@ class Textarea {
 
 class SubmitButton {
   async #findElement() {
-    const startTime = Date.now();
-    while (Date.now() - startTime < 1000) {
-      const element = document.querySelector('button.send-button');
-      if (element) {
-        return element;
-      }
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    throw new Error("Timeout: Active send button not found within 5 seconds");
+    return await ElementFinder.findElement('button.send-button');
   }
 
   #click(buttonElement) {
@@ -53,27 +74,13 @@ class SubmitButton {
 
 class ModelSelector {
   async #findListElement() {
-    const startTime = Date.now();
-    while (Date.now() - startTime < 1000) {
-      const element = document.querySelector('button.gds-mode-switch-button');
-      if (element) {
-        return element;
-      }
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
+    return await ElementFinder.findElement('button.bard-mode-menu-button');
   }
 
   async #findItemElement(modelIndex) {
-    const startTime = Date.now();
-    while (Date.now() - startTime < 1000) {
-      const elements = document.querySelectorAll('button.bard-mode-list-button');
-      if (elements.length > modelIndex) {
-        const element = elements[modelIndex];
-        if (element) {
-          return element;
-        }
-      }
-      await new Promise(resolve => setTimeout(resolve, 100));
+    const elements = await ElementFinder.findElements('button.bard-mode-list-button');
+    if (elements.length > modelIndex) {
+      return elements[modelIndex];
     }
     return null;
   }
@@ -90,11 +97,13 @@ class ModelSelector {
   async selectModel(modelIndex) {
     const list = await this.#findListElement();
     if (!list) {
+      console.warn('Model list not found');
       return
     }
     this.#click(list);
     const item = await this.#findItemElement(modelIndex);
     if (!item) {
+      console.warn('Model item not found');
       return
     }
     this.#click(item);

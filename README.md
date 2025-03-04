@@ -40,3 +40,6 @@ https://gemini.google.com/app?m=2
 ### よく使うプロンプトを登録しておき、利用時に指示を追加する
 
 https://gemini.google.com/app?q=%E4%BB%A5%E4%B8%8B%E3%81%AE%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E7%BF%BB%E8%A8%B3%E3%81%97%E3%81%A6%E3%80%82%0D%0A%0D%0A%0D%0A&confirm=1
+
+### 帰属
+Google Gemini™ は Google LLC の商標です。

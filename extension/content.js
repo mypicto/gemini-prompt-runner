@@ -22,20 +22,11 @@ class Textarea {
 }
 
 class SubmitButton {
-  #findElement() {
-    const inputAreaContentElement = document.querySelector('input-area-content');
-    if (inputAreaContentElement) {
-      const SEND_BUTTON_XPATH = 'div/div/div[3]/div/div[2]/button';
-      return document.evaluate(SEND_BUTTON_XPATH, inputAreaContentElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    }
-    return null;
-  }
-
-  async #findActiveElement() {
+  async #findElement() {
     const startTime = Date.now();
     while (Date.now() - startTime < 1000) {
-      const element = this.#findElement();
-      if (element && element.getAttribute('aria-disabled') === 'false') {
+      const element = document.querySelector('button.send-button');
+      if (element) {
         return element;
       }
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -53,7 +44,7 @@ class SubmitButton {
   }
 
   async submit() {
-    const element = await this.#findActiveElement();
+    const element = await this.#findElement();
     if (element) {
       this.#click(element);
     }
@@ -78,7 +69,7 @@ class ModelSelector {
       const elements = document.querySelectorAll('button.bard-mode-list-button');
       if (elements.length > modelIndex) {
         const element = elements[modelIndex];
-        if (element && element.getAttribute('aria-disabled') === 'false') {
+        if (element) {
           return element;
         }
       }

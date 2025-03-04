@@ -47,6 +47,16 @@ class Textarea {
   async setPrompt(prompt) {
     const element = await this.#findElement();
     element.textContent = prompt;
+    this.moveCursorToEnd(element);
+  }
+
+  moveCursorToEnd(element) {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
 }
 

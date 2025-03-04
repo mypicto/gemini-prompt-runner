@@ -29,5 +29,11 @@
 
 ### 使用例
 
-https://gemini.google.com/app?m=3&q=%E4%BB%95%E4%BA%8B%E3%81%A7%E5%BD%B9%E7%AB%8B%E3%81%A4Gemini%E3%81%AE%E6%B4%BB%E7%94%A8%E6%96%B9%E6%B3%95%E3%82%923%E3%81%A4%E7%B4%B9%E4%BB%8B%E3%81%99%E3%82%8B%E3%80%82&confirm=0
+#### Proモデルでプロンプトを自動実行する
+https://gemini.google.com/app?m=3&q=%E4%BB%95%E4%BA%8B%E3%81%A7%E5%BD%B9%E7%AB%8B%E3%81%A4Gemini%E3%81%AE%E6%B4%BB%E7%94%A8%E6%96%B9%E6%B3%95%E3%82%923%E3%81%A4%E7%B4%B9%E4%BB%8B%E3%81%99%E3%82%8B%E3%80%82
 
+#### Deep Research を直ぐに呼び出せるブックマークを作成する
+https://gemini.google.com/app?m=2
+
+### よく使うプロンプトを登録しておき、利用時に指示を追加する
+https://gemini.google.com/app?q=%E4%BB%A5%E4%B8%8B%E3%81%AE%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E7%BF%BB%E8%A8%B3%E3%81%97%E3%81%A6%E3%80%82%0D%0A%0D%0A%0D%0A&confirm=1

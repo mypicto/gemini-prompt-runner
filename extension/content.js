@@ -2,10 +2,7 @@ class Textarea {
   async #findElement() {
     const TEXTAREA_XPATH = './/div/p';
     const startTime = Date.now();
-    while (true) {
-      if (Date.now() - startTime > 1000) {
-        throw new Error("Timeout: Textarea not found within 5 seconds");
-      }
+    while (Date.now() - startTime < 1000) {
       const richTextareaElement = document.querySelector('rich-textarea');
       if (richTextareaElement) {
         const textarea = document.evaluate(TEXTAREA_XPATH, richTextareaElement, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -15,6 +12,7 @@ class Textarea {
       }
       await new Promise(resolve => setTimeout(resolve, 100));
     }
+    throw new Error("Timeout: Textarea not found within 5 seconds");
   };
 
   async setPrompt(prompt) {
@@ -35,16 +33,14 @@ class SubmitButton {
 
   async #findActiveElement() {
     const startTime = Date.now();
-    while (true) {
-      if (Date.now() - startTime > 1000) {
-        throw new Error("Timeout: Active send button not found within 5 seconds");
-      }
+    while (Date.now() - startTime < 1000) {
       const element = this.#findElement();
       if (element && element.getAttribute('aria-disabled') === 'false') {
         return element;
       }
       await new Promise(resolve => setTimeout(resolve, 100));
     }
+    throw new Error("Timeout: Active send button not found within 5 seconds");
   }
 
   #click(buttonElement) {

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Gemini Prompt Runner",
-  "version": "1.0",
-  "description": "クエリパラメータ 'q' に指定されてプロンプトを自動で実行します.",
+  "name": "Prompt Runner for Google Gemini",
+  "version": "0.9.0",
+  "description": "URL パラメータに従っGoogle GeminiのWebアプリをセットアップします。",
   "permissions": [
     "activeTab",
     "scripting"

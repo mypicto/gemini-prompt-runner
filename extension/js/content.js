@@ -51,10 +51,11 @@ class Textarea {
   }
 
   moveCursorToEnd(element) {
+    element.focus();
     const range = document.createRange();
-    const selection = window.getSelection();
     range.selectNodeContents(element);
     range.collapse(false);
+    const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
   }

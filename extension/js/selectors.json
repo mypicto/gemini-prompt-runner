@@ -1,0 +1,15 @@
+{
+  "textarea": {
+    "selector": "rich-textarea.text-input-field_textarea",
+    "xpath": ".//div/p"
+  },
+  "submitButton": {
+    "selector": "button.send-button"
+  },
+  "modelList": {
+    "selector": "button.bard-mode-menu-button"
+  },
+  "modelMenu": {
+    "selector": "button.bard-mode-list-button"
+  }
+}

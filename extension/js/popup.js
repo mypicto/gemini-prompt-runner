@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', initializeApp);
 function initializeApp() {
   initManifest();
   initExternalLinks();
+  updatePromptUrl();
 }
 
 function initManifest() {
@@ -21,4 +22,19 @@ function initExternalLinks() {
       chrome.tabs.create({ url: link.href });
     });
   });
+}
+
+function updatePromptUrl() {
+  fetch(chrome.runtime.getURL('res/prompt_readme.txt'))
+    .then(response => response.text())
+    .then(text => {
+      const link = document.querySelector('.manual-url a');
+      if (!link) return;
+      const urlObj = new URL(link.href);
+      urlObj.searchParams.set('q', text);
+      link.href = urlObj.toString();
+    })
+    .catch(error => {
+      console.error('Failed to fetch prompt URL:', error);
+    });
 }

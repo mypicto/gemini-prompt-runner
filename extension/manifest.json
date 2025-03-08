@@ -12,7 +12,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["res/selectors.json"],
+      "resources": ["res/selectors.json", "res/prompt_readme.txt"],
       "matches": ["*://gemini.google.com/*"]
     }
   ],

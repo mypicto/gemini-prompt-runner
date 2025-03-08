@@ -1,6 +1,6 @@
 # Prompt Runner for Google Gemini
 
-この拡張機能は、URL パラメータに従ってGoogle GeminiのWebアプリをセットアップします。
+この拡張機能は、Google GeminiのWebアプリに追加のURLパラメータを渡せるようにすることで、標準では対応していないプロンプトの自動実行を可能にします。
 
 ![store screen-shot](store/gemini-prompt-runner.png)
 

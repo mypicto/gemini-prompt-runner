@@ -2,7 +2,7 @@ Output the following text, preserving structure, language, and style.
 
 # Prompt Runner for Google Gemini
 
-This extension sets up the Google Gemini web app according to URL parameters.
+This extension allows automatic execution of prompts, which is not supported by default, by passing additional URL parameters to the Google Gemini web app.
 
 ## Features
 

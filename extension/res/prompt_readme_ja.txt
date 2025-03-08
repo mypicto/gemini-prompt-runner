@@ -2,7 +2,7 @@ Output the following text, preserving structure, language, and style.
 
 # Prompt Runner for Google Gemini
 
-この拡張機能は、URL パラメータに従ってGoogle GeminiのWebアプリをセットアップします。
+この拡張機能は、Google GeminiのWebアプリに追加のURLパラメータを渡せるようにすることで、標準では対応していないプロンプトの自動実行を可能にします。
 
 ## 機能
 

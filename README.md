@@ -2,6 +2,8 @@
 
 この拡張機能は、URL パラメータに従ってGoogle GeminiのWebアプリをセットアップします。
 
+![](store/gemini-prompt-runner.png)
+
 ## 機能
 
 * URLのパラメータからプロンプトを自動実行（オプションでプロンプトの入力のみにすることも可能）

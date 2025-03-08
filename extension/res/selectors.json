@@ -11,5 +11,11 @@
   },
   "modelMenu": {
     "selector": "button.bard-mode-list-button"
+  },
+  "moreMenuButton": {
+    "selector": "button.more-menu-button"
+  },
+  "copyButton": {
+    "selector": "button[data-test-id=\"copy-button\"]"
   }
 }

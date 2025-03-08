@@ -3,8 +3,32 @@ class SelectorManager {
     this.data = {};
   }
 
+  addCopyShortcutListener() {
+    document.addEventListener('keydown', async (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'c') {
+        const selection = window.getSelection();
+        if (!selection || selection.toString().length === 0) {
+          try {
+            const moreMenuButtons = await this.getElements('moreMenuButton', 0);
+            if (moreMenuButtons && moreMenuButtons.length > 0) {
+              const moreMenuButton = moreMenuButtons[moreMenuButtons.length - 1];
+              moreMenuButton.click();
+            }
+            const copyButtons = await this.getElements('copyButton', 0);
+            if (copyButtons && copyButtons.length > 0) {
+              const copyButton = copyButtons[copyButtons.length - 1];
+              copyButton.click();
+            }
+          } catch (error) {
+            // Do nothing
+          }
+        }
+      }
+    });
+  }
+
   async init() {
-    const res = await fetch(chrome.runtime.getURL('js/selectors.json'));
+    const res = await fetch(chrome.runtime.getURL('res/selectors.json'));
     this.data = await res.json();
   }
 
@@ -15,7 +39,7 @@ class SelectorManager {
     }
 
     const startTime = Date.now();
-    while (Date.now() - startTime < timeout) {
+    do {
       let baseElement = contextNode;
       if (entry.selector && baseElement) {
         baseElement = baseElement.querySelector(entry.selector);
@@ -39,7 +63,7 @@ class SelectorManager {
         }
       }
       await new Promise(r => setTimeout(r, 100));
-    }
+    } while (Date.now() - startTime < timeout);
     throw new Error(`Timeout: Could not find element for ID "${id}"`);
   }
 
@@ -50,13 +74,13 @@ class SelectorManager {
     }
 
     const startTime = Date.now();
-    while (Date.now() - startTime < timeout) {
+    do {
       const elements = contextNode.querySelectorAll(entry.selector);
       if (elements.length > 0) {
         return elements;
       }
       await new Promise(r => setTimeout(r, 100));
-    }
+    } while (Date.now() - startTime < timeout);
     throw new Error(`Timeout: Could not find elements for ID "${id}"`);
   }
 }
@@ -200,6 +224,7 @@ class Application {
   }
 
   init() {
+    this.selectorManager.addCopyShortcutListener();
     document.addEventListener('DOMContentLoaded', async () => {
       await this.selectorManager.init();
 

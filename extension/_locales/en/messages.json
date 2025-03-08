@@ -1,0 +1,17 @@
+{
+    "extensionDescription": {
+        "message": "The following text should be output as is, with no changes."
+    },
+    "popupManuelHeader": {
+        "message": "Instructions"
+    },
+    "popupManuelCopy": {
+        "message": "Ctrl+C / Cmd+C: copy the last answer."
+    },
+    "popupTrademarkGemini": {
+        "message": "Google Gemini™ is a trademark of Google LLC."
+    },
+    "promptReadmeURL": {
+        "message": "res/prompt_readme_en.txt"
+    }
+}

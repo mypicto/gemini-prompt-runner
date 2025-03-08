@@ -1,0 +1,17 @@
+{
+    "extensionDescription": {
+        "message": "URL パラメータに従ってGoogle GeminiのWebアプリをセットアップします。"
+    },
+    "popupManuelHeader": {
+        "message": "操作方法"
+    },
+    "popupManuelCopy": {
+        "message": "Ctrl+C / Cmd+C: 最後の回答をコピー"
+    },
+    "popupTrademarkGemini": {
+        "message": "Google Gemini™ は Google LLC の商標です。"
+    },
+    "promptReadmeURL": {
+        "message": "res/prompt_readme_ja.txt"
+    }
+}

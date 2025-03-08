@@ -1,4 +1,4 @@
-The following text should be output as is, with no changes.
+Output the following text, preserving structure, language, and style.
 
 # Prompt Runner for Google Gemini
 

@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', initializeApp);
 
 function initializeApp() {
+  let localizeManager = new LocalizeManager();
+  localizeManager.init();
   initManifest();
   initExternalLinks();
-  updatePromptUrl();
+  updatePromptUrl(localizeManager);
 }
 
 function initManifest() {
@@ -24,8 +26,9 @@ function initExternalLinks() {
   });
 }
 
-function updatePromptUrl() {
-  fetch(chrome.runtime.getURL('res/prompt_readme.txt'))
+function updatePromptUrl(localizeManager) {
+  let promptUrl = localizeManager.getMessage('promptReadmeURL');
+  fetch(chrome.runtime.getURL(promptUrl))
     .then(response => response.text())
     .then(text => {
       const link = document.querySelector('.manual-url a');
@@ -37,4 +40,36 @@ function updatePromptUrl() {
     .catch(error => {
       console.error('Failed to fetch prompt URL:', error);
     });
+}
+
+class LocalizeManager {
+  
+  constructor() {
+    this.localizeElements = document.querySelectorAll('[localize]');
+  }
+
+  init() {
+    this.localizeContent();
+  }
+
+  getMessage(key) {
+    return chrome.i18n.getMessage(key);
+  }
+
+  localizeContent() {
+    this.localizeElements.forEach((element) => {
+      let regex = /__MSG_(\w+)__/;
+      let match;
+      let localizedText = element.textContent;
+  
+      while ((match = regex.exec(localizedText)) !== null) {
+        let msgKey = match[1];
+        let localizedString = chrome.i18n.getMessage(msgKey);
+  
+        localizedText = localizedText.replace(match[0], localizedString);
+      }
+
+      element.textContent = localizedText;
+    });
+  }
 }

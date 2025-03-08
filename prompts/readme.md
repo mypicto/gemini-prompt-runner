@@ -4,6 +4,12 @@ The following text should be output as is, with no changes.
 
 This extension sets up the Google Gemini web app according to URL parameters.
 
+## Features
+
+* Automatically execute prompts from URL parameters (optionally, only input the prompt)
+* Select models from URL parameters
+* Press `Ctrl + C` / `Cmd + C` without selecting text to copy the last answer
+
 ## Use Cases
 
 * Register frequently used models and prompts as bookmarks

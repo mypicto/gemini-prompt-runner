@@ -36,9 +36,9 @@
 https://how-to-use
     ?q=enter-prompt-text
     &m=select-model-index
-    &confirm=prevent-auto-submit-by-q-parameter-flag
+    &confirm=flag-to-prevent-auto-submit-by-q-parameter
 
-Ctrl + C / Cmd + C: Copy the last answer
+Ctrl+C / Cmd+C: copy the last answer.
 ```
 
 | パラメータ | 説明 | 値 |

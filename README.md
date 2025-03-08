@@ -24,10 +24,10 @@
 ## 使い方
 
 ```plaintext
-https://control-Google-Gemini-with-query-parameters
-    ?q=enter-prompt
-    &m=select-model
-    &confirm=prevent-auto-submit-by-q-parameter
+https://how-to-use
+    ?q=enter-prompt-text
+    &m=select-model-index
+    &confirm=prevent-auto-submit-by-q-parameter-flag
 ```
 
 | パラメータ | 説明 | 値 |

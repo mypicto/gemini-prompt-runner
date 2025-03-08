@@ -2,16 +2,18 @@
   "manifest_version": 3,
   "name": "Prompt Runner for Google Gemini",
   "version": "0.9.0",
-  "description": "URL パラメータに従っGoogle GeminiのWebアプリをセットアップします。",
-  "permissions": [
-    "activeTab",
-    "scripting"
-  ],
+  "description": "URL パラメータに従ってGoogle GeminiのWebアプリをセットアップします。",
   "content_scripts": [
     {
       "matches": ["*://gemini.google.com/*"],
       "js": ["js/content.js"],
       "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["js/selectors.json"],
+      "matches": ["*://gemini.google.com/*"]
     }
   ],
   "icons": {
@@ -26,11 +28,5 @@
       "128": "images/icon128.png"
     },
     "default_popup": "html/popup.html"
-  },
-  "web_accessible_resources": [
-    {
-      "resources": ["js/selectors.json"],
-      "matches": ["*://gemini.google.com/*"]
-    }
-  ]
+  }
 }

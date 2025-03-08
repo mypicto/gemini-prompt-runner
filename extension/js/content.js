@@ -16,7 +16,9 @@ class SelectorManager {
         await this.triggerMoreMenu();
         await this.triggerCopy();
       } catch (error) {
-        console.error('Error handling copy shortcut:', error);
+        if (!(error.message && error.message.startsWith('Timeout:'))) {
+          console.error('Error handling copy shortcut:', error);
+        }
       }
     }
   }

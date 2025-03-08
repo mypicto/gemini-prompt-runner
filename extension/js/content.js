@@ -4,27 +4,40 @@ class SelectorManager {
   }
 
   addCopyShortcutListener() {
-    document.addEventListener('keydown', async (event) => {
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'c') {
-        const selection = window.getSelection();
-        if (!selection || selection.toString().length === 0) {
-          try {
-            const moreMenuButtons = await this.getElements('moreMenuButton', 0);
-            if (moreMenuButtons && moreMenuButtons.length > 0) {
-              const moreMenuButton = moreMenuButtons[moreMenuButtons.length - 1];
-              moreMenuButton.click();
-            }
-            const copyButtons = await this.getElements('copyButton', 0);
-            if (copyButtons && copyButtons.length > 0) {
-              const copyButton = copyButtons[copyButtons.length - 1];
-              copyButton.click();
-            }
-          } catch (error) {
-            // Do nothing
-          }
-        }
+    document.addEventListener('keydown', this.handleCopyShortcut.bind(this));
+  }
+
+  async handleCopyShortcut(event) {
+    if (!((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'c')) {
+      return;
+    }
+    if (this.isSelectionEmpty()) {
+      try {
+        await this.triggerMoreMenu();
+        await this.triggerCopy();
+      } catch (error) {
+        console.error('Error handling copy shortcut:', error);
       }
-    });
+    }
+  }
+
+  isSelectionEmpty() {
+    const selection = window.getSelection();
+    return (!selection || selection.toString().trim().length === 0);
+  }
+
+  async triggerMoreMenu() {
+    const moreMenuButtons = await this.getElements('moreMenuButton', 0);
+    if (moreMenuButtons && moreMenuButtons.length > 0) {
+      moreMenuButtons[moreMenuButtons.length - 1].click();
+    }
+  }
+
+  async triggerCopy() {
+    const copyButtons = await this.getElements('copyButton', 0);
+    if (copyButtons && copyButtons.length > 0) {
+      copyButtons[copyButtons.length - 1].click();
+    }
   }
 
   async init() {
@@ -120,19 +133,10 @@ class SubmitButton {
     return await this.selectorManager.getElement('submitButton');
   }
 
-  #click(buttonElement) {
-    const event = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true
-    });
-    buttonElement.dispatchEvent(event);
-  }
-
   async submit() {
     const element = await this.#findElement();
     if (element) {
-      this.#click(element);
+      element.click();
     }
   }
 }

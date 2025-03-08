@@ -2,3 +2,4 @@
 *.pem
 *.crx
 gemini-prompt-runner.zip
+extension/_metadata/*

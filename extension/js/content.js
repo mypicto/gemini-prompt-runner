@@ -188,9 +188,16 @@ class ModelSelector {
 }
 
 class QueryParameter {
+  static capturedPrompt = null;
+
+  static setCapturedPrompt(prompt) {
+    this.capturedPrompt = prompt;
+  }
+
   static getPrompt() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('q');
+    return this.capturedPrompt;
+    // const urlParams = new URLSearchParams(window.location.search);
+    // return urlParams.get('q');
   }
 
   static getModelIndex() {
@@ -241,9 +248,9 @@ class Application {
       const isConfirm = QueryParameter.IsConfirm();
 
       await this.operateGemini(prompt, modelIndex, isConfirm);
-      setTimeout(() => {
-        QueryParameter.removeParameters();
-      }, 5000);
+      // setTimeout(() => {
+      //   QueryParameter.removeParameters();
+      // }, 5000);
     });
   }
 
@@ -260,6 +267,12 @@ class Application {
     }
   }
 }
+
+chrome.runtime.sendMessage({ type: 'listenerReady' }, function(response) {
+  if (response && response.prompt) {
+    QueryParameter.setCapturedPrompt(response.prompt);
+  }
+});
 
 const app = new Application();
 app.init();

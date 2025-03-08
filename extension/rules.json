@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "transform": {
+          "queryTransform": {
+            "removeParams": ["q"]
+          }
+        }
+      }
+    },
+    "condition": {
+      "urlFilter": "*://gemini.google.com/*",
+      "resourceTypes": ["main_frame"]
+    }
+  }
+]

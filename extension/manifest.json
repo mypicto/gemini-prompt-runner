@@ -4,6 +4,19 @@
   "version": "1.0.0",
   "default_locale": "en",
   "description": "__MSG_extensionDescription__",
+  "permissions": ["declarativeNetRequest", "webRequest"],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "host_permissions": [
+    "*://gemini.google.com/*"
+  ],
   "content_scripts": [
     {
       "matches": ["*://gemini.google.com/*"],
@@ -11,6 +24,10 @@
       "run_at": "document_start"
     }
   ],
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  
   "web_accessible_resources": [
     {
       "resources": ["res/selectors.json", "res/prompt_readme.txt"],

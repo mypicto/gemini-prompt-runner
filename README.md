@@ -1,8 +1,11 @@
 # Prompt Runner for Google Gemini
 
-この拡張機能は、URL パラメータに従っGoogle GeminiのWebアプリをセットアップします。
+この拡張機能は、URL パラメータに従ってGoogle GeminiのWebアプリをセットアップします。
 
-※ この拡張機能は非公式版であるため、Google Gemini アプリがアップデートされると、動作しなくなる可能性があります。
+## 使い道
+
+* よく使うモデルやプロンプトをブックマークに登録
+* CLIからプロンプト実行のトリガー
 
 ## 動作環境
 
@@ -28,6 +31,8 @@ https://how-to-use
     ?q=enter-prompt-text
     &m=select-model-index
     &confirm=prevent-auto-submit-by-q-parameter-flag
+
+Ctrl + C / Cmd + C: Copy the last answer
 ```
 
 | パラメータ | 説明 | 値 |

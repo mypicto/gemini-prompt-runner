@@ -8,7 +8,9 @@ class SelectorManager {
   }
 
   async handleCopyShortcut(event) {
-    if (!((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'c')) {
+    const isMac = navigator.userAgent.includes('Macintosh');
+    const isShortcut = (isMac ? event.metaKey : event.ctrlKey) && (event.key.toLowerCase() === 'c');
+    if (!isShortcut) {
       return;
     }
     if (this.isSelectionEmpty()) {

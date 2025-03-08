@@ -1,6 +1,6 @@
 {
     "extensionDescription": {
-        "message": "この拡張機能は、Google GeminiのWebアプリに追加のURLパラメータを渡せるようにすることで、標準では対応していないプロンプトの自動実行を可能にします。"
+        "message": "この拡張機能は、追加のURLパラメータを使用してGoogle Geminiウェブアプリで自動プロンプト実行を可能にします。"
     },
     "popupManuelHeader": {
         "message": "操作方法"

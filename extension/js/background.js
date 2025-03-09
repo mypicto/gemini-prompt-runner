@@ -9,7 +9,13 @@ class BackgroundHandler {
   }
   
   #getUrlFilters() {
-    return ["*://gemini.google.com/app*", "*://gemini.google.com/*/app*"];
+    const params = ['q', 'm', 'confirm'];
+    const filters = [];
+    params.forEach(param => {
+      filters.push(`*://gemini.google.com/*?${param}=*`);
+      filters.push(`*://gemini.google.com/*&${param}=*`);
+    });
+    return filters;
   }
   
   #registerWebRequestListener() {

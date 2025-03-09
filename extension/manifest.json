@@ -14,9 +14,7 @@
       }
     ]
   },
-  "host_permissions": [
-    "*://gemini.google.com/*"
-  ],
+  "host_permissions": ["*://gemini.google.com/*"],
   "content_scripts": [
     {
       "matches": ["*://gemini.google.com/*"],

@@ -1,28 +1,47 @@
-let pendingQParam = null;
-
-if (chrome.webRequest && chrome.webRequest.onBeforeRequest) {
-  chrome.webRequest.onBeforeRequest.addListener(
-    function(details) {
-      const url = new URL(details.url);
-      const qParam = url.searchParams.get('q');
-      if (qParam) {
-        pendingQParam = qParam;
-      }
-    },
-    { urls: ["*://gemini.google.com/*"] }
-  );
-
-  chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    if (message.type === 'listenerReady') {
-      if (pendingQParam) {
-        sendResponse({ prompt: pendingQParam });
-        pendingQParam = null;
-      } else {
-        sendResponse({});
-      }
+class BackgroundHandler {
+  constructor() {
+    this.pendingParameters = null;
+  }
+  
+  init() {
+    this.#registerWebRequestListener();
+    this.#registerMessageListener();
+  }
+  
+  #getUrlFilters() {
+    return ["*://gemini.google.com/app*", "*://gemini.google.com/*/app*"];
+  }
+  
+  #registerWebRequestListener() {
+    if (chrome.webRequest && chrome.webRequest.onBeforeRequest) {
+      chrome.webRequest.onBeforeRequest.addListener(this.#handleWebRequest.bind(this), { urls: this.#getUrlFilters() });
+    } else {
+      console.error('chrome.webRequest is not available in this context.');
+    }
+  }
+  
+  #registerMessageListener() {
+    chrome.runtime.onMessage.addListener(this.#handleMessage.bind(this));
+  }
+  
+  #handleWebRequest(details) {
+    const url = new URL(details.url);
+    const q = url.searchParams.get('q');
+    const m = url.searchParams.get('m');
+    const confirm = url.searchParams.get('confirm');
+    if (q || m || confirm) {
+      this.pendingParameters = { prompt: q, model: m, confirm };
+    }
+  }
+  
+  #handleMessage(message, sender, sendResponse) {
+    if (message.type === 'requestParameters') {
+      sendResponse(this.pendingParameters);
+      this.pendingParameters = null;
       return true;
     }
-  });
-} else {
-  console.error('chrome.webRequest is not available in this context.');
+  }
 }
+
+const backgroundHandler = new BackgroundHandler();
+backgroundHandler.init();

@@ -188,45 +188,70 @@ class ModelSelector {
 }
 
 class QueryParameter {
-  static capturedPrompt = null;
-
-  static setCapturedPrompt(prompt) {
-    this.capturedPrompt = prompt;
+  constructor() {
+    this.response = null;
   }
 
-  static getPrompt() {
-    return this.capturedPrompt;
-    // const urlParams = new URLSearchParams(window.location.search);
-    // return urlParams.get('q');
+  async fetchParameters() {
+    if (this.response) {
+      return this.response;
+    }
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage({ type: 'requestParameters' }, (response) => {
+        if (chrome.runtime.lastError) {
+          this.response = new Error(this.error);
+          return reject(this.response);
+        }
+        if (!response) {
+          this.response = new Error(this.error)
+          return reject(this.response);
+        }
+        if (response.error) {
+          this.response = new Error(this.error);
+          return reject(this.response);
+        }
+        this.response = response;
+        return resolve(response);
+      });
+    });
   }
 
-  static getModelIndex() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const value = urlParams.get('m');
+  async getPrompt() {
+    while (this.response === null) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    if (this.response instanceof Error) {
+      throw this.response;
+    }
+    return this.response.prompt;
+  }
+
+  async getModelIndex() {
+    while (this.response === null) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    if (this.response instanceof Error) {
+      throw this.response;
+    }
+    const value = this.response.model;
     if (value) {
       return parseInt(value, 10);
     }
     return null;
   }
 
-  static IsConfirm() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const value = urlParams.get('confirm');
+  async IsConfirm() {
+    while (this.response === null) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    if (this.response instanceof Error) {
+      throw this.response;
+    }
+    const value = this.response.confirm;
     if (value === 'true' || value === '1') {
       return true;
     }
     return false;
-  }
-
-  static removeParameters() {
-    const url = new URL(window.location);
-    const params = url.searchParams;
-    params.delete('q');
-    params.delete('m');
-    params.delete('confirm');
-    const newUrl =
-      url.origin + url.pathname + (params.toString() ? '?' + params.toString() : '');
-    window.history.replaceState({}, '', newUrl);
   }
 }
 
@@ -236,21 +261,25 @@ class Application {
     this.textarea = new Textarea(this.selectorManager);
     this.modelSelector = new ModelSelector(this.selectorManager);
     this.submitButton = new SubmitButton(this.selectorManager);
+    this.queryParameter = new QueryParameter();
   }
 
   init() {
+    this.queryParameter.fetchParameters();
+
     this.selectorManager.addCopyShortcutListener();
     document.addEventListener('DOMContentLoaded', async () => {
       await this.selectorManager.init();
 
-      const prompt = QueryParameter.getPrompt();
-      const modelIndex = QueryParameter.getModelIndex();
-      const isConfirm = QueryParameter.IsConfirm();
+      try {
+        const prompt = await this.queryParameter.getPrompt();
+        const modelIndex = await this.queryParameter.getModelIndex();
+        const isConfirm = await this.queryParameter.IsConfirm();
 
-      await this.operateGemini(prompt, modelIndex, isConfirm);
-      // setTimeout(() => {
-      //   QueryParameter.removeParameters();
-      // }, 5000);
+        await this.operateGemini(prompt, modelIndex, isConfirm);
+      } catch (error) {
+        console.error('Error during prompt operation:', error);
+      }
     });
   }
 
@@ -267,12 +296,6 @@ class Application {
     }
   }
 }
-
-chrome.runtime.sendMessage({ type: 'listenerReady' }, function(response) {
-  if (response && response.prompt) {
-    QueryParameter.setCapturedPrompt(response.prompt);
-  }
-});
 
 const app = new Application();
 app.init();

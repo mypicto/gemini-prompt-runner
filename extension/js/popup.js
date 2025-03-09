@@ -34,7 +34,7 @@ function updatePromptUrl(localizeManager) {
       const link = document.querySelector('.manual-url a');
       if (!link) return;
       const urlObj = new URL(link.href);
-      urlObj.searchParams.set('q', text);
+      urlObj.searchParams.set('ext-q', text);
       link.href = urlObj.toString();
     })
     .catch(error => {

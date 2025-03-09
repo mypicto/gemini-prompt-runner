@@ -223,7 +223,18 @@ class QueryParameter {
     if (this.response instanceof Error) {
       throw this.response;
     }
-    return this.response.prompt;
+    let promptText = this.response.prompt;
+    const keyword = "{{clipboard}}";
+    if (promptText && promptText.includes(keyword)) {
+      let clipboardText;
+      try {
+        clipboardText = await navigator.clipboard.readText() || "";
+      } catch (err) {
+        clipboardText = "";
+      }
+      promptText = promptText.replace(new RegExp(keyword, "g"), clipboardText);
+    }
+    return promptText;
   }
 
   async getModelIndex() {
@@ -271,15 +282,11 @@ class Application {
     document.addEventListener('DOMContentLoaded', async () => {
       await this.selectorManager.init();
 
-      try {
-        const prompt = await this.queryParameter.getPrompt();
-        const modelIndex = await this.queryParameter.getModelIndex();
-        const isConfirm = await this.queryParameter.IsConfirm();
+      const prompt = await this.queryParameter.getPrompt();
+      const modelIndex = await this.queryParameter.getModelIndex();
+      const isConfirm = await this.queryParameter.IsConfirm();
 
-        await this.operateGemini(prompt, modelIndex, isConfirm);
-      } catch (error) {
-        console.error('Error during prompt operation:', error);
-      }
+      await this.operateGemini(prompt, modelIndex, isConfirm);
     });
   }
 

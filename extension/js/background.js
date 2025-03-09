@@ -1,12 +1,21 @@
 class BackgroundHandler {
   constructor() {
-    this.pendingParameters = null;
+    this.pendingParameters = this.#generateEmptyParameters();
     this.params = ['ext-q', 'ext-m', 'ext-confirm', 'ext-clipboard'];
   }
   
   init() {
     this.#registerWebRequestListener();
     this.#registerMessageListener();
+  }
+
+  #generateEmptyParameters() {
+    return {
+      prompt: null,
+      model: null,
+      confirm: null,
+      clipboard: null
+    };
   }
   
   #getUrlFilters() {
@@ -45,7 +54,7 @@ class BackgroundHandler {
   #handleMessage(message, sender, sendResponse) {
     if (message.type === 'requestParameters') {
       sendResponse(this.pendingParameters);
-      this.pendingParameters = null;
+      this.pendingParameters = this.#generateEmptyParameters();;
       return true;
     }
   }

@@ -216,16 +216,22 @@ class QueryParameter {
     });
   }
 
-  async getPrompt() {
+  async waitForResponse() {
     while (this.response === null) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     if (this.response instanceof Error) {
       throw this.response;
     }
-    let promptText = this.response.prompt;
+    return this.response;
+  }
+
+  async getPrompt() {
+    const response = await this.waitForResponse();
+    const clipboard = await this.#IsClipboard();
     const keyword = "{{clipboard}}";
-    if (promptText && promptText.includes(keyword)) {
+    let promptText = response.prompt;
+    if (clipboard && promptText && promptText.includes(keyword)) {
       let clipboardText;
       try {
         clipboardText = await navigator.clipboard.readText() || "";
@@ -238,13 +244,8 @@ class QueryParameter {
   }
 
   async getModelIndex() {
-    while (this.response === null) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    if (this.response instanceof Error) {
-      throw this.response;
-    }
-    const value = this.response.model;
+    const response = await this.waitForResponse();
+    const value = response.model;
     if (value) {
       return parseInt(value, 10);
     }
@@ -252,13 +253,17 @@ class QueryParameter {
   }
 
   async IsConfirm() {
-    while (this.response === null) {
-      await new Promise(resolve => setTimeout(resolve, 100));
+    const response = await this.waitForResponse();
+    const value = response.confirm;
+    if (value === 'true' || value === '1') {
+      return true;
     }
-    if (this.response instanceof Error) {
-      throw this.response;
-    }
-    const value = this.response.confirm;
+    return false;
+  }
+
+  async #IsClipboard() {
+    const response = await this.waitForResponse();
+    const value = response.clipboard;
     if (value === 'true' || value === '1') {
       return true;
     }

@@ -1,6 +1,7 @@
 class BackgroundHandler {
   constructor() {
     this.pendingParameters = null;
+    this.params = ['ext-q', 'ext-m', 'ext-confirm', 'ext-clipboard'];
   }
   
   init() {
@@ -9,9 +10,8 @@ class BackgroundHandler {
   }
   
   #getUrlFilters() {
-    const params = ['ext-q', 'ext-m', 'ext-confirm'];
     const filters = [];
-    params.forEach(param => {
+    this.params.forEach(param => {
       filters.push(`*://gemini.google.com/*?${param}=*`);
       filters.push(`*://gemini.google.com/*&${param}=*`);
     });
@@ -32,11 +32,12 @@ class BackgroundHandler {
   
   #handleWebRequest(details) {
     const url = new URL(details.url);
-    if (url.searchParams.has('ext-q') || url.searchParams.has('ext-m') || url.searchParams.has('ext-confirm')) {
+    if (this.params.some(param => url.searchParams.has(param))) {
       this.pendingParameters = {
         prompt: url.searchParams.get('ext-q'),
         model: url.searchParams.get('ext-m'),
-        confirm: url.searchParams.get('ext-confirm')
+        confirm: url.searchParams.get('ext-confirm'),
+        clipboard: url.searchParams.get('ext-clipboard')
       };
     }
   }

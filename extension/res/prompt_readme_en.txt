@@ -6,11 +6,11 @@ This extension allows automatic execution of prompts, which is not supported by 
 
 ## Features
 
-* Automatically execute prompts from URL parameters (parameters are processed securely without being sent to the server)
-  * Insert clipboard text into the prompt
-  * Optionally disable automatic submission of prompts
-* Select model from URL parameters
-* Press `Ctrl + C` / `Cmd + C` keys without selecting text to copy the last answer
+* Automatically execute prompts from URL parameters (parameters are processed securely within the browser and are not sent to the server)
+  * Insert clipboard text into the prompt (optional)
+  * Disable automatic submission of prompts (optional)
+* Select a model from URL parameters
+* Copy the last answer by pressing Ctrl + C / Cmd + C when no text is selected
 
 ## Use Cases
 
@@ -23,6 +23,7 @@ This extension allows automatic execution of prompts, which is not supported by 
 https://how-to-use
     ?ext-q=enter-prompt-text
     &ext-m=select-model-index
+    &ext-clipboard=flag-to-replace-clipboard-text-in-q-parameter
     &ext-confirm=flag-to-prevent-auto-submit-by-q-parameter
 
 Ctrl+C / Cmd+C: copy the last answer.
@@ -30,9 +31,10 @@ Ctrl+C / Cmd+C: copy the last answer.
 
 | Parameter | Description | Value |
 | --- | --- | --- |
-| `ext-q` | Prompt string to execute | URL-encoded text |
-| `ext-m` | Index of the model to select | Integer starting from 0 (display order in UI) |
-| `ext-confirm` | Suppress auto-submit by `ext-q` parameter | `true/false` or `0/1` |
+| `ext-q` | Prompt string to execute | URL-encoded text (insert clipboard text with `{{clipboard}}` keyword) |
+| `ext-m` | Index of the model to select | Integer starting from 0 (order as displayed in UI) |
+| `ext-clipboard` | Replace the {{clipboard}} keyword in ext-q with the clipboard text. | `true/false` or `0/1` |
+| `ext-confirm` | Prevent auto-submit by `ext-q` parameter | `true/false` or `0/1` |
 
 ## Attribution
 

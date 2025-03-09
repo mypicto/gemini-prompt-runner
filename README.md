@@ -6,9 +6,9 @@
 
 ## 機能
 
-* URLのパラメータからプロンプトを自動実行（パラメータはサーバーに送信されずセキュアに処理されます）
-  * クリップボードのテキストをプロンプトに挿入
-  * オプションでプロンプトで自動送信を無効化することも可能
+* URLのパラメータからプロンプトを自動実行（ver1.0.0以降、パラメータはサーバーに送信されず、ブラウザー内でセキュアに処理されます）
+  * クリップボードのテキストをプロンプトに挿入（オプション）
+  * プロンプトの自動送信を無効化（オプション）
 * URLのパラメータからモデルの選択
 * テキストを選択していない状態で `Ctrl + C` / `Cmd + C` キーを押すことで最後の回答をコピー
 
@@ -40,6 +40,7 @@
 https://how-to-use
     ?ext-q=enter-prompt-text
     &ext-m=select-model-index
+    &ext-clipboard=flag-to-replace-clipboard-text-in-q-parameter
     &ext-confirm=flag-to-prevent-auto-submit-by-q-parameter
 
 Ctrl+C / Cmd+C: copy the last answer.
@@ -47,8 +48,9 @@ Ctrl+C / Cmd+C: copy the last answer.
 
 | パラメータ | 説明 | 値 |
 | --- | --- | --- |
-| `ext-q` | 実行するプロンプト文字列 | URLエンコードされたテキスト</br>`{{clipboard}}`キーワードでクリップボードのテキストを挿入 |
+| `ext-q` | 実行するプロンプト文字列 | URLエンコードされたテキスト（`{{clipboard}}`キーワードでクリップボードのテキストを挿入） |
 | `ext-m` | 選択するモデルのインデックス | 0 から始まる整数（UI上での表示順） |
+| `ext-clipboard` | `ext-q`の中で`{{clipboard}}`キーワードをクリップボードのテキストと置き換えます | `true/false` または `0/1` |
 | `ext-confirm` | `ext-q`パラメータによる自動送信の抑制 | `true/false` または `0/1` |
 
 ### サンプル
@@ -63,7 +65,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 
 #### よく使うプロンプトのテンプレートをブックマーク
 
-* [クリップボードのテキストを英訳する](https://gemini.google.com/app?ext-q=%E5%85%A5%E5%8A%9B%E3%81%95%E3%82%8C%E3%81%9F%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%8B%B1%E8%AA%9E%E3%81%AB%E7%BF%BB%E8%A8%B3%E3%81%97%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%0D%0A%0D%0A%0D%0A%2A%2AInput%3A%2A%2A%0D%0A%7B%7Bclipboard%7D%7D&ext-confirm=1)
+* [クリップボードのテキストを英訳する](https://gemini.google.com/app?ext-q=%E5%85%A5%E5%8A%9B%E3%81%95%E3%82%8C%E3%81%9F%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%8B%B1%E8%AA%9E%E3%81%AB%E7%BF%BB%E8%A8%B3%E3%81%97%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%0D%0A%0D%0A%0D%0A%2A%2AInput%3A%2A%2A%0D%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1&ext-confirm=1)
 
 ### 帰属
 

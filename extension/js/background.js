@@ -9,7 +9,7 @@ class BackgroundHandler {
   }
   
   #getUrlFilters() {
-    const params = ['q', 'm', 'confirm'];
+    const params = ['ext-q', 'ext-m', 'ext-confirm'];
     const filters = [];
     params.forEach(param => {
       filters.push(`*://gemini.google.com/*?${param}=*`);
@@ -32,11 +32,12 @@ class BackgroundHandler {
   
   #handleWebRequest(details) {
     const url = new URL(details.url);
-    const q = url.searchParams.get('q');
-    const m = url.searchParams.get('m');
-    const confirm = url.searchParams.get('confirm');
-    if (q || m || confirm) {
-      this.pendingParameters = { prompt: q, model: m, confirm };
+    if (url.searchParams.has('ext-q') || url.searchParams.has('ext-m') || url.searchParams.has('ext-confirm')) {
+      this.pendingParameters = {
+        prompt: url.searchParams.get('ext-q'),
+        model: url.searchParams.get('ext-m'),
+        confirm: url.searchParams.get('ext-confirm')
+      };
     }
   }
   

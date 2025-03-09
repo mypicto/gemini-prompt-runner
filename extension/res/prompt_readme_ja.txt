@@ -19,18 +19,18 @@ Output the following text, preserving structure, language, and style.
 
 ```plaintext
 https://how-to-use
-    ?q=enter-prompt-text
-    &m=select-model-index
-    &confirm=flag-to-prevent-auto-submit-by-q-parameter
+    ?ext-q=enter-prompt-text
+    &ext-m=select-model-index
+    &ext-confirm=flag-to-prevent-auto-submit-by-q-parameter
 
 Ctrl+C / Cmd+C: copy the last answer.
 ```
 
 | パラメータ | 説明 | 値 |
 | --- | --- | --- |
-| `q` | 実行するプロンプト文字列 | URLエンコードされたテキスト |
-| `m` | 選択するモデルのインデックス | 0 から始まる整数（UI上での表示順） |
-| `confirm` | `q`パラメータによる自動送信の抑制 | `true/false` または `0/1` |
+| `ext-q` | 実行するプロンプト文字列 | URLエンコードされたテキスト |
+| `ext-m` | 選択するモデルのインデックス | 0 から始まる整数（UI上での表示順） |
+| `ext-confirm` | `ext-q`パラメータによる自動送信の抑制 | `true/false` または `0/1` |
 
 ### 帰属
 

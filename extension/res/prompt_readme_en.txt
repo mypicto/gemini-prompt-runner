@@ -19,18 +19,18 @@ This extension allows automatic execution of prompts, which is not supported by 
 
 ```plaintext
 https://how-to-use
-    ?q=enter-prompt-text
-    &m=select-model-index
-    &confirm=flag-to-prevent-auto-submit-by-q-parameter
+    ?ext-q=enter-prompt-text
+    &ext-m=select-model-index
+    &ext-confirm=flag-to-prevent-auto-submit-by-q-parameter
 
 Ctrl+C / Cmd+C: copy the last answer.
 ```
 
 | Parameter | Description | Value |
 | --- | --- | --- |
-| `q` | Prompt string to execute | URL-encoded text |
-| `m` | Index of the model to select | Integer starting from 0 (display order in UI) |
-| `confirm` | Suppress auto-submit by `q` parameter | `true/false` or `0/1` |
+| `ext-q` | Prompt string to execute | URL-encoded text |
+| `ext-m` | Index of the model to select | Integer starting from 0 (display order in UI) |
+| `ext-confirm` | Suppress auto-submit by `ext-q` parameter | `true/false` or `0/1` |
 
 ## Attribution
 

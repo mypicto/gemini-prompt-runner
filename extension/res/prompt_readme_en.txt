@@ -6,14 +6,16 @@ This extension allows automatic execution of prompts, which is not supported by 
 
 ## Features
 
-* Automatically execute prompts from URL parameters (optionally, only input the prompt)
-* Select models from URL parameters
-* Press `Ctrl + C` / `Cmd + C` without selecting text to copy the last answer
+* Automatically execute prompts from URL parameters (parameters are processed securely without being sent to the server)
+  * Insert clipboard text into the prompt
+  * Optionally disable automatic submission of prompts
+* Select model from URL parameters
+* Press `Ctrl + C` / `Cmd + C` keys without selecting text to copy the last answer
 
 ## Use Cases
 
-* Register frequently used models and prompts as bookmarks
-* Trigger prompt execution from the CLI
+* Register prompt templates in bookmarks
+* Trigger prompt execution from CLI
 
 ## Instructions
 

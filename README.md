@@ -67,7 +67,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 
 * クリップボードのテキストを英訳する
   ```url
-  https://gemini.google.com/app?ext-q=%E5%85%A5%E5%8A%9B%E3%81%95%E3%82%8C%E3%81%9F%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%8B%B1%E8%AA%9E%E3%81%AB%E7%BF%BB%E8%A8%B3%E3%81%97%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%0A%0A%2A%2AInput%3A%2A%2A%0A%0A&ext-clipboard=1&ext-confirm=1
+  https://gemini.google.com/app?ext-q=%E5%85%A5%E5%8A%9B%E3%81%95%E3%82%8C%E3%81%9F%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%8B%B1%E8%AA%9E%E3%81%AB%E7%BF%BB%E8%A8%B3%E3%81%97%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%0A%0A%2A%2AInput%3A%2A%2A%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1&ext-confirm=1
   ```
 
 ### 帰属

@@ -187,6 +187,12 @@ class ModelSelector {
   }
 }
 
+class LineEndingConverter {
+  static convertToLF(text) {
+    return text.replace(/\r\n|\r/g, '\n');
+  }
+}
+
 class QueryParameter {
   constructor() {
     this.response = null;
@@ -240,6 +246,7 @@ class QueryParameter {
       }
       promptText = promptText.replace(new RegExp(keyword, "g"), clipboardText);
     }
+    promptText = LineEndingConverter.convertToLF(promptText);
     return promptText;
   }
 

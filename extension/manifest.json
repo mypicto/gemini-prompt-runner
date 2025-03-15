@@ -25,6 +25,7 @@
       "matches": ["*://gemini.google.com/*"],
       "js": [
         "js/utils/query-parameter.js",
+        "js/utils/operation-canceled-error.js",
         "js/managers/selector-manager.js",
         "js/components/textarea.js",
         "js/components/submit-button.js",

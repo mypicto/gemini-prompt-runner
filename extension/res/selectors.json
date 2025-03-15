@@ -12,6 +12,9 @@
   "modelMenu": {
     "selector": "button.bard-mode-list-button"
   },
+  "modelLabel": {
+    "selector": "span.gds-label-l"
+  },
   "moreMenuButton": {
     "selector": "button.more-menu-button"
   },

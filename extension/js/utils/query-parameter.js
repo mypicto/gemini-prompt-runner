@@ -1,5 +1,24 @@
-class QueryParameter {
+class Parameter {
+  async getPrompt() {
+    throw new Error('Not implemented');
+  }
+
+  async getModelIndex() {
+    throw new Error('Not implemented');
+  }
+
+  async getModelName() {
+    throw new Error('Not implemented');
+  }
+
+  async IsConfirm() {
+    throw new Error('Not implemented');
+  }
+}
+
+class QueryParameter extends Parameter {
   constructor() {
+    super();
     this.response = null;
   }
 
@@ -27,7 +46,7 @@ class QueryParameter {
     });
   }
 
-  async waitForResponse() {
+  async #waitForResponse() {
     while (this.response === null) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
@@ -38,7 +57,7 @@ class QueryParameter {
   }
 
   async getPrompt() {
-    const response = await this.waitForResponse();
+    const response = await this.#waitForResponse();
     const clipboard = await this.#IsClipboard();
     const keyword = "{{clipboard}}";
     let promptText = response.prompt;
@@ -58,16 +77,29 @@ class QueryParameter {
   }
 
   async getModelIndex() {
-    const response = await this.waitForResponse();
-    const value = response.model;
-    if (value) {
+    const response = await this.#waitForResponse();
+    const model = response.model;
+    if (model && this.#isInteger(model)) {
       return parseInt(value, 10);
     }
     return null;
   }
 
+  async getModelName() {
+    const response = await this.#waitForResponse();
+    const model = response.model;
+    if (model && !this.#isInteger(model)) {
+      return model;
+    }
+    return null;
+  }
+
+  #isInteger(value) {
+    return /^\d+$/.test(value);
+  }
+
   async IsConfirm() {
-    const response = await this.waitForResponse();
+    const response = await this.#waitForResponse();
     const value = response.confirm;
     if (value === 'true' || value === '1') {
       return true;
@@ -76,7 +108,7 @@ class QueryParameter {
   }
 
   async #IsClipboard() {
-    const response = await this.waitForResponse();
+    const response = await this.#waitForResponse();
     const value = response.clipboard;
     if (value === 'true' || value === '1') {
       return true;

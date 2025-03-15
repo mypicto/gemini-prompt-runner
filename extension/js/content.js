@@ -4,31 +4,31 @@ class Application {
     this.textarea = new Textarea(this.selectorManager);
     this.modelSelector = new ModelSelector(this.selectorManager);
     this.submitButton = new SubmitButton(this.selectorManager);
-    this.queryParameter = new QueryParameter();
+    this.parameter = new QueryParameter();
   }
 
   init() {
-    this.queryParameter.fetchParameters();
+    this.parameter.fetchParameters();
 
     this.selectorManager.addCopyShortcutListener();
     document.addEventListener('DOMContentLoaded', async () => {
       await this.selectorManager.init();
-
-      const prompt = await this.queryParameter.getPrompt();
-      const modelIndex = await this.queryParameter.getModelIndex();
-      const isConfirm = await this.queryParameter.IsConfirm();
-
-      await this.operateGemini(prompt, modelIndex, isConfirm);
+      await this.operateGemini();
     });
   }
 
-  async operateGemini(prompt, modelIndex, isConfirm) {
+  async operateGemini() {
+    const prompt = await this.parameter.getPrompt();
+    const model = await this.parameter.getModelIndex()
+                    ?? await this.parameter.getModelName();
+    const isConfirm = await this.parameter.IsConfirm();
+
     const hasPrompt = prompt && prompt.trim() !== "";
     if (hasPrompt) {
       await this.textarea.setPrompt(prompt);
     }
-    if (modelIndex !== null) {
-      await this.modelSelector.selectModel(modelIndex);
+    if (model !== null) {
+      await this.modelSelector.selectModel(model);
     }
     if (!isConfirm && hasPrompt) {
       await this.submitButton.submit();

@@ -1,6 +1,8 @@
 class Application {
   constructor() {
     this.selectorManager = new SelectorManager();
+    this.copyButton = new CopyButton(this.selectorManager);
+    this.copyService = new CopyService(this.selectorManager, this.copyButton);
     this.textarea = new Textarea(this.selectorManager);
     this.modelSelector = new ModelSelector(this.selectorManager);
     this.submitButton = new SubmitButton(this.selectorManager);
@@ -10,7 +12,7 @@ class Application {
   init() {
     this.parameter.fetchParameters();
 
-    this.selectorManager.addCopyShortcutListener();
+    this.copyService.addCopyShortcutListener();
     document.addEventListener('DOMContentLoaded', async () => {
       await this.selectorManager.init();
       await this.operateGemini();

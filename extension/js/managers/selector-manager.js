@@ -3,46 +3,6 @@ class SelectorManager {
     this.data = {};
   }
 
-  addCopyShortcutListener() {
-    document.addEventListener('keydown', this.handleCopyShortcut.bind(this));
-  }
-
-  async handleCopyShortcut(event) {
-    const isMac = navigator.userAgent.includes('Macintosh');
-    const isShortcut = (isMac ? event.metaKey : event.ctrlKey) && (event.key.toLowerCase() === 'c');
-    if (!isShortcut) {
-      return;
-    }
-    if (this.isSelectionEmpty()) {
-      try {
-        await this.triggerMoreMenu();
-        await this.triggerCopy();
-      } catch (error) {
-        if (!(error.message && error.message.startsWith('Timeout:'))) {
-          console.error('Error handling copy shortcut:', error);
-        }
-      }
-    }
-  }
-
-  isSelectionEmpty() {
-    const selection = window.getSelection();
-    return (!selection || selection.toString().trim().length === 0);
-  }
-
-  async triggerMoreMenu() {
-    const moreMenuButtons = await this.getElements('moreMenuButton', 0);
-    if (moreMenuButtons && moreMenuButtons.length > 0) {
-      moreMenuButtons[moreMenuButtons.length - 1].click();
-    }
-  }
-
-  async triggerCopy() {
-    const copyButtons = await this.getElements('copyButton', 0);
-    if (copyButtons && copyButtons.length > 0) {
-      copyButtons[copyButtons.length - 1].click();
-    }
-  }
 
   async init() {
     const res = await fetch(chrome.runtime.getURL('res/selectors.json'));

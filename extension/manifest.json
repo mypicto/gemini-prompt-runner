@@ -27,8 +27,10 @@
         "js/utils/query-parameter.js",
         "js/utils/operation-canceled-error.js",
         "js/managers/selector-manager.js",
+        "js/managers/copy-service.js",
         "js/components/textarea.js",
         "js/components/submit-button.js",
+        "js/components/copy-button.js",
         "js/components/model-selector.js",
         "js/content.js"
       ],

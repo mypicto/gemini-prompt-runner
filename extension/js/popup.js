@@ -5,7 +5,7 @@ function initializeApp() {
   localizeManager.init();
   initManifest();
   initExternalLinks();
-  updatePromptUrl(localizeManager);
+  initManualUrlClick(localizeManager);
 }
 
 function initManifest() {
@@ -26,16 +26,21 @@ function initExternalLinks() {
   });
 }
 
-function updatePromptUrl(localizeManager) {
+function initManualUrlClick(localizeManager) {
+  const manualUrlElement = document.getElementById('manualUrl');
+  if (manualUrlElement) {
+    manualUrlElement.addEventListener('click', (event) => handleManualUrlClick(event, localizeManager));
+  }
+}
+
+function handleManualUrlClick(event, localizeManager) {
   let promptUrl = localizeManager.getMessage('promptReadmeURL');
   fetch(chrome.runtime.getURL(promptUrl))
     .then(response => response.text())
     .then(text => {
-      const link = document.querySelector('.manual-url a');
-      if (!link) return;
-      const urlObj = new URL(link.href);
+      const urlObj = new URL('https://gemini.google.com/app');
       urlObj.searchParams.set('ext-q', text);
-      link.href = urlObj.toString();
+      chrome.tabs.create({ url: urlObj.toString() });
     })
     .catch(error => {
       console.error('Failed to fetch prompt URL:', error);

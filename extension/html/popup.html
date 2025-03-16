@@ -30,17 +30,16 @@
             margin: 8px auto;
             font-size: 12px;
             user-select: none;
-            cursor: default;
+            cursor: pointer;
             text-align: left;
             word-break: break-all;
             width: 380px;
         }
+        .manual-url:hover {
+            background-color: #e8e8e8;
+        }
         .manual-url strong {
             text-decoration: underline;
-        }
-        .manual-url a {
-            color: #808080;
-            text-decoration: none;
         }
         .manual-url .param-q {
             color: #4786F2;
@@ -58,10 +57,10 @@
             color: #D96975;
             font-weight: bold;
         }
-        a[data-tooltip] {
+        [data-tooltip] {
             position: relative;
         }
-        a[data-tooltip]:hover::after {
+        [data-tooltip]:hover::after {
             content: attr(data-tooltip);
             position: absolute;
             top: 100%;
@@ -81,13 +80,12 @@
     <img src="../images/icon256.png" alt="Extension Icon">
     <h1 id="appName">App Name</h1>
     <p id="appVersion">Version</p>
-    <p class="manual-url">
+    <p class="manual-url" id="manualUrl" localize-attr="data-tooltip:__MSG_popupManuelTooltip__">
         <strong localize>__MSG_popupManuelHeader__</strong><br>
-        <a id="promptLink" href="https://gemini.google.com/app" target="_blank" localize-attr="data-tooltip:__MSG_popupManuelTooltip__">
-            https://how-to-use?<span class="param-q">ext-q</span>=enter-prompt-text&<span class="param-m">ext-m</span>=select-model<br>
-            &<span class="param-clipboard">ext-clipboard</span>=flag-to-replace-clipboard-text-in-q-parameter<br>
-            &<span class="param-confirm">ext-confirm</span>=flag-to-prevent-auto-submit-by-q-parameter
-        </a><br><br>
+        https://how-to-use?<span class="param-q">ext-q</span>=enter-prompt-text&<span class="param-m">ext-m</span>=select-model<br>
+        &<span class="param-clipboard">ext-clipboard</span>=flag-to-replace-clipboard-text-in-q-parameter<br>
+        &<span class="param-confirm">ext-confirm</span>=flag-to-prevent-auto-submit-by-q-parameter
+        <br><br>
         <span localize>__MSG_popupManuelCopy__</span>
     </p>
     <a href="https://github.com/mypicto/gemini-prompt-runner" target="_blank">GitHub Repository</a>

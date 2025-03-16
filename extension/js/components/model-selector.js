@@ -29,6 +29,7 @@ class ModelSelector {
   }
 
   #normalizeModelName(name) {
+    name = name.replace(/\(.*\)/g, '');
     return name.toLowerCase().replace(/\s+/g, '');
   }
   

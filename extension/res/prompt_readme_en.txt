@@ -36,6 +36,32 @@ Ctrl+C / Cmd+C: copy the last answer.
 | `ext-clipboard` | Replace the {{clipboard}} keyword in ext-q with the clipboard text. | `true/false` or `0/1` |
 | `ext-confirm` | Prevent auto-submit by `ext-q` parameter | `true/false` or `0/1` |
 
+### Examples
+
+* Ask for today's weather forecast
+
+  ```url
+  https://gemini.google.com/app?ext-q=Today%27s+weather+forecast.
+  ```
+
+* Start a chat with the 3rd model
+
+  ```url
+  https://gemini.google.com/app?ext-m=2
+  ```
+
+* Start a chat with Deep Research model
+
+  ```url
+  https://gemini.google.com/app?ext-m=Deep+Research
+  ```
+
+* Summarize text from clipboard
+
+  ```url
+  https://gemini.google.com/app?ext-q=Summarize%20the%20input%20text.%0A%0A**Input%3A**%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1&ext-confirm=1
+  ```
+
 ## Attribution
 
 Google Gemini™ is a trademark of Google LLC.

@@ -67,10 +67,10 @@ Ctrl+C / Cmd+C: copy the last answer.
   https://gemini.google.com/app?ext-q=%E4%BB%8A%E6%97%A5%E3%81%AE%E5%A4%A9%E6%B0%97%E4%BA%88%E5%A0%B1%E3%80%82
   ```
 
-* 3番目のモデルでチャットを開始
+* 2番目のモデルでチャットを開始
 
   ```url
-  https://gemini.google.com/app?ext-m=2
+  https://gemini.google.com/app?ext-m=1
   ```
 
 * Deep Research モデルでチャットを開始
@@ -79,10 +79,10 @@ Ctrl+C / Cmd+C: copy the last answer.
   https://gemini.google.com/app?ext-m=Deep+Research
   ```
 
-* クリップボードのテキストを英訳する
+* クリップボードのテキストを要約する
 
   ```url
-  https://gemini.google.com/app?ext-q=%E5%85%A5%E5%8A%9B%E3%81%95%E3%82%8C%E3%81%9F%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%8B%B1%E8%AA%9E%E3%81%AB%E7%BF%BB%E8%A8%B3%E3%81%97%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%0A%0A%2A%2AInput%3A%2A%2A%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1&ext-confirm=1
+  https://gemini.google.com/app?ext-q=%E5%85%A5%E5%8A%9B%E3%81%95%E3%82%8C%E3%81%9F%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%A6%81%E7%B4%84%E3%81%99%E3%82%8B%E3%80%82%0A%0A%2A%2AInput%3A%2A%2A%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1&ext-confirm=1
   ```
 
 ### 帰属

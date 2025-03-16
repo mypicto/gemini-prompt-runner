@@ -73,7 +73,7 @@ Ctrl+C / Cmd+C: copy the last answer.
   https://gemini.google.com/app?ext-m=1
   ```
 
-* Deep Research モデルでチャットを開始
+* Deep Research モデルでチャットを開始（ver1.1.0以降）
 
   ```url
   https://gemini.google.com/app?ext-m=DeepResearch

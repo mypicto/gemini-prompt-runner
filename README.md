@@ -63,15 +63,15 @@ Ctrl+C / Cmd+C: copy the last answer.
 
 Mac ショートカットアプリと連携させることで、プロンプト動的に作成して実行することができます。
 
-* [Prompt Runner for Google Gemini](./tools/mac/shortcuts/Prompt%20Runner%20for%20Google%20Gemini.shortcut)
+* [Prompt Runner for Google Gemini](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Prompt%20Runner%20for%20Google%20Gemini.shortcut)  
   ベースのショートカット。  
   Prompt Runner for Google Gemini拡張機能をインストールしているのがデフォルトブラウザの場合に、ショートカットアプリからPrompt Runner for Google Geminiを呼び出します。 
  
-* [Today's weather forecast](./tools/mac/shortcuts/Today's%20weather%20forecast.shortcut)
+* [Today's weather forecast](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Today's%20weather%20forecast.shortcut)  
   今日の天気予報を質問するサンプル。  
   実行には別途 Prompt Runner for Google Gemini ショートカットが必要です。  
 
-* [Summarize the input text in Gemini](./tools/mac/shortcuts/Summarize%20the%20input%20text%20in%20Gemini.shortcut)
+* [Summarize the input text in Gemini](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Summarize%20the%20input%20text%20in%20Gemini.shortcut)  
   クリップボードのテキストを要約するサンプル。  
   実行には別途 Prompt Runner for Google Gemini ショートカットが必要です。  
 

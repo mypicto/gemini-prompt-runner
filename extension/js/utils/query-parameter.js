@@ -80,7 +80,7 @@ class QueryParameter extends Parameter {
     const response = await this.#waitForResponse();
     const model = response.model;
     if (model && this.#isInteger(model)) {
-      return parseInt(value, 10);
+      return parseInt(model, 10);
     }
     return null;
   }

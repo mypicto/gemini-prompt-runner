@@ -53,7 +53,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 * Start a chat with Deep Research model
 
   ```url
-  https://gemini.google.com/app?ext-m=Deep+Research
+  https://gemini.google.com/app?ext-m=DeepResearch
   ```
 
 * Summarize text from clipboard

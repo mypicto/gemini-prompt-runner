@@ -53,7 +53,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 * Deep Research モデルでチャットを開始
 
   ```url
-  https://gemini.google.com/app?ext-m=Deep+Research
+  https://gemini.google.com/app?ext-m=DeepResearch
   ```
 
 * クリップボードのテキストを要約する

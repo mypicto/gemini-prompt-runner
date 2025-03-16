@@ -46,10 +46,12 @@ class LocalizeManager {
   
   constructor() {
     this.localizeElements = document.querySelectorAll('[localize]');
+    this.localizeAttrElements = document.querySelectorAll('[localize-attr]');
   }
 
   init() {
     this.localizeContent();
+    this.localizeAttributes();
   }
 
   getMessage(key) {
@@ -58,18 +60,31 @@ class LocalizeManager {
 
   localizeContent() {
     this.localizeElements.forEach((element) => {
-      let regex = /__MSG_(\w+)__/;
-      let match;
-      let localizedText = element.textContent;
-  
-      while ((match = regex.exec(localizedText)) !== null) {
-        let msgKey = match[1];
-        let localizedString = chrome.i18n.getMessage(msgKey);
-  
-        localizedText = localizedText.replace(match[0], localizedString);
-      }
-
+      const text = element.textContent;
+      const msgKey = this.#extractMessageKey(text);
+      const localizedText = this.getMessage(msgKey);
       element.textContent = localizedText;
     });
+  }
+  
+  localizeAttributes() {
+    this.localizeAttrElements.forEach((element) => {
+      const attrMappings = element.getAttribute('localize-attr').split(',');
+      
+      attrMappings.forEach(mapping => {
+        const [attrName, msgKey] = mapping.trim().split(':');
+        if (attrName && msgKey) {
+          const key = this.#extractMessageKey(msgKey);
+          const localizedString = this.getMessage(key);
+          element.setAttribute(attrName, localizedString);
+        }
+      });
+    });
+  }
+
+  // ヘルパーメソッドを追加
+  #extractMessageKey(text) {
+    const match = text.match(/__MSG_(\w+)__/);
+    return match ? match[1] : null;
   }
 }

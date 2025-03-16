@@ -8,6 +8,9 @@
     "popupManuelCopy": {
         "message": "Ctrl+C / Cmd+C: 最後の回答をコピー"
     },
+    "popupManuelTooltip": {
+        "message": "クリックで説明書を開く"
+    },
     "popupTrademarkGemini": {
         "message": "Google Gemini™ は Google LLC の商標です。"
     },

@@ -8,6 +8,9 @@
     "popupManuelCopy": {
         "message": "Ctrl+C / Cmd+C: copy the last answer."
     },
+    "popupManuelTooltip": {
+        "message": "Click to open the manual."
+    },
     "popupTrademarkGemini": {
         "message": "Google Gemini™ is a trademark of Google LLC."
     },

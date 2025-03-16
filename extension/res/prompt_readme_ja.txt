@@ -36,7 +36,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 | `ext-clipboard` | `ext-q`の中で`{{clipboard}}`キーワードをクリップボードのテキストと置き換えます | `true/false` または `0/1` |
 | `ext-confirm` | `ext-q`パラメータによる自動送信の抑制 | `true/false` または `0/1` |
 
-### サンプル
+## サンプル
 
 * 今日の天気予報を質問
 

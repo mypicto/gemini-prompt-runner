@@ -36,7 +36,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 | `ext-clipboard` | Replace the {{clipboard}} keyword in ext-q with the clipboard text. | `true/false` or `0/1` |
 | `ext-confirm` | Prevent auto-submit by `ext-q` parameter | `true/false` or `0/1` |
 
-### Examples
+## Examples
 
 * Ask for today's weather forecast
 

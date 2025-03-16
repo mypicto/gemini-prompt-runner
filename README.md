@@ -59,23 +59,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 | `ext-clipboard` | `ext-q`の中で`{{clipboard}}`キーワードをクリップボードのテキストと置き換えます | `true/false` または `0/1` |
 | `ext-confirm` | `ext-q`パラメータによる自動送信の抑制 | `true/false` または `0/1` |
 
-### Mac ショートカットアプリとの連携
-
-Mac ショートカットアプリと連携させることで、プロンプト動的に作成して実行することができます。
-
-* [Prompt Runner for Google Gemini](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Prompt%20Runner%20for%20Google%20Gemini.shortcut)  
-  ベースのショートカット。  
-  Prompt Runner for Google Gemini拡張機能をインストールしているのがデフォルトブラウザの場合に、ショートカットアプリからPrompt Runner for Google Geminiを呼び出します。 
- 
-* [Today's weather forecast](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Today's%20weather%20forecast.shortcut)  
-  今日の天気予報を質問するサンプル。  
-  実行には別途 Prompt Runner for Google Gemini ショートカットが必要です。  
-
-* [Summarize the input text in Gemini](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Summarize%20the%20input%20text%20in%20Gemini.shortcut)  
-  クリップボードのテキストを要約するサンプル。  
-  実行には別途 Prompt Runner for Google Gemini ショートカットが必要です。  
-
-### サンプル
+## サンプル
 
 * 今日の天気予報を質問
 
@@ -100,6 +84,22 @@ Mac ショートカットアプリと連携させることで、プロンプト�
   ```url
   https://gemini.google.com/app?ext-q=%E5%85%A5%E5%8A%9B%E3%81%95%E3%82%8C%E3%81%9F%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%A6%81%E7%B4%84%E3%81%99%E3%82%8B%E3%80%82%0A%0A%2A%2AInput%3A%2A%2A%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1&ext-confirm=1
   ```
+
+## Mac ショートカットアプリとの連携
+
+Mac ショートカットアプリと連携させることで、プロンプト動的に作成して実行することができます。
+
+* [Prompt Runner for Google Gemini](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Prompt%20Runner%20for%20Google%20Gemini.shortcut)  
+  ベースのショートカット。  
+  Prompt Runner for Google Gemini拡張機能をインストールしているのがデフォルトブラウザの場合に、ショートカットアプリからPrompt Runner for Google Geminiを呼び出します。 
+ 
+* [Today's weather forecast](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Today's%20weather%20forecast.shortcut)  
+  今日の天気予報を質問するサンプル。  
+  実行には別途 Prompt Runner for Google Gemini ショートカットが必要です。  
+
+* [Summarize the input text in Gemini](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Summarize%20the%20input%20text%20in%20Gemini.shortcut)  
+  クリップボードのテキストを要約するサンプル。  
+  実行には別途 Prompt Runner for Google Gemini ショートカットが必要です。  
 
 ### 帰属
 

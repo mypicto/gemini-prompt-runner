@@ -23,8 +23,8 @@ Output the following text, preserving structure, language, and style.
 https://how-to-use
     ?ext-q=enter-prompt-text
     &ext-m=select-model
-    &ext-clipboard=flag-to-replace-clipboard-text-in-q-parameter
-    &ext-confirm=flag-to-prevent-auto-submit-by-q-parameter
+    &ext-clipboard=flag-to-replace-clipboard-text-in-prompt
+    &ext-confirm=flag-to-prevent-auto-submit-by-prompt
 
 Ctrl+C / Cmd+C: copy the last answer.
 ```

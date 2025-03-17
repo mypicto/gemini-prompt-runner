@@ -23,8 +23,8 @@ This extension allows automatic execution of prompts, which is not supported by 
 https://how-to-use
     ?ext-q=enter-prompt-text
     &ext-m=select-model
-    &ext-clipboard=flag-to-replace-clipboard-text-in-q-parameter
-    &ext-confirm=flag-to-prevent-auto-submit-by-q-parameter
+    &ext-clipboard=flag-to-replace-clipboard-text-in-prompt
+    &ext-confirm=flag-to-prevent-auto-submit-by-prompt
 
 Ctrl+C / Cmd+C: copy the last answer.
 ```
@@ -33,7 +33,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 | --- | --- | --- |
 | `ext-q` | Prompt string to execute | URL-encoded text (insert clipboard text with `{{clipboard}}` keyword) |
 | `ext-m` | Index of the model to select | Integer starting from 0 (order as displayed in UI) or model name (as displayed in UI) |
-| `ext-clipboard` | Replace the {{clipboard}} keyword in ext-q with the clipboard text. | `true/false` or `0/1` |
+| `ext-clipboard` | Replace the {{clipboard}} keyword in `ext-q` with the clipboard text. | `true/false` or `0/1` |
 | `ext-confirm` | Prevent auto-submit by `ext-q` parameter | `true/false` or `0/1` |
 
 ## Examples

@@ -6,6 +6,7 @@ function initializeApp() {
   initManifest();
   initExternalLinks();
   initManualUrlClick(localizeManager);
+  initUrlGenerateButton();
 }
 
 function initManifest() {
@@ -45,6 +46,21 @@ function handleManualUrlClick(event, localizeManager) {
     .catch(error => {
       console.error('Failed to fetch prompt URL:', error);
     });
+}
+
+function initUrlGenerateButton() {
+  const btn = document.getElementById('urlGenerateButton');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText("https://gemini.google.com/app")
+        .then(() => {
+          console.log("URL copied to clipboard.");
+        })
+        .catch(err => {
+          console.error("Failed to copy URL: ", err);
+        });
+    });
+  }
 }
 
 class LocalizeManager {

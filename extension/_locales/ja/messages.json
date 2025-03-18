@@ -14,6 +14,9 @@
     "popupTrademarkGemini": {
         "message": "Google Gemini™ は Google LLC の商標です。"
     },
+    "popupUrlGenerateButton": {
+        "message": "URL生成"
+    },
     "promptReadmeURL": {
         "message": "res/prompt_readme_ja.txt"
     }

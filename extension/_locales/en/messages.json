@@ -14,6 +14,9 @@
     "popupTrademarkGemini": {
         "message": "Google Gemini™ is a trademark of Google LLC."
     },
+    "popupUrlGenerateButton": {
+        "message": "Generate URL"
+    },
     "promptReadmeURL": {
         "message": "res/prompt_readme_en.txt"
     }

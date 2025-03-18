@@ -6,7 +6,7 @@ function initializeApp() {
   initManifest();
   initExternalLinks();
   initManualUrlClick(localizeManager);
-  initUrlGenerateButton();
+  initUrlGenerateButton(localizeManager);
 }
 
 function initManifest() {
@@ -48,8 +48,10 @@ function handleManualUrlClick(event, localizeManager) {
     });
 }
 
-function initUrlGenerateButton() {
-  const controller = new UrlGenerateController(new MessagingService(), new ClipboardService());
+function initUrlGenerateButton(localizeManager) {
+  const messagingService = new MessagingService();
+  const clipboardService = new ClipboardService();
+  const controller = new UrlGenerateController(messagingService, clipboardService, localizeManager);
   controller.init();
 }
 
@@ -83,9 +85,10 @@ class ClipboardService {
 }
 
 class UrlGenerateController {
-  constructor(messagingService, clipboardService) {
+  constructor(messagingService, clipboardService, localizeManager) {
     this.messagingService = messagingService;
     this.clipboardService = clipboardService;
+    this.localizeManager = localizeManager;
   }
 
   init() {
@@ -97,13 +100,8 @@ class UrlGenerateController {
         btn.addEventListener('click', () => {
           this.clipboardService.copy(url)
             .then(() => {
-              const copyStatus = document.getElementById('copyStatus');
-              if (copyStatus) {
-                copyStatus.style.display = 'block';
-                setTimeout(() => {
-                  copyStatus.style.display = 'none';
-                }, 3000);
-              }
+              btn.textContent = this.localizeManager.getMessage('popupCopySuccess');
+              btn.classList.add('copied');
             })
             .catch(err => {
               console.error("Failed to copy URL: ", err);

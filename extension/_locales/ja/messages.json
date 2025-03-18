@@ -17,6 +17,9 @@
     "popupUrlGenerateButton": {
         "message": "URL生成"
     },
+    "popupCopySuccess": {
+        "message": "コピーしました"
+    },
     "promptReadmeURL": {
         "message": "res/prompt_readme_ja.txt"
     }

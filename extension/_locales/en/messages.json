@@ -17,6 +17,9 @@
     "popupUrlGenerateButton": {
         "message": "Generate URL"
     },
+    "popupCopySuccess": {
+        "message": "Copied"
+    },
     "promptReadmeURL": {
         "message": "res/prompt_readme_en.txt"
     }

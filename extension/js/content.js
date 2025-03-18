@@ -21,8 +21,7 @@ class Application {
 
   async operateGemini() {
     const prompt = await this.parameter.getPrompt();
-    const model = await this.parameter.getModelIndex()
-                    ?? await this.parameter.getModelName();
+    const model = await this.parameter.getModelIndex() ?? await this.parameter.getModelName();
     const isConfirm = await this.parameter.IsConfirm();
 
     const hasPrompt = prompt && prompt.trim() !== "";
@@ -40,3 +39,9 @@ class Application {
 
 const app = new Application();
 app.init();
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message && message.action === "getGenerateUrl") {
+    sendResponse({ url: window.location.href });
+  }
+});

@@ -49,16 +49,67 @@ function handleManualUrlClick(event, localizeManager) {
 }
 
 function initUrlGenerateButton() {
-  const btn = document.getElementById('urlGenerateButton');
-  if (btn) {
-    btn.addEventListener('click', () => {
-      navigator.clipboard.writeText("https://gemini.google.com/app")
-        .then(() => {
-          console.log("URL copied to clipboard.");
-        })
-        .catch(err => {
-          console.error("Failed to copy URL: ", err);
+  const controller = new UrlGenerateController(new MessagingService(), new ClipboardService());
+  controller.init();
+}
+
+class MessagingService {
+  getUrlFromActiveTab() {
+    return new Promise((resolve, reject) => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (!tabs || tabs.length === 0) {
+          resolve(null);
+          return;
+        }
+        const tab = tabs[0];
+        chrome.tabs.sendMessage(tab.id, { action: "getGenerateUrl" }, (response) => {
+          if (chrome.runtime.lastError) {
+            resolve(null);
+          } else if (response && response.url) {
+            resolve(response.url);
+          } else {
+            resolve(null);
+          }
         });
+      });
+    });
+  }
+}
+
+class ClipboardService {
+  copy(text) {
+    return navigator.clipboard.writeText(text);
+  }
+}
+
+class UrlGenerateController {
+  constructor(messagingService, clipboardService) {
+    this.messagingService = messagingService;
+    this.clipboardService = clipboardService;
+  }
+
+  init() {
+    const btn = document.getElementById('urlGenerateButton');
+    btn.disabled = true;
+    this.messagingService.getUrlFromActiveTab().then((url) => {
+      if (url) {
+        btn.disabled = false;
+        btn.addEventListener('click', () => {
+          this.clipboardService.copy(url)
+            .then(() => {
+              const copyStatus = document.getElementById('copyStatus');
+              if (copyStatus) {
+                copyStatus.style.display = 'block';
+                setTimeout(() => {
+                  copyStatus.style.display = 'none';
+                }, 3000);
+              }
+            })
+            .catch(err => {
+              console.error("Failed to copy URL: ", err);
+            });
+        });
+      }
     });
   }
 }
@@ -103,7 +154,6 @@ class LocalizeManager {
     });
   }
 
-  // ヘルパーメソッドを追加
   #extractMessageKey(text) {
     const match = text.match(/__MSG_(\w+)__/);
     return match ? match[1] : null;

@@ -92,6 +92,19 @@
             outline: none;
             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
         }
+        #urlGenerateButton:disabled {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: default;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        /* コピー完了フィードバック用のスタイル */
+        #copyStatus {
+            margin: 10px auto;
+            font-size: 12px;
+            color: #28a745;
+        }
     </style>
 </head>
 <body>
@@ -106,7 +119,9 @@
         <br><br>
         <span localize>__MSG_popupManuelCopy__</span>
     </p>
-    <button id="urlGenerateButton" localize>__MSG_popupUrlGenerateButton__</button><br>
+    <button id="urlGenerateButton" localize>__MSG_popupUrlGenerateButton__</button>
+    <div id="copyStatus" style="display: none;" localize>__MSG_copySuccess__</div>
+    <br>
     <a href="https://github.com/mypicto/gemini-prompt-runner" target="_blank">GitHub Repository</a>
     <footer style="font-size: 10px; color: #666;" localize>__MSG_popupTrademarkGemini__</footer>
     <script src="../js/popup.js"></script>

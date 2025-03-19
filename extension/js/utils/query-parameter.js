@@ -1,119 +1,113 @@
+const PRIVATE_TOKEN = Symbol('private_constructor_token');
+
 class Parameter {
-  async getPrompt() {
+  getPrompt() {
     throw new Error('Not implemented');
   }
 
-  async getModelIndex() {
+  getModelIndex() {
     throw new Error('Not implemented');
   }
 
-  async getModelName() {
+  getModelName() {
     throw new Error('Not implemented');
   }
 
-  async IsConfirm() {
+  IsConfirm() {
     throw new Error('Not implemented');
   }
 }
 
 class QueryParameter extends Parameter {
-  constructor() {
+  constructor(token) {
     super();
-    this.response = null;
+    if (token !== PRIVATE_TOKEN) {
+      throw new Error('Use QueryParameter.generate to create an instance.');
+    }
+    this.prompt = null;
+    this.modelIndex = null;
+    this.modelName = null;
+    this.isConfirm = null;
   }
 
   async fetchParameters() {
-    if (this.response) {
-      return this.response;
-    }
-    return new Promise((resolve, reject) => {
+    const response = await new Promise((resolve, reject) => {
       chrome.runtime.sendMessage({ type: 'requestParameters' }, (response) => {
         if (chrome.runtime.lastError) {
-          this.response = new Error(this.error);
-          return reject(this.response);
+          return reject(new Error(chrome.runtime.lastError.message));
         }
         if (!response) {
-          this.response = new Error(this.error);
-          return reject(this.response);
+          return reject(new Error('No response'));
         }
         if (response.error) {
-          this.response = new Error(this.error);
-          return reject(this.response);
+          return reject(new Error(response.error));
         }
-        this.response = response;
-        return resolve(response);
+        resolve(response);
       });
     });
+    return response;
   }
 
-  async #waitForResponse() {
-    while (this.response === null) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    if (this.response instanceof Error) {
-      throw this.response;
-    }
-    return this.response;
+  static async generateFromUrl() {
+    const instance = new QueryParameter(PRIVATE_TOKEN);
+    const response = await instance.fetchParameters();
+
+    instance.prompt = await instance.#processPrompt(response.prompt);
+    const modelResult = instance.#processModel(response.model);
+    instance.modelIndex = modelResult.modelIndex;
+    instance.modelName = modelResult.modelName;
+    instance.isConfirm = QueryParameter.convertToBoolean(response.confirm);
+
+    return instance;
   }
 
-  async getPrompt() {
-    const response = await this.#waitForResponse();
-    const clipboard = await this.#IsClipboard();
-    const keyword = "{{clipboard}}";
-    let promptText = response.prompt;
-    if (clipboard && promptText && promptText.includes(keyword)) {
-      let clipboardText;
-      try {
-        clipboardText = await navigator.clipboard.readText() || "";
-      } catch (err) {
-        clipboardText = "";
-      }
-      promptText = promptText.replace(new RegExp(keyword, "g"), clipboardText);
-    }
+  getPrompt() {
+    return this.prompt;
+  }
+
+  getModelIndex() {
+    return this.modelIndex;
+  }
+
+  getModelName() {
+    return this.modelName;
+  }
+
+  IsConfirm() {
+    return this.isConfirm;
+  }
+
+  async #processPrompt(promptText) {
     if (promptText) {
-      promptText = LineEndingConverter.convertToLF(promptText);
+      const keyword = "{{clipboard}}";
+      if (promptText.includes(keyword)) {
+        let clipboardText = "";
+        try {
+          clipboardText = await navigator.clipboard.readText() || "";
+        } catch (err) {
+          clipboardText = "";
+        }
+        promptText = promptText.replace(new RegExp(keyword, "g"), clipboardText);
+      }
+      return LineEndingConverter.convertToLF(promptText);
     }
     return promptText;
   }
 
-  async getModelIndex() {
-    const response = await this.#waitForResponse();
-    const model = response.model;
+  #processModel(model) {
     if (model && this.#isInteger(model)) {
-      return parseInt(model, 10);
+      return { modelIndex: parseInt(model, 10), modelName: null };
+    } else {
+      return { modelIndex: null, modelName: model || null };
     }
-    return null;
-  }
-
-  async getModelName() {
-    const response = await this.#waitForResponse();
-    const model = response.model;
-    if (model && !this.#isInteger(model)) {
-      return model;
-    }
-    return null;
   }
 
   #isInteger(value) {
     return /^\d+$/.test(value);
   }
 
-  async IsConfirm() {
-    const response = await this.#waitForResponse();
-    const value = response.confirm;
-    if (value === 'true' || value === '1') {
-      return true;
-    }
-    return false;
-  }
-
-  async #IsClipboard() {
-    const response = await this.#waitForResponse();
-    const value = response.clipboard;
-    if (value === 'true' || value === '1') {
-      return true;
-    }
-    return false;
+  static convertToBoolean(value) {
+    return (value === 'true' || value === '1');
   }
 }
 

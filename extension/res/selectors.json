@@ -12,6 +12,9 @@
   "modelMenu": {
     "selector": "button.bard-mode-list-button"
   },
+  "currentModelLabel": {
+    "selector": "div.current-mode-title > span"
+  },
   "modelLabel": {
     "selector": "span.gds-label-l"
   },

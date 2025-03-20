@@ -1,4 +1,6 @@
 class QueryParameter {
+  static CLIPBOARD_KEYWORD = "{{clipboard}}";
+
   constructor({ prompt = null, modelQuery = null, isConfirm = null } = {}) {
     this.prompt = prompt;
     this.modelQuery = modelQuery;
@@ -47,10 +49,25 @@ class QueryParameter {
   IsConfirm() {
     return this.isConfirm;
   }
+  
+  buildUrl(location) {
+    const url = new URL(location.origin + location.pathname);
+    if (this.prompt) {
+      url.searchParams.set('ext-q', this.prompt);
+      url.searchParams.set('ext-confirm', this.isConfirm ? '1' : '0');
+      if (this.prompt.includes(QueryParameter.CLIPBOARD_KEYWORD)) {
+        url.searchParams.set('ext-clipboard', '1');
+      }
+    }
+    if (this.modelQuery) {
+      url.searchParams.set('ext-m', this.modelQuery.getIdentifierString());
+    }
+    return url.toString();
+  }
 
   static async #processPrompt(promptText) {
     if (promptText) {
-      const keyword = "{{clipboard}}";
+      const keyword = QueryParameter.CLIPBOARD_KEYWORD;
       if (promptText.includes(keyword)) {
         let clipboardText = "";
         try {

@@ -6,10 +6,13 @@ class Application {
     this.textarea = new Textarea(this.selectorManager);
     this.modelSelector = new ModelSelector(this.selectorManager);
     this.submitButton = new SubmitButton(this.selectorManager);
+    this.urlGenerateService = new UrlGenerateService(this.textarea, this.modelSelector);
   }
 
   init() {
     this.copyService.addCopyShortcutListener();
+    this.urlGenerateService.subscribeToListeners();
+
     document.addEventListener('DOMContentLoaded', async () => {
       await this.selectorManager.init();
       await this.#waitForUiStability();
@@ -54,11 +57,28 @@ class Application {
   }
 }
 
+class UrlGenerateService {
+  constructor(textarea, modelSelector) {
+    this.textarea = textarea;
+    this.modelSelector = modelSelector;
+  }
+
+  subscribeToListeners() {
+    chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+      if (message && message.action === "getGenerateUrl") {
+        const prompt = await this.textarea.getPrompt();
+        const modelQuery = await this.modelSelector.getCurrentModelQuery();
+        const queryParameter = new QueryParameter({
+          prompt: prompt,
+          modelQuery: modelQuery,
+          isConfirm: !!prompt
+        });
+        const urlString = queryParameter.buildUrl(window.location);
+        sendResponse({ url: urlString });
+      }
+    });
+  }
+}
+
 const app = new Application();
 app.init();
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message && message.action === "getGenerateUrl") {
-    sendResponse({ url: window.location.href });
-  }
-});

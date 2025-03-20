@@ -5,6 +5,10 @@ class ModelQuery {
   equalsModel(model) {
     throw new Error('Not implemented');
   }
+
+  getIdentifierString() {
+    throw new Error('Not implemented');
+  }
 }
   
 class IdentifierModelQuery extends ModelQuery {
@@ -18,6 +22,10 @@ class IdentifierModelQuery extends ModelQuery {
         throw new Error('Model must be an instance of Model');
       }
       return this.index === model.index;
+    }
+
+    getIdentifierString() {
+      return this.index.toString();
     }
   }
   
@@ -34,6 +42,10 @@ class IdentifierModelQuery extends ModelQuery {
       const normalizedName = this.#normalizeModelName(this.name);
       const normalizedModelName = this.#normalizeModelName(model.name);
       return normalizedName === normalizedModelName;
+    }
+
+    getIdentifierString() {
+      return this.#normalizeModelName(this.name);
     }
   
     #normalizeModelName(name) {

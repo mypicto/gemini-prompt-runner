@@ -41,6 +41,11 @@ class ModelSelector {
     }
   }
 
+  async getCurrentModelQuery() {
+    const element = await this.selectorManager.getElement('currentModelLabel');
+    return new NominalModelQuery(element.textContent);
+  }
+
   async #openModelList() {
     const list = await this.#findListElement();
     if (!list) {

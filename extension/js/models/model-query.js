@@ -33,7 +33,6 @@ class IdentifierModelQuery extends ModelQuery {
       }
       const normalizedName = this.#normalizeModelName(this.name);
       const normalizedModelName = this.#normalizeModelName(model.name);
-      console.log(normalizedName, normalizedModelName);
       return normalizedName === normalizedModelName;
     }
   

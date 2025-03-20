@@ -12,11 +12,30 @@ class Application {
     this.copyService.addCopyShortcutListener();
     document.addEventListener('DOMContentLoaded', async () => {
       await this.selectorManager.init();
-      await this.operateGemini();
+      await this.#waitForUiStability();
+      await this.#operateGemini();
     });
   }
 
-  async operateGemini() {
+  async #waitForUiStability() {
+    return new Promise(resolve => {
+      let isStable = false;
+      const observer = new MutationObserver((mutations) => {
+        isStable = false;
+      });
+      observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+      const checkInterval = setInterval(() => {
+        if (isStable) {
+          clearInterval(checkInterval);
+          observer.disconnect();
+          resolve();
+        }
+        isStable = true;
+      }, 100);
+    });
+  }
+
+  async #operateGemini() {
     const parameter = await QueryParameter.generateFromUrl();
     const prompt = parameter.getPrompt();
     const modelQuery = parameter.getModelQuery();

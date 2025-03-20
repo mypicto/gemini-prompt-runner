@@ -19,15 +19,15 @@ class Application {
   async operateGemini() {
     const parameter = await QueryParameter.generateFromUrl();
     const prompt = parameter.getPrompt();
-    const model = parameter.getModelIndex() ?? parameter.getModelName();
+    const modelQuery = parameter.getModelQuery();
     const isConfirm = parameter.IsConfirm();
 
     const hasPrompt = prompt && prompt.trim() !== "";
     if (hasPrompt) {
       await this.textarea.setPrompt(prompt);
     }
-    if (model !== null) {
-      await this.modelSelector.selectModel(model);
+    if (modelQuery !== null) {
+      await this.modelSelector.selectModel(modelQuery);
     }
     if (!isConfirm && hasPrompt) {
       await this.submitButton.submit();

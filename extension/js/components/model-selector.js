@@ -7,30 +7,16 @@ class ModelSelector {
     return await this.selectorManager.getElement('modelList');
   }
   
-  async #findItemElementFromIndex(modelIndex) {
+  async #findItemElement(modelQuery) {
     const elements = await this.selectorManager.getElements('modelMenu');
-    if (elements.length > modelIndex) {
-      return elements[modelIndex];
-    }
-    return null;
-  }
-
-  async #findItemElementFromName(modelName) {
-    const elements = await this.selectorManager.getElements('modelMenu');
-    for (const element of elements) {
+    for (const [index, element] of elements.entries()) {
       const label = await this.selectorManager.getElement('modelLabel', 1000, element);
-      const normalizedLabel = this.#normalizeModelName(label.textContent);
-      const normalizedName = this.#normalizeModelName(modelName);
-      if (normalizedLabel === normalizedName) {
+      const model = new Model(index, label.textContent);
+      if (modelQuery.equalsModel(model)) {
         return element;
       }
     }
     return null;
-  }
-
-  #normalizeModelName(name) {
-    name = name.replace(/\(.*\)/g, '');
-    return name.toLowerCase().replace(/\s+/g, '');
   }
   
   #click(buttonElement) {
@@ -42,10 +28,10 @@ class ModelSelector {
     buttonElement.dispatchEvent(event);
   }
   
-  async selectModel(model) {
+  async selectModel(modelQuery) {
     try {
       await this.#openModelList();
-      await this.#selectModelItem(model);
+      await this.#selectModelItem(modelQuery);
     } catch (error) {
       if (error instanceof OperationCanceledError) {
         console.debug(error.message);
@@ -63,26 +49,8 @@ class ModelSelector {
     this.#click(list);
   }
 
-  async #selectModelItem(model) {
-    if (typeof model === 'number') {
-      await this.#sekectItemFromIndex(model);
-    } else if (typeof model === 'string') {
-      await this.#selectItemFromName(model);
-    } else {
-      throw new Error('Model must be a number or a string');
-    }
-  }
-
-  async #sekectItemFromIndex(index) {
-    const item = await this.#findItemElementFromIndex(index);
-    if (!item) {
-      throw new OperationCanceledError('Model item not found');
-    }
-    this.#click(item);
-  }
-
-  async #selectItemFromName(name) {
-    const item = await this.#findItemElementFromName(name);
+  async #selectModelItem(modelQuery) {
+    const item = await this.#findItemElement(modelQuery);
     if (!item) {
       throw new OperationCanceledError('Model item not found');
     }

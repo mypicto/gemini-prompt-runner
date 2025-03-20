@@ -26,6 +26,8 @@
       "js": [
         "js/utils/query-parameter.js",
         "js/utils/operation-canceled-error.js",
+        "js/models/model.js",
+        "js/models/model-query.js",
         "js/managers/selector-manager.js",
         "js/managers/copy-service.js",
         "js/components/textarea.js",

@@ -12,6 +12,11 @@ class Textarea {
     element.textContent = prompt;
     this.moveCursorToEnd(element);
   }
+
+  async getPrompt() {
+    const element = await this.#findElement();
+    return element.textContent;
+  }
   
   moveCursorToEnd(element) {
     element.focus();

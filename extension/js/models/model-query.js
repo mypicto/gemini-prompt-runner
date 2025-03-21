@@ -9,6 +9,10 @@ class ModelQuery {
   getIdentifierString() {
     throw new Error('Not implemented');
   }
+
+  equalsQuery(query) {
+    throw new Error('Not implemented');
+  }
 }
   
 class IdentifierModelQuery extends ModelQuery {
@@ -26,6 +30,11 @@ class IdentifierModelQuery extends ModelQuery {
 
     getIdentifierString() {
       return this.index.toString();
+    }
+
+    equalsQuery(query) {
+      if (!(query instanceof IdentifierModelQuery)) return false;
+      return this.index === query.index;
     }
   }
   
@@ -46,6 +55,11 @@ class IdentifierModelQuery extends ModelQuery {
 
     getIdentifierString() {
       return this.#normalizeModelName(this.name);
+    }
+
+    equalsQuery(query) {
+      if (!(query instanceof NominalModelQuery)) return false;
+      return this.getIdentifierString() === query.getIdentifierString();
     }
   
     #normalizeModelName(name) {

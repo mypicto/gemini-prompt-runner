@@ -44,12 +44,16 @@ class Application {
     const modelQuery = parameter.getModelQuery();
     const isConfirm = parameter.IsConfirm();
 
+    if (modelQuery !== null) {
+      const currentModelQuery = await this.modelSelector.getCurrentModelQuery();
+      if (!currentModelQuery.equalsQuery(modelQuery)) {
+        await this.modelSelector.selectModel(modelQuery);
+        await this.#waitForUiStability();
+      }
+    }
     const hasPrompt = prompt && prompt.trim() !== '';
     if (hasPrompt) {
       await this.textarea.setPrompt(prompt);
-    }
-    if (modelQuery !== null) {
-      await this.modelSelector.selectModel(modelQuery);
     }
     if (!isConfirm && hasPrompt) {
       await this.submitButton.submit();

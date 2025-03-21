@@ -34,7 +34,7 @@ class Application {
           resolve();
         }
         isStable = true;
-      }, 100);
+      }, 400);
     });
   }
 

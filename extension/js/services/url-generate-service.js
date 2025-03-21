@@ -6,7 +6,7 @@ class UrlGenerateService {
   
   subscribeToListeners() {
     chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-      if (message && message.action === "getGenerateUrl") {
+      if (message && message.action === 'getGenerateUrl') {
         const prompt = await this.textarea.getPrompt();
         const modelQuery = await this.modelSelector.getCurrentModelQuery();
         const queryParameter = new QueryParameter({

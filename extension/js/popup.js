@@ -64,7 +64,7 @@ class MessagingService {
           return;
         }
         const tab = tabs[0];
-        chrome.tabs.sendMessage(tab.id, { action: "getGenerateUrl" }, (response) => {
+        chrome.tabs.sendMessage(tab.id, { action: 'getGenerateUrl' }, (response) => {
           if (chrome.runtime.lastError) {
             resolve(null);
           } else if (response && response.url) {
@@ -104,7 +104,7 @@ class UrlGenerateController {
               btn.classList.add('copied');
             })
             .catch(err => {
-              console.error("Failed to copy URL: ", err);
+              console.error('Failed to copy URL: ', err);
             });
         });
       }

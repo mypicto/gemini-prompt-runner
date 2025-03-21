@@ -1,5 +1,5 @@
 class QueryParameter {
-  static CLIPBOARD_KEYWORD = "{{clipboard}}";
+  static CLIPBOARD_KEYWORD = '{{clipboard}}';
 
   constructor({ prompt = null, modelQuery = null, isConfirm = null } = {}) {
     this.prompt = prompt;
@@ -69,13 +69,13 @@ class QueryParameter {
     if (promptText) {
       const keyword = QueryParameter.CLIPBOARD_KEYWORD;
       if (promptText.includes(keyword)) {
-        let clipboardText = "";
+        let clipboardText = '';
         try {
-          clipboardText = await navigator.clipboard.readText() || "";
+          clipboardText = await navigator.clipboard.readText() || '';
         } catch (err) {
-          clipboardText = "";
+          clipboardText = '';
         }
-        promptText = promptText.replace(new RegExp(keyword, "g"), clipboardText);
+        promptText = promptText.replace(new RegExp(keyword, 'g'), clipboardText);
       }
       return LineEndingConverter.convertToLF(promptText);
     }

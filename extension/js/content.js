@@ -44,7 +44,7 @@ class Application {
     const modelQuery = parameter.getModelQuery();
     const isConfirm = parameter.IsConfirm();
 
-    const hasPrompt = prompt && prompt.trim() !== "";
+    const hasPrompt = prompt && prompt.trim() !== '';
     if (hasPrompt) {
       await this.textarea.setPrompt(prompt);
     }

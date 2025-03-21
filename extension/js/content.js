@@ -25,8 +25,9 @@ class Application {
     const prompt = parameter.getPrompt();
     const modelQuery = parameter.getModelQuery();
     const isConfirm = parameter.IsConfirm();
+    const isOnGemPage = LocationChecker.isOnGemPage();
 
-    if (modelQuery !== null && !this.#isOnGemPage()) {
+    if (modelQuery !== null && !isOnGemPage) {
       const currentModelQuery = await this.modelSelector.getCurrentModelQuery();
       if (!currentModelQuery.equalsQuery(modelQuery)) {
         await this.modelSelector.selectModel(modelQuery);
@@ -40,10 +41,6 @@ class Application {
     if (!isConfirm && hasPrompt) {
       await this.submitButton.submit();
     }
-  }
-
-  #isOnGemPage() {
-    return window.location.pathname.includes('/gem/');
   }
 }
 

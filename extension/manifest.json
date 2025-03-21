@@ -27,6 +27,7 @@
         "js/utils/query-parameter.js",
         "js/utils/operation-canceled-error.js",
         "js/utils/ui-stability-monitor.js",
+        "js/utils/location-checker.js",
         "js/models/model.js",
         "js/models/model-query.js",
         "js/services/selector-service.js",

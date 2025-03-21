@@ -6,16 +6,16 @@
   "submitButton": {
     "selector": "button.send-button"
   },
-  "modelList": {
+  "modelMenuButton": {
     "selector": "button.bard-mode-menu-button"
-  },
-  "modelMenu": {
-    "selector": "button.bard-mode-list-button"
   },
   "currentModelLabel": {
     "selector": "div.current-mode-title > span"
   },
-  "modelLabel": {
+  "modelListButton": {
+    "selector": "button.bard-mode-list-button"
+  },
+  "modelListLabel": {
     "selector": "span.gds-label-l"
   },
   "moreMenuButton": {

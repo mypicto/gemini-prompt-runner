@@ -3,29 +3,20 @@ class ModelSelector {
     this.selectorManager = selectorManager;
   }
   
-  async #findListElement() {
-    return await this.selectorManager.getElement('modelList');
+  async #findModelMenuButton() {
+    return await this.selectorManager.getElement('modelMenuButton');
   }
   
-  async #findItemElement(modelQuery) {
-    const elements = await this.selectorManager.getElements('modelMenu');
-    for (const [index, element] of elements.entries()) {
-      const label = await this.selectorManager.getElement('modelLabel', 1000, element);
+  async #findModelListButton(modelQuery) {
+    const buttons = await this.selectorManager.getElements('modelListButton');
+    for (const [index, button] of buttons.entries()) {
+      const label = await this.selectorManager.getElement('modelListLabel', 1000, button);
       const model = new Model(index, label.textContent);
       if (modelQuery.equalsModel(model)) {
-        return element;
+        return button;
       }
     }
     return null;
-  }
-  
-  #click(buttonElement) {
-    const event = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true
-    });
-    buttonElement.dispatchEvent(event);
   }
   
   async selectModel(modelQuery) {
@@ -47,18 +38,18 @@ class ModelSelector {
   }
 
   async #openModelList() {
-    const list = await this.#findListElement();
-    if (!list) {
+    const button = await this.#findModelMenuButton();
+    if (!button) {
       throw new OperationCanceledError('Model list not found');
     }
-    this.#click(list);
+    button.click();
   }
 
   async #selectModelItem(modelQuery) {
-    const item = await this.#findItemElement(modelQuery);
-    if (!item) {
+    const button = await this.#findModelListButton(modelQuery);
+    if (!button) {
       throw new OperationCanceledError('Model item not found');
     }
-    this.#click(item);
+    button.click();
   }
 }

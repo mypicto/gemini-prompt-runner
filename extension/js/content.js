@@ -1,11 +1,11 @@
 class Application {
   constructor() {
-    this.selectorManager = new SelectorManager();
-    this.copyButton = new CopyButton(this.selectorManager);
-    this.copyService = new CopyService(this.selectorManager, this.copyButton);
-    this.textarea = new Textarea(this.selectorManager);
-    this.modelSelector = new ModelSelector(this.selectorManager);
-    this.submitButton = new SubmitButton(this.selectorManager);
+    this.selectorService = new SelectorService();
+    this.copyButton = new CopyButton(this.selectorService);
+    this.copyService = new CopyService(this.selectorService, this.copyButton);
+    this.textarea = new Textarea(this.selectorService);
+    this.modelSelector = new ModelSelector(this.selectorService);
+    this.submitButton = new SubmitButton(this.selectorService);
     this.urlGenerateService = new UrlGenerateService(this.textarea, this.modelSelector);
   }
 
@@ -14,7 +14,7 @@ class Application {
     this.urlGenerateService.subscribeToListeners();
 
     document.addEventListener('DOMContentLoaded', async () => {
-      await this.selectorManager.init();
+      await this.selectorService.init();
       await this.#waitForUiStability();
       await this.#operateGemini();
     });
@@ -54,29 +54,6 @@ class Application {
     if (!isConfirm && hasPrompt) {
       await this.submitButton.submit();
     }
-  }
-}
-
-class UrlGenerateService {
-  constructor(textarea, modelSelector) {
-    this.textarea = textarea;
-    this.modelSelector = modelSelector;
-  }
-
-  subscribeToListeners() {
-    chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-      if (message && message.action === "getGenerateUrl") {
-        const prompt = await this.textarea.getPrompt();
-        const modelQuery = await this.modelSelector.getCurrentModelQuery();
-        const queryParameter = new QueryParameter({
-          prompt: prompt,
-          modelQuery: modelQuery,
-          isConfirm: !!prompt
-        });
-        const urlString = queryParameter.buildUrl(window.location);
-        sendResponse({ url: urlString });
-      }
-    });
   }
 }
 

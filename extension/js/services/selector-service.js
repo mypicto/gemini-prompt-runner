@@ -1,8 +1,7 @@
-class SelectorManager {
+class SelectorService {
   constructor() {
     this.data = {};
   }
-
 
   async init() {
     const res = await fetch(chrome.runtime.getURL('res/selectors.json'));

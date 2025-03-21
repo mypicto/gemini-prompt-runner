@@ -10,6 +10,7 @@ Output the following text, preserving structure, language, and style.
   * クリップボードのテキストをプロンプトに挿入（オプション）
   * プロンプトの自動送信を無効化（オプション）
 * URLのパラメータからモデルの選択
+* 現在のプロンプトと選択中のモデルから、Prompt Runner for Google Gemini で使うことのできるURLを生成
 * テキストを選択していない状態で `Ctrl + C` / `Cmd + C` キーを押すことで最後の回答をコピー
 
 ## 用途

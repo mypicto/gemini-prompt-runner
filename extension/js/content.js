@@ -15,26 +15,8 @@ class Application {
 
     document.addEventListener('DOMContentLoaded', async () => {
       await this.selectorService.init();
-      await this.#waitForUiStability();
+      await UIStabilityMonitor.waitForUiStability();
       await this.#operateGemini();
-    });
-  }
-
-  async #waitForUiStability() {
-    return new Promise(resolve => {
-      let isStable = false;
-      const observer = new MutationObserver((mutations) => {
-        isStable = false;
-      });
-      observer.observe(document.body, { attributes: true, childList: true, subtree: true });
-      const checkInterval = setInterval(() => {
-        if (isStable) {
-          clearInterval(checkInterval);
-          observer.disconnect();
-          resolve();
-        }
-        isStable = true;
-      }, 400);
     });
   }
 
@@ -44,11 +26,11 @@ class Application {
     const modelQuery = parameter.getModelQuery();
     const isConfirm = parameter.IsConfirm();
 
-    if (modelQuery !== null) {
+    if (modelQuery !== null && !this.#isOnGemPage()) {
       const currentModelQuery = await this.modelSelector.getCurrentModelQuery();
       if (!currentModelQuery.equalsQuery(modelQuery)) {
         await this.modelSelector.selectModel(modelQuery);
-        await this.#waitForUiStability();
+        await UIStabilityMonitor.waitForUiStability();
       }
     }
     const hasPrompt = prompt && prompt.trim() !== '';
@@ -58,6 +40,10 @@ class Application {
     if (!isConfirm && hasPrompt) {
       await this.submitButton.submit();
     }
+  }
+
+  #isOnGemPage() {
+    return window.location.pathname.includes('/gem/');
   }
 }
 

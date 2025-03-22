@@ -112,6 +112,20 @@
             color: #ffffff;
             transition: background-color 0.5s ease-in-out;
         }
+        #urlGenerateOptions {
+            text-align: left;
+            display: block;
+            margin: 10px auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        #urlGenerateOptions .option {
+            margin-left: 0;
+        }
+        #urlGenerateOptions .sub-option {
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
@@ -126,9 +140,22 @@
         <br><br>
         <span localize>__MSG_popupManuelCopy__</span>
     </p>
-    <button id="urlGenerateButton" localize>__MSG_popupUrlGenerateButton__</button>
+    <fieldset id="urlGenerateOptions">
+      <legend>URL生成</legend>
+      <div class="option">
+        <label><input type="checkbox" id="includeModel" checked> モデル</label>
+      </div>
+      <div class="option">
+        <label><input type="checkbox" id="includePrompt" checked> プロンプト</label>
+      </div>
+      <div class="option sub-option">
+        <label><input type="checkbox" id="autoSend"> 自動送信する</label>
+      </div>
+      <div class="option">
+        <button id="urlGenerateButton" localize>__MSG_popupUrlGenerateButton__</button>
+      </div>
+    </fieldset>
     <a href="https://github.com/mypicto/gemini-prompt-runner" target="_blank">GitHub Repository</a>
-    <footer style="font-size: 10px; color: #666;" localize>__MSG_popupTrademarkGemini__</footer>
     <script defer src="../js/utils/query-parameter.js"></script>
     <script defer src="../js/models/model-query.js"></script>
     <script defer src="../js/popup.js"></script>

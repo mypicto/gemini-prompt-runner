@@ -7,6 +7,7 @@ function initializeApp() {
   initExternalLinks();
   initManualUrlClick(localizeManager);
   initUrlGenerateButton(localizeManager);
+  updateAutoSend();
 }
 
 function initManifest() {
@@ -58,6 +59,21 @@ function initUrlGenerateButton(localizeManager) {
   controller.init();
 }
 
+function updateAutoSend() {
+  var includePrompt = document.getElementById('includePrompt');
+  var autoSend = document.getElementById('autoSend');
+  function updateAutoSend() {
+      if (!includePrompt.checked) {
+          autoSend.disabled = true;
+          autoSend.checked = false;
+      } else {
+          autoSend.disabled = false;
+      }
+  }
+  includePrompt.addEventListener('change', updateAutoSend);
+  updateAutoSend();
+}
+
 class MessagingService {
   getUrlFromActiveTab() {
     return new Promise((resolve, reject) => {
@@ -96,21 +112,38 @@ class UrlGenerateController {
 
   init() {
     const btn = document.getElementById('urlGenerateButton');
-    btn.disabled = true;
-    this.messagingService.getUrlFromActiveTab().then((url) => {
-      if (url) {
-        btn.disabled = false;
-        btn.addEventListener('click', () => {
-          this.clipboardService.copy(url)
-            .then(() => {
-              btn.textContent = this.localizeManager.getMessage('popupCopySuccess');
-              btn.classList.add('copied');
-            })
-            .catch(err => {
-              console.error('Failed to copy URL: ', err);
-            });
+    btn.disabled = false;
+    btn.addEventListener('click', () => {
+      const includeModel = document.getElementById('includeModel').checked;
+      const includePrompt = document.getElementById('includePrompt').checked;
+      const autoSend = document.getElementById('autoSend').checked;
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (!tabs || tabs.length === 0) {
+          return;
+        }
+        const tab = tabs[0];
+        chrome.tabs.sendMessage(tab.id, {
+          action: "getGenerateUrl",
+          includeModel: includeModel,
+          includePrompt: includePrompt,
+          autoSend: autoSend
+        }, (response) => {
+          if (chrome.runtime.lastError) {
+            console.error('Error sending message:', chrome.runtime.lastError.message);
+            return;
+          }
+          if (response && response.url) {
+            this.clipboardService.copy(response.url)
+              .then(() => {
+                btn.textContent = this.localizeManager.getMessage('popupCopySuccess');
+                btn.classList.add('copied');
+              })
+              .catch(err => {
+                console.error('Failed to copy URL: ', err);
+              });
+          }
         });
-      }
+      });
     });
   }
 }

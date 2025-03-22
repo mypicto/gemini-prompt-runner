@@ -7,12 +7,18 @@ class UrlGenerateService {
   subscribeToListeners() {
     chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       if (message && message.action === 'getGenerateUrl') {
-        const prompt = await this.textarea.getPrompt();
-        const modelQuery = await this.modelSelector.getCurrentModelQuery();
+        let promptVal = null;
+        let modelQueryVal = null;
+        if (message.includePrompt) {
+          promptVal = await this.textarea.getPrompt();
+        }
+        if (message.includeModel) {
+          modelQueryVal = await this.modelSelector.getCurrentModelQuery();
+        }
         const queryParameter = new QueryParameter({
-          prompt: prompt,
-          modelQuery: modelQuery,
-          isAutoSend: null
+          prompt: promptVal,
+          modelQuery: modelQueryVal,
+          isAutoSend: message.autoSend
         });
         const urlString = queryParameter.buildUrl(window.location);
         sendResponse({ url: urlString });

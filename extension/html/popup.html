@@ -126,6 +126,22 @@
         #urlGenerateOptions .sub-option {
             margin-left: 20px;
         }
+        input[type="checkbox"]:disabled + label {
+            color: #999;
+            opacity: 0.7;
+            cursor: default;
+        }
+        #urlGenerateOptions label {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            cursor: pointer;
+        }
+        footer {
+            font-size: 10px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -143,19 +159,20 @@
     <fieldset id="urlGenerateOptions">
       <legend localize>__MSG_popupUrlGenerateHeader__</legend>
       <div class="option">
-        <input type="checkbox" id="includeModel" checked><label localize>__MSG_popupUrlGenerateModelCheckbox__</label>
+        <input type="checkbox" id="includeModel" checked><label for="includeModel" localize>__MSG_popupUrlGenerateModelCheckbox__</label>
       </div>
       <div class="option">
-        <input type="checkbox" id="includePrompt" checked><label localize>__MSG_popupUrlGeneratePromptCheckbox__</label>
+        <input type="checkbox" id="includePrompt" checked><label for="includePrompt" localize>__MSG_popupUrlGeneratePromptCheckbox__</label>
       </div>
       <div class="option sub-option">
-        <input type="checkbox" id="autoSend"><label localize>__MSG_popupUrlGeneratePromptAutoSendCheckbox__</label>
+        <input type="checkbox" id="autoSend"><label for="autoSend" localize>__MSG_popupUrlGeneratePromptAutoSendCheckbox__</label>
       </div>
       <div class="option">
         <button id="urlGenerateButton" localize>__MSG_popupUrlGenerateButton__</button>
       </div>
-    </fieldset>
+    </fieldset> 
     <a href="https://github.com/mypicto/gemini-prompt-runner" target="_blank">GitHub Repository</a>
+    <footer localize>__MSG_popupTrademarkGemini__</footer>
     <script defer src="../js/utils/query-parameter.js"></script>
     <script defer src="../js/models/model-query.js"></script>
     <script defer src="../js/popup.js"></script>

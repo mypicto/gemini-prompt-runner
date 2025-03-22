@@ -3,7 +3,7 @@
     "selector": "rich-textarea.text-input-field_textarea",
     "xpath": ".//div/p"
   },
-  "submitButton": {
+  "sendButton": {
     "selector": "button.send-button"
   },
   "modelMenuButton": {

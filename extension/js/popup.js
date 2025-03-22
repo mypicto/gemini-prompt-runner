@@ -19,7 +19,6 @@ function initManifest() {
 function initExternalLinks() {
   const externalLinks = document.querySelectorAll('a[target="_blank"]');
   externalLinks.forEach(link => {
-    console.log(link);
     link.addEventListener('click', event => {
       event.preventDefault();
       chrome.tabs.create({ url: link.href });

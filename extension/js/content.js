@@ -5,7 +5,7 @@ class Application {
     this.copyService = new CopyService(this.selectorService, this.copyButton);
     this.textarea = new Textarea(this.selectorService);
     this.modelSelector = new ModelSelector(this.selectorService);
-    this.submitButton = new SubmitButton(this.selectorService);
+    this.sendButton = new SendButton(this.selectorService);
     this.urlGenerateService = new UrlGenerateService(this.textarea, this.modelSelector);
   }
 
@@ -24,7 +24,7 @@ class Application {
     const parameter = await QueryParameter.generateFromUrl();
     const prompt = parameter.getPrompt();
     const modelQuery = parameter.getModelQuery();
-    const isConfirm = parameter.IsConfirm();
+    const isAutoSend = parameter.IsAutoSend();
     const isOnGemPage = LocationChecker.isOnGemPage();
 
     if (modelQuery !== null && !isOnGemPage) {
@@ -38,8 +38,8 @@ class Application {
     if (hasPrompt) {
       await this.textarea.setPrompt(prompt);
     }
-    if (!isConfirm && hasPrompt) {
-      await this.submitButton.submit();
+    if (isAutoSend && hasPrompt) {
+      await this.sendButton.submit();
     }
   }
 }

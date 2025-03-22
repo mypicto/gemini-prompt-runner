@@ -1,7 +1,7 @@
 class BackgroundHandler {
   constructor() {
     this.pendingParameters = this.#generateEmptyParameters();
-    this.params = ['ext-q', 'ext-m', 'ext-confirm', 'ext-clipboard'];
+    this.params = ['ext-q', 'ext-m', 'ext-send', 'ext-clipboard'];
   }
   
   init() {
@@ -13,7 +13,7 @@ class BackgroundHandler {
     return {
       prompt: null,
       model: null,
-      confirm: null,
+      audosend: null,
       clipboard: null
     };
   }
@@ -45,7 +45,7 @@ class BackgroundHandler {
       this.pendingParameters = {
         prompt: url.searchParams.get('ext-q'),
         model: url.searchParams.get('ext-m'),
-        confirm: url.searchParams.get('ext-confirm'),
+        send: url.searchParams.get('ext-send'),
         clipboard: url.searchParams.get('ext-clipboard')
       };
     }

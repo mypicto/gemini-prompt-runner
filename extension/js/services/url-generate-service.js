@@ -12,7 +12,7 @@ class UrlGenerateService {
         const queryParameter = new QueryParameter({
           prompt: prompt,
           modelQuery: modelQuery,
-          isConfirm: !!prompt
+          isAutoSend: null
         });
         const urlString = queryParameter.buildUrl(window.location);
         sendResponse({ url: urlString });

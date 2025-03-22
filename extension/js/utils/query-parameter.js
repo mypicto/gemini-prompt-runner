@@ -1,10 +1,10 @@
 class QueryParameter {
   static CLIPBOARD_KEYWORD = '{{clipboard}}';
 
-  constructor({ prompt = null, modelQuery = null, isConfirm = null } = {}) {
+  constructor({ prompt = null, modelQuery = null, isAutoSend = null } = {}) {
     this.prompt = prompt;
     this.modelQuery = modelQuery;
-    this.isConfirm = isConfirm;
+    this.isAutoSend = isAutoSend;
   }
 
   static async #fetchParameters() {
@@ -29,12 +29,12 @@ class QueryParameter {
     const response = await QueryParameter.#fetchParameters();
     const prompt = await QueryParameter.#processPrompt(response.prompt);
     const modelQuery = QueryParameter.#processModel(response.model);
-    const isConfirm = QueryParameter.#convertToBoolean(response.confirm);
+    const isAutoSend = QueryParameter.#convertToBoolean(response.send);
 
     return new QueryParameter({
       prompt: prompt,
       modelQuery: modelQuery,
-      isConfirm: isConfirm
+      isAutoSend: isAutoSend
     });
   }
 
@@ -46,21 +46,23 @@ class QueryParameter {
     return this.modelQuery;
   }
 
-  IsConfirm() {
-    return this.isConfirm;
+  IsAutoSend() {
+    return this.isAutoSend;
   }
   
   buildUrl(location) {
     const url = new URL(location.origin + location.pathname);
+    if (this.modelQuery) {
+      url.searchParams.set('ext-m', this.modelQuery.getIdentifierString());
+    }
     if (this.prompt) {
       url.searchParams.set('ext-q', this.prompt);
-      url.searchParams.set('ext-confirm', this.isConfirm ? '1' : '0');
+      if (this.isAutoSend) {
+        url.searchParams.set('ext-send', '1');
+      }
       if (this.prompt.includes(QueryParameter.CLIPBOARD_KEYWORD)) {
         url.searchParams.set('ext-clipboard', '1');
       }
-    }
-    if (this.modelQuery) {
-      url.searchParams.set('ext-m', this.modelQuery.getIdentifierString());
     }
     return url.toString();
   }

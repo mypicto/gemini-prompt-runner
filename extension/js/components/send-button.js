@@ -1,10 +1,10 @@
-class SubmitButton {
+class SendButton {
   constructor(selectorManager) {
     this.selectorManager = selectorManager;
  }
   
   async #findElement() {
-    return await this.selectorManager.getElement('submitButton');
+    return await this.selectorManager.getElement('sendButton');
   }
   
   async submit() {

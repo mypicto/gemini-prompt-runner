@@ -183,11 +183,14 @@ class UrlGenerateComponent {
     }
   }
   
-  disableAll() {
+  disableButton() {
+    this.button.disabled = true;
+  }
+
+  disableCheckbox() {
     this.includeModel.disabled = true;
     this.includePrompt.disabled = true;
     this.autoSend.disabled = true;
-    this.button.disabled = true;
   }
 }
 
@@ -203,7 +206,8 @@ class UrlGenerateService {
     this.component.attachButtonClickListener(this.handleCopyButtonClick.bind(this));
     let url = await this.generateUrl();
     if (url === null) {
-      this.component.disableAll();
+      this.component.disableCheckbox();
+      this.component.disableButton();
     }
   }
 
@@ -240,6 +244,7 @@ class UrlGenerateService {
     try {
       await this.clipboardService.copy(url);
       this.component.updateButton(this.localizeService.getMessage('popupCopySuccess'), 'copied');
+      this.component.disableCheckbox();
     } catch (err) {
       console.error('Failed to copy URL:', err);
       throw err;

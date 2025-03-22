@@ -83,15 +83,15 @@
             padding: 6px 20px;
             font-size: 14px;
             cursor: pointer;
-            margin: 10px auto;
-            display: block;
-            width: 220px;
             white-space: nowrap;
             box-sizing: border-box;
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            width: 100%;
+            height: 100%;
+            min-height: 80px;
         }
         #urlGenerateButton:hover {
             background-color: #0056b3;
@@ -120,8 +120,26 @@
             padding: 10px;
             border-radius: 6px;
         }
+        .options-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .options-left {
+            flex: 6;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .options-right {
+            flex: 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         #urlGenerateOptions .option {
             margin-left: 0;
+            margin-bottom: 5px;
         }
         #urlGenerateOptions .sub-option {
             margin-left: 20px;
@@ -129,7 +147,7 @@
         input[type="checkbox"]:disabled + label {
             color: #999;
             opacity: 0.7;
-            cursor: default;
+            cursor: default !important;
         }
         #urlGenerateOptions label {
             user-select: none;
@@ -158,17 +176,21 @@
     </p>
     <fieldset id="urlGenerateOptions">
       <legend localize>__MSG_popupUrlGenerateHeader__</legend>
-      <div class="option">
-        <input type="checkbox" id="includeModel" checked><label for="includeModel" localize>__MSG_popupUrlGenerateModelCheckbox__</label>
-      </div>
-      <div class="option">
-        <input type="checkbox" id="includePrompt" checked><label for="includePrompt" localize>__MSG_popupUrlGeneratePromptCheckbox__</label>
-      </div>
-      <div class="option sub-option">
-        <input type="checkbox" id="autoSend"><label for="autoSend" localize>__MSG_popupUrlGeneratePromptAutoSendCheckbox__</label>
-      </div>
-      <div class="option">
-        <button id="urlGenerateButton" localize>__MSG_popupUrlGenerateButton__</button>
+      <div class="options-container">
+        <div class="options-left">
+          <div class="option">
+            <input type="checkbox" id="includeModel" checked><label for="includeModel" localize>__MSG_popupUrlGenerateModelCheckbox__</label>
+          </div>
+          <div class="option">
+            <input type="checkbox" id="includePrompt" checked><label for="includePrompt" localize>__MSG_popupUrlGeneratePromptCheckbox__</label>
+          </div>
+          <div class="option sub-option">
+            <input type="checkbox" id="autoSend"><label for="autoSend" localize>__MSG_popupUrlGeneratePromptAutoSendCheckbox__</label>
+          </div>
+        </div>
+        <div class="options-right">
+          <button id="urlGenerateButton" localize>__MSG_popupUrlGenerateButton__</button>
+        </div>
       </div>
     </fieldset> 
     <a href="https://github.com/mypicto/gemini-prompt-runner" target="_blank">GitHub Repository</a>

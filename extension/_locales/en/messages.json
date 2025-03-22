@@ -15,13 +15,13 @@
         "message": "URL Generation"
     },
     "popupUrlGenerateModelCheckbox": {
-        "message": "Model"
+        "message": "Include model"
     },
     "popupUrlGeneratePromptCheckbox": {
-        "message": "Prompt"
+        "message": "Include prompt"
     },
     "popupUrlGeneratePromptAutoSendCheckbox": {
-        "message": "Auto send"
+        "message": "Auto-send prompt"
     },
     "popupUrlGenerateButton": {
         "message": "Generate URL"

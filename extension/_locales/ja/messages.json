@@ -15,16 +15,16 @@
         "message": "URL生成"
     },
     "popupUrlGenerateModelCheckbox": {
-        "message": "モデル"
+        "message": "モデルを含める"
     },
     "popupUrlGeneratePromptCheckbox": {
-        "message": "プロンプト"
+        "message": "プロンプトを含める"
     },
     "popupUrlGeneratePromptAutoSendCheckbox": {
-        "message": "自動送信する"
+        "message": "プロンプトを自動送信する"
     },
     "popupUrlGenerateButton": {
-        "message": "URL生成"
+        "message": "URLを生成する"
     },
     "popupCopySuccess": {
         "message": "コピーしました"

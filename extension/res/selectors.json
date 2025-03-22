@@ -1,7 +1,6 @@
 {
-  "textarea": {
-    "selector": "rich-textarea.text-input-field_textarea",
-    "xpath": ".//div/p"
+  "textareaContainer": {
+    "selector": "rich-textarea.text-input-field_textarea > div"
   },
   "sendButton": {
     "selector": "button.send-button"

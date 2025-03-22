@@ -33,7 +33,7 @@
             cursor: pointer;
             text-align: left;
             word-break: break-all;
-            width: 350px;
+            width: 400px;
         }
         .manual-url:hover {
             background-color: #e8e8e8;
@@ -121,14 +121,16 @@
     <p class="manual-url" id="manualUrl" localize-attr="data-tooltip:__MSG_popupManuelTooltip__">
         <strong localize>__MSG_popupManuelHeader__</strong><br>
         https://how-to-use?<span class="param-q">ext-q</span>=enter-prompt-text&<span class="param-m">ext-m</span>=select-model<br>
-        &<span class="param-clipboard">ext-clipboard</span>=flag-to-replace-clipboard-text-in-prompt<br>
-        &<span class="param-confirm">ext-confirm</span>=flag-to-prevent-auto-submit-by-prompt
+        &<span class="param-clipboard">ext-clipboard</span>=clipboard=replace-keywords-in-prompt-with-clipboard-text<br>
+        &<span class="param-confirm">ext-send</span>=auto-send-for-prompt
         <br><br>
         <span localize>__MSG_popupManuelCopy__</span>
     </p>
     <button id="urlGenerateButton" localize>__MSG_popupUrlGenerateButton__</button>
     <a href="https://github.com/mypicto/gemini-prompt-runner" target="_blank">GitHub Repository</a>
     <footer style="font-size: 10px; color: #666;" localize>__MSG_popupTrademarkGemini__</footer>
-    <script src="../js/popup.js"></script>
+    <script defer src="../js/utils/query-parameter.js"></script>
+    <script defer src="../js/models/model-query.js"></script>
+    <script defer src="../js/popup.js"></script>
 </body>
 </html>

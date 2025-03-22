@@ -38,9 +38,13 @@ function handleManualUrlClick(event, localizeManager) {
   fetch(chrome.runtime.getURL(promptUrl))
     .then(response => response.text())
     .then(text => {
-      const urlObj = new URL('https://gemini.google.com/app');
-      urlObj.searchParams.set('ext-q', text);
-      chrome.tabs.create({ url: urlObj.toString() });
+      const locationMock = { origin: 'https://gemini.google.com', pathname: '/app' };
+      const queryParameter = new QueryParameter({
+        prompt: text,
+        modelQuery: new IdentifierModelQuery(0),
+        isAutoSend: true
+      });
+      chrome.tabs.create({ url: queryParameter.buildUrl(locationMock) });
     })
     .catch(error => {
       console.error('Failed to fetch prompt URL:', error);

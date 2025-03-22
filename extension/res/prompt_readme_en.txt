@@ -7,8 +7,8 @@ This extension allows automatic execution of prompts, which is not supported by 
 ## Features
 
 * Automatically execute prompts from URL parameters. (parameters are processed securely within the browser and are not sent to the server)
-  * Insert clipboard text into the prompt. (optional)
-  * Disable automatic submission of prompts. (optional)
+  * Replace keywords in prompt with clipboard text. (optional)
+  * Auto-sending for prompt. (optional)
 * Select a model from URL parameters.
 * Generate a URL that can be used with Prompt Runner for Google Gemini from the current prompt and selected model.
 * Copy the last answer by pressing Ctrl + C / Cmd + C when no text is selected.
@@ -24,8 +24,8 @@ This extension allows automatic execution of prompts, which is not supported by 
 https://how-to-use
     ?ext-q=enter-prompt-text
     &ext-m=select-model
-    &ext-clipboard=flag-to-replace-clipboard-text-in-prompt
-    &ext-confirm=flag-to-prevent-auto-submit-by-prompt
+    &ext-clipboard=replace-keywords-in-prompt-with-clipboard-text
+    &ext-send=auto-send-for-prompt
 
 Ctrl+C / Cmd+C: copy the last answer.
 ```
@@ -34,15 +34,15 @@ Ctrl+C / Cmd+C: copy the last answer.
 | --- | --- | --- |
 | `ext-q` | Prompt string to execute | URL-encoded text (insert clipboard text with `{{clipboard}}` keyword) |
 | `ext-m` | Index of the model to select | Integer starting from 0 (order as displayed in UI) or model name (as displayed in UI) |
-| `ext-clipboard` | Replace the {{clipboard}} keyword in `ext-q` with the clipboard text. | `true/false` or `0/1` |
-| `ext-confirm` | Prevent auto-submit by `ext-q` parameter | `true/false` or `0/1` |
+| `ext-clipboard` | Replace the {{clipboard}} keyword in `ext-q` with the clipboard text | `true/false` or `0/1` |
+| `ext-send` | Auto-sending for prompt | `true/false` または `0/1` |
 
 ## Examples
 
 * Ask for today's weather forecast
 
   ```url
-  https://gemini.google.com/app?ext-q=Today%27s+weather+forecast.
+  https://gemini.google.com/app?ext-q=Today%27s+weather+forecast.&ext-send=1
   ```
 
 * Start a chat with the 3rd model
@@ -60,7 +60,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 * Summarize text from clipboard
 
   ```url
-  https://gemini.google.com/app?ext-q=Summarize%20the%20input%20text.%0A%0A**Input%3A**%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1&ext-confirm=1
+  https://gemini.google.com/app?ext-q=Summarize%20the%20input%20text.%0A%0A**Input%3A**%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1
   ```
 
 ## Attribution

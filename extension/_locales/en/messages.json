@@ -11,14 +11,26 @@
     "popupManuelTooltip": {
         "message": "Click to open the manual."
     },
-    "popupTrademarkGemini": {
-        "message": "Google Gemini™ is a trademark of Google LLC."
+    "popupUrlGenerateHeader": {
+        "message": "URL Generation"
+    },
+    "popupUrlGenerateModelCheckbox": {
+        "message": "Model"
+    },
+    "popupUrlGeneratePromptCheckbox": {
+        "message": "Prompt"
+    },
+    "popupUrlGeneratePromptAutoSendCheckbox": {
+        "message": "Auto send"
     },
     "popupUrlGenerateButton": {
         "message": "Generate URL"
     },
     "popupCopySuccess": {
         "message": "Copied"
+    },
+    "popupTrademarkGemini": {
+        "message": "Google Gemini™ is a trademark of Google LLC."
     },
     "promptReadmeURL": {
         "message": "res/prompt_readme_en.txt"

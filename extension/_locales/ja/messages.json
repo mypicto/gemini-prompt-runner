@@ -11,14 +11,26 @@
     "popupManuelTooltip": {
         "message": "クリックで説明書を開く"
     },
-    "popupTrademarkGemini": {
-        "message": "Google Gemini™ は Google LLC の商標です。"
+    "popupUrlGenerateHeader": {
+        "message": "URL生成"
+    },
+    "popupUrlGenerateModelCheckbox": {
+        "message": "モデル"
+    },
+    "popupUrlGeneratePromptCheckbox": {
+        "message": "プロンプト"
+    },
+    "popupUrlGeneratePromptAutoSendCheckbox": {
+        "message": "自動送信する"
     },
     "popupUrlGenerateButton": {
         "message": "URL生成"
     },
     "popupCopySuccess": {
         "message": "コピーしました"
+    },
+    "popupTrademarkGemini": {
+        "message": "Google Gemini™ は Google LLC の商標です。"
     },
     "promptReadmeURL": {
         "message": "res/prompt_readme_ja.txt"

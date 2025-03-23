@@ -1,10 +1,16 @@
 class QueryParameter {
   static CLIPBOARD_KEYWORD = '{{clipboard}}';
+  static #PRIVATE_TOKEN = Symbol('QueryParameterToken');
 
-  constructor({ prompt = null, modelQuery = null, isAutoSend = null } = {}) {
+  constructor({ prompt = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, token = null} = {}) {
+    if (token !== QueryParameter.#PRIVATE_TOKEN) {
+      throw new Error('Invalid constructor call: Use static factory methods instead');
+    }
+    
     this.prompt = prompt;
     this.modelQuery = modelQuery;
     this.isAutoSend = isAutoSend;
+    this.isUseClipboard = isUseClipboard;
   }
 
   static async #fetchParameters() {
@@ -25,16 +31,30 @@ class QueryParameter {
     return response;
   }
 
+  static async generate({ prompt = null, modelQuery = null, isAutoSend = null, isUseClipboard = null} = {}) {
+    const promptText = await QueryParameter.#processPrompt(prompt, isUseClipboard);
+
+    return new QueryParameter({
+      prompt: promptText,
+      modelQuery: modelQuery,
+      isAutoSend: isAutoSend,
+      isUseClipboard: isUseClipboard,
+      token: QueryParameter.#PRIVATE_TOKEN
+    });
+  }
+
   static async generateFromUrl() {
     const response = await QueryParameter.#fetchParameters();
-    const prompt = await QueryParameter.#processPrompt(response.prompt);
+    const promptText = await QueryParameter.#processPrompt(response.prompt, response.clipboard);
     const modelQuery = QueryParameter.#processModel(response.model);
     const isAutoSend = QueryParameter.#convertToBoolean(response.send);
 
     return new QueryParameter({
-      prompt: prompt,
+      prompt: promptText,
       modelQuery: modelQuery,
-      isAutoSend: isAutoSend
+      isAutoSend: isAutoSend,
+      isUseClipboard: null,
+      token: QueryParameter.#PRIVATE_TOKEN
     });
   }
 
@@ -60,17 +80,18 @@ class QueryParameter {
       if (this.isAutoSend) {
         url.searchParams.set('ext-send', '1');
       }
-      if (this.prompt.includes(QueryParameter.CLIPBOARD_KEYWORD)) {
+      if (this.prompt.includes(QueryParameter.CLIPBOARD_KEYWORD) && this.isUseClipboard !== false) {
         url.searchParams.set('ext-clipboard', '1');
       }
     }
     return url.toString();
   }
 
-  static async #processPrompt(promptText) {
+  static async #processPrompt(promptText, clipboard) {
     if (promptText) {
       const keyword = QueryParameter.CLIPBOARD_KEYWORD;
-      if (promptText.includes(keyword)) {
+      const isUseClipboard = QueryParameter.#convertToBoolean(clipboard);
+      if (isUseClipboard && promptText.includes(keyword)) {
         let clipboardText = '';
         try {
           clipboardText = await navigator.clipboard.readText() || '';

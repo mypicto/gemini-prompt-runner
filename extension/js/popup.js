@@ -118,12 +118,13 @@ class ManualUrlService {
     const promptUrl = this.localizeService.getMessage('promptReadmeURL');
     fetch(chrome.runtime.getURL(promptUrl))
       .then(response => response.text())
-      .then(text => {
+      .then(async text => {
         const locationMock = { origin: 'https://gemini.google.com', pathname: '/app' };
-        const queryParameter = new QueryParameter({
+        const queryParameter = await QueryParameter.generate({
           prompt: text,
           modelQuery: new IdentifierModelQuery(0),
-          isAutoSend: true
+          isAutoSend: true,
+          isUseClipboard: false
         });
         chrome.tabs.create({ url: queryParameter.buildUrl(locationMock) });
       })

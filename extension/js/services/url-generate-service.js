@@ -15,10 +15,11 @@ class UrlGenerateService {
         if (message.includeModel) {
           modelQueryVal = await this.modelSelector.getCurrentModelQuery();
         }
-        const queryParameter = new QueryParameter({
+        const queryParameter = await QueryParameter.generate({
           prompt: promptVal,
           modelQuery: modelQueryVal,
-          isAutoSend: message.autoSend
+          isAutoSend: message.autoSend,
+          isUseClipboard: null
         });
         const urlString = queryParameter.buildUrl(window.location);
         sendResponse({ url: urlString });

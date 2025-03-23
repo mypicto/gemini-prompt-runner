@@ -7,11 +7,13 @@ class Application {
     this.modelSelector = new ModelSelector(this.selectorService);
     this.sendButton = new SendButton(this.selectorService);
     this.urlGenerateService = new UrlGenerateService(this.textarea, this.modelSelector);
+    this.clipboardKeywordService = new ClipboardKeywordService(this.textarea);
   }
 
   init() {
     this.copyService.addCopyShortcutListener();
     this.urlGenerateService.subscribeToListeners();
+    this.clipboardKeywordService.subscribeToListeners();
 
     document.addEventListener('DOMContentLoaded', async () => {
       await this.selectorService.init();

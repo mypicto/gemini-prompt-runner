@@ -1,7 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
-  new PopupApp().initialize();
-});
-
 class PopupApp {
   constructor() {
     this.localizeService = new LocalizeService();
@@ -142,20 +138,21 @@ class UrlGenerateComponent {
     this.includeModel = document.getElementById('includeModel');
     this.includePrompt = document.getElementById('includePrompt');
     this.autoSend = document.getElementById('autoSend');
-    this.button = document.getElementById('urlGenerateButton');
+    this.urlGenerateButton = document.getElementById('urlGenerateButton');
+    this.clipboardInsertButton = document.getElementById('clipboardInsertButton');
   }
 
   attachButtonClickListener(callback) {
-    if (this.button) {
-      this.button.addEventListener('click', callback);
+    if (this.urlGenerateButton) {
+      this.urlGenerateButton.addEventListener('click', callback);
     }
   }
 
-  updateButton(text, additionalClass) {
-    if (this.button) {
-      this.button.textContent = text;
+  updateUrlGenerateButton(text, additionalClass) {
+    if (this.urlGenerateButton) {
+      this.urlGenerateButton.textContent = text;
       if (additionalClass) {
-        this.button.classList.add(additionalClass);
+        this.urlGenerateButton.classList.add(additionalClass);
       }
     }
   }
@@ -183,14 +180,21 @@ class UrlGenerateComponent {
     }
   }
   
-  disableButton() {
-    this.button.disabled = true;
+  disableUrlGenerateButton() {
+    this.urlGenerateButton.disabled = true;
   }
 
-  disableCheckbox() {
+  disableOptions() {
     this.includeModel.disabled = true;
     this.includePrompt.disabled = true;
     this.autoSend.disabled = true;
+    this.clipboardInsertButton.disabled = true;
+  }
+
+  attachClipboardInsertButtonClickListener(callback) {
+    if (this.clipboardInsertButton) {
+      this.clipboardInsertButton.addEventListener('click', callback);
+    }
   }
 }
 
@@ -204,10 +208,11 @@ class UrlGenerateService {
   async init() {
     this.component.attachIncludePromptChangeListener(() => this.component.updateAutoSendState());
     this.component.attachButtonClickListener(this.handleCopyButtonClick.bind(this));
+    this.component.attachClipboardInsertButtonClickListener(this.handleClipboardInsertButtonClick.bind(this));
     let url = await this.generateUrl();
     if (url === null) {
-      this.component.disableCheckbox();
-      this.component.disableButton();
+      this.component.disableOptions();
+      this.component.disableUrlGenerateButton();
     }
   }
 
@@ -243,8 +248,8 @@ class UrlGenerateService {
   async copyAndInteraction(url) {
     try {
       await this.clipboardService.copy(url);
-      this.component.updateButton(this.localizeService.getMessage('popupCopySuccess'), 'copied');
-      this.component.disableCheckbox();
+      this.component.updateUrlGenerateButton(this.localizeService.getMessage('popupCopySuccess'), 'copied');
+      this.component.disableOptions();
     } catch (err) {
       console.error('Failed to copy URL:', err);
       throw err;
@@ -259,4 +264,17 @@ class UrlGenerateService {
       console.error(err);
     }
   }
+
+  handleClipboardInsertButtonClick() {
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+      if (tabs && tabs.length > 0) {
+        chrome.tabs.sendMessage(tabs[0].id, {action:"insertClipboardkKeyword"});
+      }
+    });
+  }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const app = new PopupApp();
+  app.initialize();
+});

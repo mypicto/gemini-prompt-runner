@@ -33,6 +33,7 @@
         "js/services/selector-service.js",
         "js/services/copy-service.js",
         "js/services/url-generate-service.js",
+        "js/services/clipboard-keyword-service.js",
         "js/components/textarea.js",
         "js/components/send-button.js",
         "js/components/copy-button.js",

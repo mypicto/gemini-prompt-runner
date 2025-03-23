@@ -23,6 +23,9 @@
     "popupUrlGeneratePromptAutoSendCheckbox": {
         "message": "Auto-send prompt"
     },
+    "popupUrlGenerateClipboardInsertButton": {
+        "message": "Insert {{clipboard}}"
+    },
     "popupUrlGenerateButton": {
         "message": "Generate URL"
     },

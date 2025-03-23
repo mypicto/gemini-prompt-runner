@@ -6,12 +6,13 @@ This extension allows automatic execution of prompts, which is not supported by 
 
 ## Features
 
-* Automatically execute prompts from URL parameters. (parameters are processed securely within the browser and are not sent to the server)
-  * Replace keywords in prompt with clipboard text. (optional)
-  * Auto-sending for prompt. (optional)
-* Select a model from URL parameters.
-* Generate a URL that can be used with Prompt Runner for Google Gemini from the current prompt and selected model.
-* Copy the last answer by pressing Ctrl + C / Cmd + C when no text is selected.
+* Automatic prompt execution via URL parameters (parameters are not sent to the server and are processed securely within the browser)
+  * Replacement of the keyword `{{clipboard}}` in prompts with clipboard text (optional)
+  * Automatic prompt submission (optional)
+* Model selection via URL parameters
+* Generation of URLs usable in Prompt Runner for Google Gemini from the current prompt and selected model
+* Copying of the last response when `Ctrl + C` / `Cmd + C` is pressed without text selection (requires a copy button, so a certain window size is necessary)
+
 
 ## Use Cases
 

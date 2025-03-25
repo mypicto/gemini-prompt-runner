@@ -8,7 +8,7 @@ class ClipboardKeywordService {
   }
 
   handleMessages(message, sender, sendResponse) {
-    if (message.action === "insertClipboardkKeyword") {
+    if (message.action === "insertClipboardKeyword") {
       this.insertClipboardKeyword();
     }
   }

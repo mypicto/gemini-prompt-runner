@@ -269,7 +269,7 @@ class UrlGenerateService {
   handleClipboardInsertButtonClick() {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
       if (tabs && tabs.length > 0) {
-        chrome.tabs.sendMessage(tabs[0].id, {action:"insertClipboardkKeyword"});
+        chrome.tabs.sendMessage(tabs[0].id, {action:"insertClipboardKeyword"});
       }
     });
   }

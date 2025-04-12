@@ -22,6 +22,20 @@ class Application {
     });
   }
 
+  async #waitForAnsweringToComplete() {
+    const timeout = 60000;
+    const interval = 100;
+    const startTime = Date.now();
+
+    await new Promise(resolve => setTimeout(resolve, 100)); // ステータスがボタンの表示に反映されるのを待つ 
+    while (await this.sendButton.isAnswering()) {
+      if (Date.now() - startTime > timeout) {
+        throw new Error('Timeout waiting for answering to complete.');
+      }
+      await new Promise(resolve => setTimeout(resolve, interval));
+    }
+  }
+
   async #operateGemini() {
     const parameter = await QueryParameter.generateFromUrl();
     const prompt = parameter.getPrompt();

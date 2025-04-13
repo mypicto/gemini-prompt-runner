@@ -121,7 +121,7 @@ class ManualUrlService {
       .then(async text => {
         const locationMock = { origin: 'https://gemini.google.com', pathname: '/app' };
         const queryParameter = await QueryParameter.generate({
-          prompt: text,
+          prompts: text ? [text] : null,
           modelQuery: new IdentifierModelQuery(0),
           isAutoSend: true,
           isUseClipboard: false

@@ -11,7 +11,7 @@ class BackgroundHandler {
 
   #generateEmptyParameters() {
     return {
-      prompt: null,
+      prompts: null,
       model: null,
       audosend: null,
       clipboard: null
@@ -43,7 +43,7 @@ class BackgroundHandler {
     const url = new URL(details.url);
     if (this.params.some(param => url.searchParams.has(param))) {
       this.pendingParameters = {
-        prompt: url.searchParams.get('ext-q'),
+        prompts: url.searchParams.getAll('ext-q'),
         model: url.searchParams.get('ext-m'),
         send: url.searchParams.get('ext-send'),
         clipboard: url.searchParams.get('ext-clipboard')

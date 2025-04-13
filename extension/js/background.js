@@ -7,6 +7,7 @@ class BackgroundHandler {
   init() {
     this.#registerWebRequestListener();
     this.#registerMessageListener();
+    this.#registerUpdateIconListener();
   }
 
   #generateEmptyParameters() {
@@ -38,6 +39,10 @@ class BackgroundHandler {
   #registerMessageListener() {
     chrome.runtime.onMessage.addListener(this.#handleMessage.bind(this));
   }
+
+  #registerUpdateIconListener() {
+    chrome.runtime.onMessage.addListener(this.#handleUpdateIcon.bind(this));
+  }
   
   #handleWebRequest(details) {
     const url = new URL(details.url);
@@ -54,8 +59,22 @@ class BackgroundHandler {
   #handleMessage(message, sender, sendResponse) {
     if (message.type === 'requestParameters') {
       sendResponse(this.pendingParameters);
-      this.pendingParameters = this.#generateEmptyParameters();;
+      this.pendingParameters = this.#generateEmptyParameters();
       return true;
+    }
+  }
+
+  #handleUpdateIcon(message, sender, sendResponse) {
+    if (message.type === 'updateIcon') {
+      chrome.action.setIcon({ path: message.iconPath }, () => {
+        if (chrome.runtime.lastError) {
+          console.error('Failed to set icon:', chrome.runtime.lastError.message, 'Path:', message.iconPath);
+          sendResponse({ success: false, error: chrome.runtime.lastError.message });
+        } else {
+          sendResponse({ success: true });
+        }
+      });
+      return true; // // 非同期処理があるため、true を返してメッセージポートを開いたままにする
     }
   }
 }

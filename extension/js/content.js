@@ -8,6 +8,7 @@ class Application {
     this.sendButton = new SendButton(this.selectorService);
     this.urlGenerateService = new UrlGenerateService(this.textarea, this.modelSelector);
     this.clipboardKeywordService = new ClipboardKeywordService(this.textarea);
+    this.iconStateService = new IconStateService();
   }
 
   init() {
@@ -43,11 +44,33 @@ class Application {
     const isAutoSend = parameter.isAutoSend();
     const isOnGemPage = LocationChecker.isOnGemPage();
 
+    try {
+      this.progressCounter = await this.#buildProgressCounter(prompts);
+      this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
+      await this.#processAll(prompts, modelQuery, isAutoSend, isOnGemPage);
+    } finally {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      this.iconStateService.resetToDefault();
+    }
+  }
+
+  async #buildProgressCounter(prompts) {
+    let maxValue = 1; // 1 for model
+    if (prompts) {
+      maxValue += prompts.length * 2; // 1 for prompt and 1 for answer
+    }
+    const progressCounter = new ProgressCounter(maxValue);
+    return progressCounter;
+  }
+
+  async #processAll(prompts, modelQuery, isAutoSend, isOnGemPage) {
     if (modelQuery !== null && !isOnGemPage) {
       await this.#processModel(modelQuery);
     }
+    this.#incrementProgress()
+
     if (prompts) {
-      this.#processPrompts(prompts, isAutoSend);
+      await this.#processPrompts(prompts, isAutoSend);
     }
   }
 
@@ -66,9 +89,6 @@ class Application {
       if (!isAutoSend) {
         break;
       }
-      if (i < prompts.length - 1) {
-        await this.#waitForAnsweringToComplete();
-      }
     }
   }
 
@@ -82,8 +102,38 @@ class Application {
 
     if (isAutoSend) {
       await UIStabilityMonitor.waitForUiStability();
+      this.#incrementProgress()
+
       await this.sendButton.submit();
+      await this.#waitForAnsweringToComplete();
+      this.#incrementProgress()
     }
+  }
+
+  #incrementProgress() {
+    this.progressCounter.incrementCount();
+    this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
+  }
+}
+
+class ProgressCounter {
+  constructor(maxValue) {
+    this.maxValue = maxValue;
+    this.count = 0;
+  }
+
+  incrementCount() {
+    this.count ++;
+    if (this.count > this.maxValue) {
+      this.count = this.maxValue;
+    }
+  }
+
+  getProgress() {
+    if (this.maxValue === 0) {
+      return 0;
+    }
+    return this.count / this.maxValue * 100;
   }
 }
 

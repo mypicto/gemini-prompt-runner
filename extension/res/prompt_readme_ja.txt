@@ -37,6 +37,9 @@ Ctrl+C / Cmd+C: copy the last answer.
 | `ext-clipboard` | `ext-q`の中で`{{clipboard}}`キーワードをクリップボードのテキストと置き換える | `true/false` または `0/1` |
 | `ext-send` | プロンプトの自動送信 | `true/false` または `0/1` |
 
+> [!TIP]
+> `ext-send` を有効にした状態で、`ext-q` を複数指定することで複数のプロンプトを連続して送信することができます。
+
 ## サンプル
 
 * 今日の天気予報を質問

@@ -62,9 +62,7 @@ class QueryParameter {
     });
   }
 
-  static async generateFromFragment() {
-    const url = new URL(window.location.href);
-    const fragmentParams = QueryParameter.#extractFragmentParameters(url);
+  static async generateFromFragment(fragmentParams) {
     const promptTexts = fragmentParams.getAll('ext-q');
     const modelValue = fragmentParams.get('ext-m');
     const sendValue = fragmentParams.get('ext-send');
@@ -85,26 +83,9 @@ class QueryParameter {
     });
   }
 
-  static #extractFragmentParameters(url) {
-    if (url.hash && url.hash.length > 1) {
-      const decodedHash = decodeURIComponent(url.hash.substring(1));
-      return new URLSearchParams(decodedHash);
-    }
-    return new URLSearchParams();
-  }
-
-  static validateFragmentParameters() {
-    const url = new URL(window.location.href);
-    const hash = url.hash;
-
-    if (!hash || hash.length <= 1) return;
-
+  static hasTargetParameters(urlOrParams) {
     const targetParams = ['ext-q', 'ext-m', 'ext-send', 'ext-clipboard'];
-    const isContaminated = targetParams.some(param => hash.includes(`${param}=`));
-
-    if (isContaminated) {
-      throw new Error('Extension parameters found in URL fragment. This may be caused by extension loading delay.');
-    }
+    return targetParams.some(param => urlOrParams.has(param));
   }
 
   getPrompts() {

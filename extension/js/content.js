@@ -12,6 +12,8 @@ class Application {
   }
 
   init() {
+    this.#extractAndProtectSensitiveFragmentParams();
+
     this.copyService.addCopyShortcutListener();
     this.urlGenerateService.subscribeToListeners();
     this.clipboardKeywordService.subscribeToListeners();
@@ -21,6 +23,14 @@ class Application {
       await UIStabilityMonitor.waitForUiStability();
       await this.#operateGemini();
     });
+  }
+
+  #extractAndProtectSensitiveFragmentParams() {
+    const fragmentParams = this.#getFragmentParams();
+    if (QueryParameter.hasTargetParameters(fragmentParams)) {
+      this.fragmentParams = fragmentParams;
+      this.#removeUrlFragment();
+    }
   }
 
   async #waitForAnsweringToComplete() {
@@ -55,19 +65,24 @@ class Application {
   }
 
   async #getQueryParameter() {
-    try {
-      QueryParameter.validateFragmentParameters();
-      return await QueryParameter.generateFromBackground();
-    } catch (error) {
-      const parameter = await QueryParameter.generateFromFragment();
-      this.#removeUrlFragment();
-      return parameter;
+    if (this.fragmentParams) {
+      return await QueryParameter.generateFromFragment(this.fragmentParams);
     }
+    return await QueryParameter.generateFromBackground();
+  }
+
+  #getFragmentParams() {
+    const url = new URL(window.location.href);
+    const hash = url.hash;
+    if (hash && hash.length > 1) {
+      const decodedHash = decodeURIComponent(hash.substring(1));
+      return new URLSearchParams(decodedHash);
+    }
+    return new URLSearchParams();
   }
 
   #removeUrlFragment() {
-    const url = new URL(window.location.href);
-    history.replaceState(null, '', url.pathname + url.search);
+    history.replaceState(null, document.title, location.origin + location.pathname + location.search);
   }
 
   async #buildProgressCounter(prompts) {

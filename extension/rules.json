@@ -8,7 +8,8 @@
         "transform": {
           "queryTransform": {
             "removeParams": ["ext-q", "ext-m", "ext-confirm", "ext-clipboard", "ext-send"]
-          }
+          },
+          "fragment": ""
         }
       }
     },

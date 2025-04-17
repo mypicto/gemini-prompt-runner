@@ -43,8 +43,7 @@ class BackgroundHandler {
   #getUrlFilters() {
     const filters = [];
     this.params.forEach(param => {
-      filters.push(`*://gemini.google.com/*?${param}=*`);
-      filters.push(`*://gemini.google.com/*&${param}=*`);
+      filters.push(`*://gemini.google.com/*`);
     });
     return filters;
   }
@@ -75,14 +74,39 @@ class BackgroundHandler {
   
   #handleWebRequest(details) {
     const url = new URL(details.url);
-    if (this.params.some(param => url.searchParams.has(param))) {
-      this.pendingParameters = {
-        prompts: url.searchParams.getAll('ext-q'),
-        model: url.searchParams.get('ext-m'),
-        send: url.searchParams.get('ext-send'),
-        clipboard: url.searchParams.get('ext-clipboard')
-      };
+    const queryParams = this.#extractQueryParameters(url);
+    const fragmentParams = this.#extractFragmentParameters(url);
+
+    if (this.#hasTargetParameters(queryParams, fragmentParams)) {
+      this.pendingParameters = this.#mergeParameters(queryParams, fragmentParams);
     }
+  }
+
+  #extractQueryParameters(url) {
+    return url.searchParams;
+  }
+
+  #extractFragmentParameters(url) {
+    if (url.hash && url.hash.length > 1) {
+      const decodedHash = decodeURIComponent(url.hash.substring(1));
+      return new URLSearchParams(decodedHash);
+    }
+    return new URLSearchParams();
+  }
+
+  #hasTargetParameters(queryParams, fragmentParams) {
+    return this.params.some(param => 
+      queryParams.has(param) || fragmentParams.has(param)
+    );
+  }
+
+  #mergeParameters(queryParams, fragmentParams) {
+    return {
+      prompts: [...queryParams.getAll('ext-q'), ...fragmentParams.getAll('ext-q')],
+      model: queryParams.get('ext-m') || fragmentParams.get('ext-m'),
+      send: queryParams.get('ext-send') || fragmentParams.get('ext-send'),
+      clipboard: queryParams.get('ext-clipboard') || fragmentParams.get('ext-clipboard')
+    };
   }
   
   #handleMessage(message, sender, sendResponse) {

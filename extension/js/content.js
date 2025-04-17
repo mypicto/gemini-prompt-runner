@@ -38,7 +38,7 @@ class Application {
   }
 
   async #operateGemini() {
-    const parameter = await QueryParameter.generateFromUrl();
+    const parameter = await this.#getQueryParameter();
     const prompts = parameter.getPrompts();
     const modelQuery = parameter.getModelQuery();
     const isAutoSend = parameter.isAutoSend();
@@ -52,6 +52,22 @@ class Application {
       await new Promise(resolve => setTimeout(resolve, 1000));
       this.iconStateService.resetToDefault();
     }
+  }
+
+  async #getQueryParameter() {
+    try {
+      QueryParameter.validateFragmentParameters();
+      return await QueryParameter.generateFromBackground();
+    } catch (error) {
+      const parameter = await QueryParameter.generateFromFragment();
+      this.#removeUrlFragment();
+      return parameter;
+    }
+  }
+
+  #removeUrlFragment() {
+    const url = new URL(window.location.href);
+    history.replaceState(null, '', url.pathname + url.search);
   }
 
   async #buildProgressCounter(prompts) {

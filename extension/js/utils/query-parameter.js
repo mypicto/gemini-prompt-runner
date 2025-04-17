@@ -45,7 +45,7 @@ class QueryParameter {
     });
   }
 
-  static async generateFromUrl() {
+  static async generateFromBackground() {
     const response = await QueryParameter.#fetchParameters();
     const promptTexts = response.prompts
       ? await Promise.all(response.prompts.map(prompt => QueryParameter.#processPrompt(prompt, response.clipboard)))
@@ -60,6 +60,51 @@ class QueryParameter {
       isUseClipboard: null,
       token: QueryParameter.#PRIVATE_TOKEN
     });
+  }
+
+  static async generateFromFragment() {
+    const url = new URL(window.location.href);
+    const fragmentParams = QueryParameter.#extractFragmentParameters(url);
+    const promptTexts = fragmentParams.getAll('ext-q');
+    const modelValue = fragmentParams.get('ext-m');
+    const sendValue = fragmentParams.get('ext-send');
+    const clipboardValue = fragmentParams.get('ext-clipboard');
+
+    const processedPrompts = promptTexts.length > 0
+      ? await Promise.all(promptTexts.map(prompt => QueryParameter.#processPrompt(prompt, clipboardValue)))
+      : [];
+    const modelQuery = QueryParameter.#processModel(modelValue);
+    const isAutoSend = QueryParameter.#convertToBoolean(sendValue);
+
+    return new QueryParameter({
+      prompts: processedPrompts,
+      modelQuery: modelQuery,
+      isAutoSend: isAutoSend,
+      isUseClipboard: null,
+      token: QueryParameter.#PRIVATE_TOKEN
+    });
+  }
+
+  static #extractFragmentParameters(url) {
+    if (url.hash && url.hash.length > 1) {
+      const decodedHash = decodeURIComponent(url.hash.substring(1));
+      return new URLSearchParams(decodedHash);
+    }
+    return new URLSearchParams();
+  }
+
+  static validateFragmentParameters() {
+    const url = new URL(window.location.href);
+    const hash = url.hash;
+
+    if (!hash || hash.length <= 1) return;
+
+    const targetParams = ['ext-q', 'ext-m', 'ext-send', 'ext-clipboard'];
+    const isContaminated = targetParams.some(param => hash.includes(`${param}=`));
+
+    if (isContaminated) {
+      throw new Error('Extension parameters found in URL fragment. This may be caused by extension loading delay.');
+    }
   }
 
   getPrompts() {

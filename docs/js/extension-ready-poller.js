@@ -1,4 +1,7 @@
-const EXT_ID = 'aanchkianmckcemipkbnpjbkldfmbgbd';
+const EXT_ID = (() => {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('ext_id') || 'gmjljiibddnjnbllmddpplmnfhcddjmg';
+})(); 
 const START_TIME = Date.now();
 const FAST_INTERVAL = 1000;
 const SLOW_INTERVAL = 5000;
@@ -10,6 +13,7 @@ function buildTargetUrl() {
   const prefix = '/gemini-prompt-runner/';
   const relativePath = window.location.pathname.slice(prefix.length);
   const fragment = window.originalFragment || window.location.hash;
+  console.log('Redirecting to:', relativePath, window.location.search, fragment);
   return `https://gemini.google.com/${relativePath}${window.location.search}${fragment}`;
 }
 

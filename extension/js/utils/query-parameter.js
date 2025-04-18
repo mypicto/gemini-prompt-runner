@@ -2,14 +2,14 @@ class QueryParameter {
   static CLIPBOARD_KEYWORD = '{{clipboard}}';
   static #PRIVATE_TOKEN = Symbol('QueryParameterToken');
 
-  constructor({ prompt = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, token = null} = {}) {
+  constructor({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, token = null} = {}) {
     if (token !== QueryParameter.#PRIVATE_TOKEN) {
       throw new Error('Invalid constructor call: Use static factory methods instead');
     }
     
-    this.prompt = prompt;
+    this.prompts = prompts;
     this.modelQuery = modelQuery;
-    this.isAutoSend = isAutoSend;
+    this._isAutoSend = isAutoSend;
     this.isUseClipboard = isUseClipboard;
   }
 
@@ -31,11 +31,13 @@ class QueryParameter {
     return response;
   }
 
-  static async generate({ prompt = null, modelQuery = null, isAutoSend = null, isUseClipboard = null} = {}) {
-    const promptText = await QueryParameter.#processPrompt(prompt, isUseClipboard);
+  static async generate({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null} = {}) {
+    const promptTexts = prompts
+      ? await Promise.all(prompts.map(prompt => QueryParameter.#processPrompt(prompt, isUseClipboard)))
+      : [];
 
     return new QueryParameter({
-      prompt: promptText,
+      prompts: promptTexts,
       modelQuery: modelQuery,
       isAutoSend: isAutoSend,
       isUseClipboard: isUseClipboard,
@@ -45,12 +47,14 @@ class QueryParameter {
 
   static async generateFromUrl() {
     const response = await QueryParameter.#fetchParameters();
-    const promptText = await QueryParameter.#processPrompt(response.prompt, response.clipboard);
+    const promptTexts = response.prompts
+      ? await Promise.all(response.prompts.map(prompt => QueryParameter.#processPrompt(prompt, response.clipboard)))
+      : [];
     const modelQuery = QueryParameter.#processModel(response.model);
     const isAutoSend = QueryParameter.#convertToBoolean(response.send);
 
     return new QueryParameter({
-      prompt: promptText,
+      prompts: promptTexts,
       modelQuery: modelQuery,
       isAutoSend: isAutoSend,
       isUseClipboard: null,
@@ -58,16 +62,16 @@ class QueryParameter {
     });
   }
 
-  getPrompt() {
-    return this.prompt;
+  getPrompts() {
+    return this.prompts;
   }
 
   getModelQuery() {
     return this.modelQuery;
   }
 
-  IsAutoSend() {
-    return this.isAutoSend;
+  isAutoSend() {
+    return this._isAutoSend;
   }
   
   buildUrl(location) {
@@ -75,12 +79,15 @@ class QueryParameter {
     if (this.modelQuery) {
       url.searchParams.set('ext-m', this.modelQuery.getIdentifierString());
     }
-    if (this.prompt) {
-      url.searchParams.set('ext-q', this.prompt);
-      if (this.isAutoSend) {
+    if (this.prompts) {
+      for (let prompt of this.prompts) {
+        url.searchParams.append('ext-q', prompt);
+      }
+      if (this._isAutoSend) {
         url.searchParams.set('ext-send', '1');
       }
-      if (this.prompt.includes(QueryParameter.CLIPBOARD_KEYWORD) && this.isUseClipboard !== false) {
+      const hasClipboardKeyword = this.prompts.some(prompt => prompt.includes(QueryParameter.CLIPBOARD_KEYWORD));
+      if (hasClipboardKeyword && this.isUseClipboard !== false) {
         url.searchParams.set('ext-clipboard', '1');
       }
     }

@@ -1,47 +1,49 @@
+English | [日本語](README_ja.md)
+
 # Prompt Runner for Google Gemini
 
-この拡張機能は、Google GeminiのWebアプリに追加のURLパラメータを渡せるようにすることで、標準では対応していないプロンプトの自動実行を可能にします。
+This extension allows automatic execution of prompts, which is not supported by default, by passing additional URL parameters to the Google Gemini web app.
 
 ![store screen-shot](store/gemini-prompt-runner.png)
 
-## 機能
+## Features
 
-* URLパラメーターによるプロンプトの自動実行（パラメーターはサーバーに送信されず、ブラウザー内で安全に処理されます）
-  * プロンプト内のキーワード `{{clipboard}}` をクリップボードのテキストに置換（オプション）
-  * プロンプトの自動送信（オプション）
-* URLパラメーターによるモデルの選択
-* 現在のプロンプトと選択中のモデルから、Prompt Runner for Google Gemini で使用可能なURLを生成
-* テキスト未選択状態で `Ctrl + C` / `Cmd + C` キーを押すと、最後の回答をコピー（コピーボタンを必要とするので、一定以上のウィンドウサイズが必要）
+* Automatic prompt execution via URL parameters (parameters are not sent to the server and are processed securely within the browser)
+  * Replacement of the keyword `{{clipboard}}` in prompts with clipboard text (optional)
+  * Automatic prompt submission (optional)
+* Model selection via URL parameters
+* Generation of URLs usable in Prompt Runner for Google Gemini from the current prompt and selected model
+* Copying of the last response when `Ctrl + C` / `Cmd + C` is pressed without text selection (requires a copy button, so a certain window size is necessary)
 
-## 用途
+## Use Cases
 
-* プロンプトのテンプレートをブックマークに登録
-* CLIからプロンプト実行のトリガー
+* Register prompt templates in bookmarks
+* Trigger prompt execution from CLI
 
-## 動作環境
+## Supported Environments
 
 * Google Chrome
 * Microsoft Edge
 * Opera
 * Brave
 * Arc
-* 他、Chromium 派生のブラウザ
+* Other Chromium-based browsers
 
-## インストール
+## Install
 
 ### Chrome Web Store
 
 * [Prompt Runner for Google Gemini](https://chromewebstore.google.com/detail/gmjljiibddnjnbllmddpplmnfhcddjmg)
 
-### CRX ファイル
+### CRX File
 
-1. [Releases](https://github.com/mypicto/gemini-prompt-runner/releases/latest) から最新版の crx ファイルをダウンロードし、ローカルに保存。
-2. Chromeで拡張機能を管理(`chrome://extensions/`) にアクセス
-3. 右上の「デベロッパーモード」を有効にする
-4. ダウンロードした crx ファイルをブラウザにドラッグ&ドロップ
-5. 拡張機能を追加ボタンを押下
+1. Download the latest `.crx` file from the [Releases](https://github.com/mypicto/gemini-prompt-runner/releases/latest) page and save it locally.
+2. Open the Chrome Extensions page (`chrome://extensions/`).
+3. Enable "Developer mode" at the top right corner.
+4. Drag and drop the downloaded `.crx` file into the browser window.
+5. Click the "Add extension" button to complete the installation.
 
-## 操作方法
+## Instructions
 
 ```plaintext
 https://how-to-use
@@ -53,55 +55,57 @@ https://how-to-use
 Ctrl+C / Cmd+C: copy the last answer.
 ```
 
-| パラメータ | 説明 | 値 |
+| Parameter | Description | Value |
 | --- | --- | --- |
-| `ext-q` | 実行するプロンプト文字列 | URLエンコードされたテキスト（`{{clipboard}}`キーワードでクリップボードのテキストを挿入） |
-| `ext-m` | 選択するモデルのインデックス | 0 から始まる整数（UI上での表示順）またはモデル名（UI上での表示名） |
-| `ext-clipboard` | `ext-q`の中で`{{clipboard}}`キーワードをクリップボードのテキストと置き換える | `true/false` または `0/1` |
-| `ext-send` | プロンプトの自動送信 | `true/false` または `0/1` |
+| `ext-q` | Prompt string to execute | URL-encoded text (insert clipboard text with `{{clipboard}}` keyword) |
+| `ext-m` | Index of the model to select | Integer starting from 0 (order as displayed in UI) or model name (as displayed in UI) |
+| `ext-clipboard` | Replace the {{clipboard}} keyword in `ext-q` with the clipboard text | `true/false` or `0/1` |
+| `ext-send` | Auto-sending for prompt | `true/false` or `0/1` |
 
-## サンプル
+> [!TIP]
+> By enabling `ext-send` and specifying multiple `ext-q` values, you can send multiple prompts consecutively.
 
-* 今日の天気予報を質問
+## Examples
 
-  ```url
-  https://gemini.google.com/app?ext-q=%E4%BB%8A%E6%97%A5%E3%81%AE%E5%A4%A9%E6%B0%97%E4%BA%88%E5%A0%B1%E3%80%82$ext-send=1
-  ```
-
-* 2番目のモデルでチャットを開始
+* Ask for today's weather forecast
 
   ```url
-  https://gemini.google.com/app?ext-m=1
+  https://gemini.google.com/app?ext-q=Today%27s+weather+forecast.&ext-send=1
   ```
 
-* Deep Research モデルでチャットを開始
+* Start a chat with the 3rd model
+
+  ```url
+  https://gemini.google.com/app?ext-m=2
+  ```
+
+* Start a chat with Deep Research model
 
   ```url
   https://gemini.google.com/app?ext-m=DeepResearch
   ```
 
-* クリップボードのテキストを要約する
+* Summarize text from clipboard
 
   ```url
-  https://gemini.google.com/app?ext-q=%E5%85%A5%E5%8A%9B%E3%81%95%E3%82%8C%E3%81%9F%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%A6%81%E7%B4%84%E3%81%99%E3%82%8B%E3%80%82%0A%0A%2A%2AInput%3A%2A%2A%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1
-  ```
+  https://gemini.google.com/app?ext-q=Summarize%20the%20input%20text.%0A%0A**Input%3A**%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1
 
-## Mac ショートカットアプリとの連携
+## Integration with the Mac Shortcuts App
 
-Mac ショートカットアプリと連携させることで、プロンプト動的に作成して実行することができます。
+By integrating with the Mac Shortcuts app, you can dynamically create and run prompts.
 
 * [Prompt Runner for Google Gemini](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Prompt%20Runner%20for%20Google%20Gemini.shortcut)  
-  ベースのショートカット。  
-  Prompt Runner for Google Gemini拡張機能をインストールしているのがデフォルトブラウザの場合に、ショートカットアプリからPrompt Runner for Google Geminiを呼び出します。 
- 
+  Base shortcut.  
+  Launches Prompt Runner for Google Gemini from the Shortcuts app, assuming your default browser has the extension installed.  
+
 * [Today's weather forecast](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Today's%20weather%20forecast.shortcut)  
-  今日の天気予報を質問するサンプル。  
-  実行には別途 Prompt Runner for Google Gemini ショートカットが必要です。  
+  Sample shortcut that asks for today’s weather forecast.  
+  Requires the base Prompt Runner for Google Gemini shortcut to work.  
 
 * [Summarize the input text in Gemini](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Summarize%20the%20input%20text%20in%20Gemini.shortcut)  
-  クリップボードのテキストを要約するサンプル。  
-  実行には別途 Prompt Runner for Google Gemini ショートカットが必要です。  
+  Sample shortcut that summarizes the text in your clipboard.  
+  Requires the base Prompt Runner for Google Gemini shortcut to work.  
 
-### 帰属
+## Attribution
 
-Google Gemini™ は Google LLC の商標です。
+Google Gemini™ is a trademark of Google LLC.

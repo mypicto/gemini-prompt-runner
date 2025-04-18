@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Prompt Runner for Google Gemini",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
   "icons": {
@@ -34,6 +34,7 @@
         "js/services/copy-service.js",
         "js/services/url-generate-service.js",
         "js/services/clipboard-keyword-service.js",
+        "js/services/icon-state-service.js",
         "js/components/textarea.js",
         "js/components/send-button.js",
         "js/components/copy-button.js",

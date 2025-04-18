@@ -16,7 +16,7 @@ class UrlGenerateService {
           modelQueryVal = await this.modelSelector.getCurrentModelQuery();
         }
         const queryParameter = await QueryParameter.generate({
-          prompt: promptVal,
+          prompts: promptVal ? [promptVal] : null,
           modelQuery: modelQueryVal,
           isAutoSend: message.autoSend,
           isUseClipboard: null

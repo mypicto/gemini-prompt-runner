@@ -102,21 +102,31 @@ class QueryParameter {
   
   buildUrl(location) {
     const url = new URL(location.origin + location.pathname);
+    const params = new URLSearchParams();
+
     if (this.modelQuery) {
-      url.searchParams.set('ext-m', this.modelQuery.getIdentifierString());
+      params.set('ext-m', this.modelQuery.getIdentifierString());
     }
+
     if (this.prompts) {
       for (let prompt of this.prompts) {
-        url.searchParams.append('ext-q', prompt);
+        params.append('ext-q', prompt);
       }
       if (this._isAutoSend) {
-        url.searchParams.set('ext-send', '1');
+        params.set('ext-send', '1');
       }
-      const hasClipboardKeyword = this.prompts.some(prompt => prompt.includes(QueryParameter.CLIPBOARD_KEYWORD));
+      const hasClipboardKeyword = this.prompts.some(p =>
+        p.includes(QueryParameter.CLIPBOARD_KEYWORD)
+      );
       if (hasClipboardKeyword && this.isUseClipboard !== false) {
-        url.searchParams.set('ext-clipboard', '1');
+        params.set('ext-clipboard', '1');
       }
     }
+
+    if ([...params].length > 0) {
+      url.hash = params.toString();
+    }
+
     return url.toString();
   }
 

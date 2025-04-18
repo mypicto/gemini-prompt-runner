@@ -3,7 +3,7 @@ const fallback = 'en';
 const uiLang = (navigator.language || fallback).toLowerCase().startsWith('ja')
              ? 'ja' : 'en';
 
-const messages = await fetch(`./i18n/${uiLang}.json`)
+const messages = await fetch(`/i18n/${uiLang}.json`)
                  .then(r => r.ok ? r.json() : {})
                  .catch(() => ({}));
 

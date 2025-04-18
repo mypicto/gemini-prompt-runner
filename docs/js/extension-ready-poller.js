@@ -9,7 +9,8 @@ let timeoutId;
 function buildTargetUrl() {
   const prefix = '/gemini-prompt-runner/';
   const relativePath = window.location.pathname.slice(prefix.length);
-  return `https://gemini.google.com/${relativePath}${window.location.search}${window.location.hash}`;
+  const fragment = window.originalFragment || window.location.hash;
+  return `https://gemini.google.com/${relativePath}${window.location.search}${fragment}`;
 }
 
 function redirectToGemini() {

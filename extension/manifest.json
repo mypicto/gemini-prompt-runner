@@ -39,6 +39,7 @@
         "js/components/send-button.js",
         "js/components/copy-button.js",
         "js/components/model-selector.js",
+        "js/components/login-button.js",
         "js/content.js"
       ],
       "run_at": "document_start"

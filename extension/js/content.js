@@ -6,6 +6,7 @@ class Application {
     this.textarea = new Textarea(this.selectorService);
     this.modelSelector = new ModelSelector(this.selectorService);
     this.sendButton = new SendButton(this.selectorService);
+    this.loginButton = new LoginButton(this.selectorService);
     this.urlGenerateService = new UrlGenerateService(this.textarea, this.modelSelector);
     this.clipboardKeywordService = new ClipboardKeywordService(this.textarea);
     this.iconStateService = new IconStateService();
@@ -53,11 +54,20 @@ class Application {
     const modelQuery = parameter.getModelQuery();
     const isAutoSend = parameter.isAutoSend();
     const isOnGemPage = LocationChecker.isOnGemPage();
+    const isRequiredLogin = parameter.isRequiredLogin();
+
+    const options = {
+      prompts,
+      modelQuery,
+      autoSend: isAutoSend,
+      onGemPage: isOnGemPage,
+      requiredLogin: isRequiredLogin
+    };
 
     try {
       this.progressCounter = await this.#buildProgressCounter(prompts);
       this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
-      await this.#processAll(prompts, modelQuery, isAutoSend, isOnGemPage);
+      await this.#processAll(options);
     } finally {
       await new Promise(resolve => setTimeout(resolve, 1000));
       this.iconStateService.resetToDefault();
@@ -94,15 +104,28 @@ class Application {
     return progressCounter;
   }
 
-  async #processAll(prompts, modelQuery, isAutoSend, isOnGemPage) {
-    if (modelQuery !== null && !isOnGemPage) {
+  async #processAll({ prompts, modelQuery, autoSend, onGemPage, requiredLogin }) {
+    if (requiredLogin && await this.validateLoginRequirement()) {
+      return;
+    }
+
+    if (modelQuery !== null && !onGemPage) {
       await this.#processModel(modelQuery);
     }
     this.#incrementProgress()
 
     if (prompts) {
-      await this.#processPrompts(prompts, isAutoSend);
+      await this.#processPrompts(prompts, autoSend);
     }
+  }
+
+  async validateLoginRequirement() {
+    const loginRequired = await this.loginButton.exists();
+    if (loginRequired) {
+      await this.loginButton.click();
+      return true;
+    }
+    return false;
   }
 
   async #processModel(modelQuery) {

@@ -4,7 +4,11 @@ class LoginButton {
   }
 
   async #findElement() {
-    return await this.selectorManager.getElement('serviceLoginLink');
+    try {
+      return await this.selectorManager.getElement('serviceLoginLink', 10);
+    } catch (error) {
+      return null;
+    }
   }
 
   async exists() {

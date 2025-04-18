@@ -120,8 +120,7 @@ class Application {
   }
 
   async validateLoginRequirement() {
-    const loginRequired = await this.loginButton.exists();
-    if (loginRequired) {
+    if (await this.loginButton.exists()) {
       await this.loginButton.click();
       return true;
     }

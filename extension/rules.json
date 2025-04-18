@@ -7,7 +7,7 @@
       "redirect": {
         "transform": {
           "queryTransform": {
-            "removeParams": ["ext-q", "ext-m", "ext-confirm", "ext-clipboard", "ext-send"]
+            "removeParams": ["ext-q", "ext-m", "ext-confirm", "ext-clipboard", "ext-send", "ext-required-login"]
           },
           "fragment": ""
         }

@@ -19,7 +19,7 @@ class TabIconCache {
 class BackgroundHandler {
   constructor() {
     this.pendingParameters = this.#generateEmptyParameters();
-    this.params = ['ext-q', 'ext-m', 'ext-send', 'ext-clipboard'];
+    this.params = ['ext-q', 'ext-m', 'ext-send', 'ext-clipboard', 'ext-required-login'];
     this.tabIconCache = new TabIconCache();
   }
   
@@ -35,8 +35,9 @@ class BackgroundHandler {
     return {
       prompts: null,
       model: null,
-      audosend: null,
-      clipboard: null
+      autosend: null,
+      clipboard: null,
+      requiredLogin: null
     };
   }
   
@@ -105,7 +106,8 @@ class BackgroundHandler {
       prompts: [...queryParams.getAll('ext-q'), ...fragmentParams.getAll('ext-q')],
       model: queryParams.get('ext-m') || fragmentParams.get('ext-m'),
       send: queryParams.get('ext-send') || fragmentParams.get('ext-send'),
-      clipboard: queryParams.get('ext-clipboard') || fragmentParams.get('ext-clipboard')
+      clipboard: queryParams.get('ext-clipboard') || fragmentParams.get('ext-clipboard'),
+      requiredLogin: queryParams.get('ext-required-login') || fragmentParams.get('ext-required-login')
     };
   }
   

@@ -139,6 +139,7 @@ class UrlGenerateComponent {
     this.includeModel = document.getElementById('includeModel');
     this.includePrompt = document.getElementById('includePrompt');
     this.autoSend = document.getElementById('autoSend');
+    this.requiredLogin = document.getElementById('requiredLogin');
     this.urlGenerateButton = document.getElementById('urlGenerateButton');
     this.clipboardInsertButton = document.getElementById('clipboardInsertButton');
   }
@@ -162,7 +163,8 @@ class UrlGenerateComponent {
     return {
       includeModel: this.includeModel.checked,
       includePrompt: this.includePrompt.checked,
-      autoSend: this.autoSend.checked
+      autoSend: this.autoSend.checked,
+      requiredLogin: this.requiredLogin.checked
     };
   }
 
@@ -189,6 +191,7 @@ class UrlGenerateComponent {
     this.includeModel.disabled = true;
     this.includePrompt.disabled = true;
     this.autoSend.disabled = true;
+    this.requiredLogin.disabled = true;
     this.clipboardInsertButton.disabled = true;
   }
 
@@ -231,7 +234,8 @@ class UrlGenerateService {
         action: "getGenerateUrl",
         includeModel: options.includeModel,
         includePrompt: options.includePrompt,
-        autoSend: options.autoSend
+        autoSend: options.autoSend,
+        requiredLogin: options.requiredLogin
       }, (resp) => {
         if (chrome.runtime.lastError) {
           resolve(null);

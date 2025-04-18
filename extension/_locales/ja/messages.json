@@ -23,6 +23,9 @@
     "popupUrlGeneratePromptAutoSendCheckbox": {
         "message": "プロンプトを自動送信する"
     },
+    "popupUrlGenerateLoginCheckbox": {
+        "message": "ログインを必須にする"
+    },
     "popupUrlGenerateClipboardInsertButton": {
         "message": "{{clipboard}} を挿入する"
     },

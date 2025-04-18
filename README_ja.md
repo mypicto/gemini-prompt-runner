@@ -45,9 +45,13 @@
 
 ## 操作方法
 
+パラメータは `#` から始まるフラグメントで指定してください。
+クエリ形式（`?key=value`）ではなく、`#key=value` を使います。
+複数指定する場合は `&` で区切ります。
+
 ```plaintext
 https://how-to-use
-    ?ext-q=enter-prompt-text
+    #ext-q=enter-prompt-text
     &ext-m=select-model
     &ext-clipboard=replace-keywords-in-prompt-with-clipboard-text
     &ext-send=auto-send-for-prompt
@@ -70,25 +74,25 @@ Ctrl+C / Cmd+C: copy the last answer.
 * 今日の天気予報を質問
 
   ```url
-  https://gemini.google.com/app?ext-q=%E4%BB%8A%E6%97%A5%E3%81%AE%E5%A4%A9%E6%B0%97%E4%BA%88%E5%A0%B1%E3%80%82$ext-send=1
+  https://gemini.google.com/app#ext-q=%E4%BB%8A%E6%97%A5%E3%81%AE%E5%A4%A9%E6%B0%97%E4%BA%88%E5%A0%B1%E3%80%82&ext-send=1
   ```
 
 * 2番目のモデルでチャットを開始
 
   ```url
-  https://gemini.google.com/app?ext-m=1
+  https://gemini.google.com/app#ext-m=1
   ```
 
 * Deep Research モデルでチャットを開始
 
   ```url
-  https://gemini.google.com/app?ext-m=DeepResearch
+  https://gemini.google.com/app#ext-m=DeepResearch
   ```
 
 * クリップボードのテキストを要約する
 
   ```url
-  https://gemini.google.com/app?ext-q=%E5%85%A5%E5%8A%9B%E3%81%95%E3%82%8C%E3%81%9F%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%A6%81%E7%B4%84%E3%81%99%E3%82%8B%E3%80%82%0A%0A%2A%2AInput%3A%2A%2A%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1
+  https://gemini.google.com/app#ext-q=%E5%85%A5%E5%8A%9B%E3%81%95%E3%82%8C%E3%81%9F%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%A6%81%E7%B4%84%E3%81%99%E3%82%8B%E3%80%82%0A%0A%2A%2AInput%3A%2A%2A%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1
   ```
 
 ## Mac ショートカットアプリとの連携
@@ -97,7 +101,7 @@ Mac ショートカットアプリと連携させることで、プロンプト�
 
 * [Prompt Runner for Google Gemini](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Prompt%20Runner%20for%20Google%20Gemini.shortcut)  
   ベースのショートカット。  
-  Prompt Runner for Google Gemini拡張機能をインストールしているのがデフォルトブラウザの場合に、ショートカットアプリからPrompt Runner for Google Geminiを呼び出します。 
+  Prompt Runner for Google Gemini拡張機能をインストールしているのがデフォルトブラウザの場合に、ショートカットアプリからPrompt Runner for Google Geminiを呼び出します。  
 
 * [Today's weather forecast](https://github.com/mypicto/gemini-prompt-runner/raw/main/tools/mac/shortcuts/Today's%20weather%20forecast.shortcut)  
   今日の天気予報を質問するサンプル。  

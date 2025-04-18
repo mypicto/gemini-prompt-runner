@@ -45,9 +45,13 @@ This extension allows automatic execution of prompts, which is not supported by 
 
 ## Instructions
 
+Use a **fragment** starting with `#` to specify parameters.
+Do not use query parameters like `?key=value`; use `#key=value` instead.
+Use `&` to separate multiple parameters.
+
 ```plaintext
 https://how-to-use
-    ?ext-q=enter-prompt-text
+    #ext-q=enter-prompt-text
     &ext-m=select-model
     &ext-clipboard=replace-keywords-in-prompt-with-clipboard-text
     &ext-send=auto-send-for-prompt
@@ -70,25 +74,25 @@ Ctrl+C / Cmd+C: copy the last answer.
 * Ask for today's weather forecast
 
   ```url
-  https://gemini.google.com/app?ext-q=Today%27s+weather+forecast.&ext-send=1
+  https://gemini.google.com/app#ext-q=Today%27s+weather+forecast.&ext-send=1
   ```
 
 * Start a chat with the 3rd model
 
   ```url
-  https://gemini.google.com/app?ext-m=2
+  https://gemini.google.com/app#ext-m=2
   ```
 
 * Start a chat with Deep Research model
 
   ```url
-  https://gemini.google.com/app?ext-m=DeepResearch
+  https://gemini.google.com/app#ext-m=DeepResearch
   ```
 
 * Summarize text from clipboard
 
   ```url
-  https://gemini.google.com/app?ext-q=Summarize%20the%20input%20text.%0A%0A**Input%3A**%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1
+  https://gemini.google.com/app#ext-q=Summarize%20the%20input%20text.%0A%0A**Input%3A**%0A%7B%7Bclipboard%7D%7D&ext-clipboard=1
 
 ## Integration with the Mac Shortcuts App
 

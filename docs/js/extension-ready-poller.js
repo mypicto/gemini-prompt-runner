@@ -18,7 +18,9 @@ function buildTargetUrl() {
 }
 
 function redirectToGemini() {
-  window.location.replace(buildTargetUrl());
+  const targetUrl = buildTargetUrl();
+  console.log('Redirecting to:', targetUrl);
+  // window.location.replace(buildTargetUrl());
 }
 
 function handlePingResponse(resp) {

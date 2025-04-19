@@ -12,15 +12,11 @@ let timeoutId;
 function buildTargetUrl() {
   const prefix = '/gemini-prompt-runner/';
   const relativePath = window.location.pathname.slice(prefix.length);
-  const fragment = window.originalFragment || window.location.hash;
-  console.log('Redirecting to:', relativePath, window.location.search, fragment);
-  return `https://gemini.google.com/${relativePath}${window.location.search}${fragment}`;
+  return `https://gemini.google.com/${relativePath}${window.location.search}${window.location.hash}`;
 }
 
 function redirectToGemini() {
-  const targetUrl = buildTargetUrl();
-  console.log('Redirecting to:', targetUrl);
-  // window.location.replace(buildTargetUrl());
+  window.location.replace(buildTargetUrl());
 }
 
 function handlePingResponse(resp) {

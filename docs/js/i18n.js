@@ -1,30 +1,53 @@
-(async () => {
-const fallback = 'en';
-const uiLang = (navigator.language || fallback).toLowerCase().startsWith('ja')
-             ? 'ja' : 'en';
+function getUiLang() {
+  const fallback = 'en';
+  return (navigator.language || fallback)
+    .toLowerCase()
+    .startsWith('ja') ? 'ja' : 'en';
+}
 
-const messages = await fetch(`/gemini-prompt-runner/i18n/${uiLang}.json`)
-                 .then(r => r.ok ? r.json() : {})
-                 .catch(() => ({}));
+async function fetchMessages(uiLang) {
+  try {
+    const response = await fetch(`/gemini-prompt-runner/i18n/${uiLang}.json`);
+    return response.ok ? await response.json() : {};
+  } catch {
+    return {};
+  }
+}
 
-for (const [key, value] of Object.entries(messages)) {
+function validateMessages(messages) {
   const parser = new DOMParser();
-  const parsedDoc = parser.parseFromString(value, 'text/html');
-  if (parsedDoc.body.children.length > 0) {
-    throw new Error(`[i18n] Message "${key}" contains HTML tags, which is not allowed.`);
+  for (const [key, value] of Object.entries(messages)) {
+    const parsedDoc = parser.parseFromString(value, 'text/html');
+    if (parsedDoc.body.children.length > 0) {
+      throw new Error(`[i18n] Message "${key}" contains HTML tags, which is not allowed.`);
+    }
   }
 }
 
-for (const el of document.querySelectorAll('[localize]')) {
-  const key = el.textContent.trim();
-  if (messages[key]) {
-    el.innerHTML = messages[key]
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\n/g, '<br>');
-  } else {
-    console.warn(`[i18n] Missing key "${key}" in ${uiLang}.json`);
+function applyMarkup(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+}
+
+function localizeElements(messages, uiLang) {
+  document.documentElement.lang = uiLang;
+  for (const el of document.querySelectorAll('[localize]')) {
+    const attr = el.getAttribute('localize');
+    const key = attr ? attr.trim() : null;
+    if (key && messages[key]) {
+      el.innerHTML = applyMarkup(messages[key]);
+    } else if (key) {
+      console.warn(`[i18n] Missing key "${key}" in ${uiLang}.json`);
+    }
   }
 }
 
-document.documentElement.lang = uiLang;
-})();
+async function initLocalization() {
+  const uiLang = getUiLang();
+  const messages = await fetchMessages(uiLang);
+  validateMessages(messages);
+  localizeElements(messages, uiLang);
+}
+
+initLocalization();

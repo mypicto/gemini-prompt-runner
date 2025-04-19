@@ -2,5 +2,6 @@
     "__i18n_title__": "拡張機能を探しています…",
     "__i18n_message__": "Prompt Runner for Google Gemini が**まだ読み込まれていない**ため、このページが表示されています。\n拡張機能がロードされ次第、自動的に本来のページへ転送されます。",
     "__i18n_reload_button__": "もう一度開く",
-    "__i18n_store_button__": "拡張機能をインストールする"
+    "__i18n_store_button__": "拡張機能をインストールする",
+    "__i18n_view_source__": "ソースをGitHubで表示する"
 }

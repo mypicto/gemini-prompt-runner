@@ -26,6 +26,12 @@
     "popupUrlGenerateLoginCheckbox": {
         "message": "Require login"
     },
+    "popupUrlGenerateRedirectUrl": {
+        "message": "Secure URL for sharing"
+    },
+    "popupUrlGenerateRedirectUrlHelp": {
+        "message": "Inserts a secure page to verify the presence of the extension before forwarding the prompt to Gemini."
+    },
     "popupUrlGenerateClipboardInsertButton": {
         "message": "Insert {{clipboard}}"
     },

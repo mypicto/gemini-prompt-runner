@@ -26,6 +26,12 @@
     "popupUrlGenerateLoginCheckbox": {
         "message": "ログインを必須にする"
     },
+    "popupUrlGenerateRedirectUrl": {
+        "message": "共有用の安全なURL"
+    },
+    "popupUrlGenerateRedirectUrlHelp": {
+        "message": "プロンプトをGeminiへ転送する前に、拡張機能の有無を検証するセキュアなページを挟みます。"
+    },
     "popupUrlGenerateClipboardInsertButton": {
         "message": "{{clipboard}} を挿入する"
     },

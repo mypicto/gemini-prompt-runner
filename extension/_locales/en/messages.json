@@ -27,7 +27,7 @@
         "message": "Require login"
     },
     "popupUrlGenerateRedirectUrl": {
-        "message": "Secure URL for sharing"
+        "message": "Secure URL for sharing (experimental)"
     },
     "popupUrlGenerateRedirectUrlHelp": {
         "message": "To prevent the prompt from being sent to Gemini without the extension, a secure verification page is inserted to check whether the extension is installed."

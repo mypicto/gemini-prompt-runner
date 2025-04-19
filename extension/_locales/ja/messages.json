@@ -27,7 +27,7 @@
         "message": "ログインを必須にする"
     },
     "popupUrlGenerateRedirectUrl": {
-        "message": "共有用の安全なURL"
+        "message": "共有用の安全なURL（試験運用）"
     },
     "popupUrlGenerateRedirectUrlHelp": {
         "message": "拡張機能がない状態でGeminiにプロンプトが送信されるのを防ぐため、拡張機能のインストールを確認するセキュアな検証ページを挟みます。"

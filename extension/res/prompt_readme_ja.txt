@@ -46,6 +46,8 @@ Ctrl+C / Cmd+C: copy the last answer.
 > `https://gemini.google.com/app#ext-q=prompt`  
 > → `https://mypicto.github.io/gemini-prompt-runner/app#ext-q=prompt`
 
+### パラメータ
+
 | パラメータ | 説明 | 値 |
 | --- | --- | --- |
 | `ext-q` | 実行するプロンプト文字列 | URLエンコードされたテキスト（`{{clipboard}}`キーワードでクリップボードのテキストを挿入） |

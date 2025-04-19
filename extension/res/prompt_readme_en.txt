@@ -48,6 +48,8 @@ Ctrl+C / Cmd+C: copy the last answer.
 > `https://gemini.google.com/app#ext-q=prompt`  
 > → `https://mypicto.github.io/gemini-prompt-runner/app#ext-q=prompt`
 
+### Parameters
+
 | Parameter | Description | Value |
 | --- | --- | --- |
 | `ext-q` | Prompt string to execute | URL-encoded text (insert clipboard text with `{{clipboard}}` keyword) |

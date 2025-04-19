@@ -30,7 +30,7 @@
         "message": "Secure URL for sharing"
     },
     "popupUrlGenerateRedirectUrlHelp": {
-        "message": "Inserts a secure page to verify the presence of the extension before forwarding the prompt to Gemini."
+        "message": "To prevent the prompt from being sent to Gemini without the extension, a secure verification page is inserted to check whether the extension is installed."
     },
     "popupUrlGenerateClipboardInsertButton": {
         "message": "Insert {{clipboard}}"

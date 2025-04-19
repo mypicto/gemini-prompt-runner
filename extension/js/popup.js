@@ -143,6 +143,7 @@ class UrlGenerateComponent {
     this.redirectUrl = document.getElementById('redirectUrl');
     this.urlGenerateButton = document.getElementById('urlGenerateButton');
     this.clipboardInsertButton = document.getElementById('clipboardInsertButton');
+    this.helpIcons = document.querySelectorAll('.help-icon');
   }
 
   attachButtonClickListener(callback) {
@@ -196,6 +197,10 @@ class UrlGenerateComponent {
     this.requiredLogin.disabled = true;
     this.redirectUrl.disabled = true;
     this.clipboardInsertButton.disabled = true;
+    
+    this.helpIcons.forEach(icon => {
+      icon.classList.add('disabled');
+    });
   }
 
   attachClipboardInsertButtonClickListener(callback) {

@@ -30,7 +30,7 @@
         "message": "共有用の安全なURL"
     },
     "popupUrlGenerateRedirectUrlHelp": {
-        "message": "プロンプトをGeminiへ転送する前に、拡張機能の有無を検証するセキュアなページを挟みます。"
+        "message": "拡張機能がない状態でGeminiにプロンプトが送信されるのを防ぐため、拡張機能のインストールを確認するセキュアな検証ページを挟みます。"
     },
     "popupUrlGenerateClipboardInsertButton": {
         "message": "{{clipboard}} を挿入する"

@@ -65,6 +65,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 | `ext-m` | Index of the model to select | Integer starting from 0 (order as displayed in UI) or model name (as displayed in UI) |
 | `ext-clipboard` | Replace the {{clipboard}} keyword in `ext-q` with the clipboard text | `true/false` or `0/1` |
 | `ext-send` | Auto-sending for prompt | `true/false` or `0/1` |
+| `ext-required-login` | Prevents prompt execution if the user is not logged into Gemini when opening the URL | `true/false` or `0/1` |
 
 > [!TIP]
 > By enabling `ext-send` and specifying multiple `ext-q` values, you can send multiple prompts consecutively.

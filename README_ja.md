@@ -65,6 +65,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 | `ext-m` | 選択するモデルのインデックス | 0 から始まる整数（UI上での表示順）またはモデル名（UI上での表示名） |
 | `ext-clipboard` | `ext-q`の中で`{{clipboard}}`キーワードをクリップボードのテキストと置き換える | `true/false` または `0/1` |
 | `ext-send` | プロンプトの自動送信 | `true/false` または `0/1` |
+| `ext-required-login` | Gemini にログインしていない状態でプロンプトが自動実行されるのを防止するフラグ | `true/false` または `0/1` |
 
 > [!TIP]
 > `ext-send` を有効にした状態で、`ext-q` を複数指定することで複数のプロンプトを連続して送信することができます。

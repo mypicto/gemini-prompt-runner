@@ -16,7 +16,7 @@ class TabIconCache {
   }
 }
 
-class BackgroundHandler {
+class InternalMessageHandler {
   constructor() {
     this.pendingParameters = this.#generateEmptyParameters();
     this.params = ['ext-q', 'ext-m', 'ext-send', 'ext-clipboard', 'ext-required-login'];
@@ -152,5 +152,22 @@ class BackgroundHandler {
   }
 }
 
-const backgroundHandler = new BackgroundHandler();
-backgroundHandler.init();
+class ExternalMessageHandler {
+
+  init() {
+    chrome.runtime.onMessageExternal.addListener(this.handleExternalMessage.bind(this));
+  }
+
+  handleExternalMessage(request, sender, sendResponse) {
+    if (request.type === 'PING') {
+      sendResponse({status: 'ALIVE', version: chrome.runtime.getManifest().version});
+    }
+    return true;
+  }
+}
+
+const internalMessageHandler = new InternalMessageHandler();
+internalMessageHandler.init();
+
+const externalMessageHandler = new ExternalMessageHandler();
+externalMessageHandler.init();

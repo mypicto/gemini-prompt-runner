@@ -61,5 +61,8 @@
       "resources": ["res/selectors.json", "res/prompt_readme.txt"],
       "matches": ["*://gemini.google.com/*"]
     }
-  ]
+  ],
+  "externally_connectable": {
+    "matches": ["*://mypicto.github.io/gemini-prompt-runner*"]
+  }
 }

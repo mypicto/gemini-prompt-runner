@@ -46,7 +46,7 @@
     }
   ],
   "permissions": ["declarativeNetRequest", "webRequest"],
-  "host_permissions": ["*://gemini.google.com/*"],
+  "host_permissions": ["*://gemini.google.com/*", "*://mypicto.github.io/gemini-prompt-runner*"],
   "declarative_net_request": {
     "rule_resources": [
       {

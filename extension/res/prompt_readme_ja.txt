@@ -20,7 +20,7 @@ Output the following text, preserving structure, language, and style.
 
 ## 操作方法
 
-パラメータは `#` から始まるフラグメントで指定してください。
+Gemini の URL に、後述のパラメータを `#` から始まるフラグメント形式で指定してください。
 クエリ形式（`?key=value`）ではなく、`#key=value` を使います。
 複数指定する場合は `&` で区切ります。
 
@@ -33,6 +33,17 @@ https://how-to-use
 
 Ctrl+C / Cmd+C: copy the last answer.
 ```
+
+> [!WARNING] URL共有時の注意  
+> クエリ形式（`?key=value`）でも拡張機能は動作しますが、**拡張機能が未インストールの環境では暗号化されずにGeminiのサーバーへ送信**されるため、サーバーログに記録されるリスクがあります。  
+> フラグメント形式（`#key=value`）であっても、**未インストール環境ではWeb解析ツールの対象**になる可能性があります。  
+>
+> 機密性の高いプロンプトを共有する場合は、URLを [https://mypicto.github.io/gemini-prompt-runner](https://mypicto.github.io/gemini-prompt-runner) に置き換えることで、拡張機能の有無とパラメータ形式の検証を行うセキュアなページを経由できます。  
+> ※ このリダイレクトページは試験的な機能のため、恒常的な運用が保証されるものではありません。
+>
+> **例：**  
+> `https://gemini.google.com/app#ext-q=prompt`  
+> → `https://mypicto.github.io/gemini-prompt-runner/app#ext-q=prompt`
 
 | パラメータ | 説明 | 値 |
 | --- | --- | --- |

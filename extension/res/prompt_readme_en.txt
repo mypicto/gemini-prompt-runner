@@ -20,8 +20,8 @@ This extension allows automatic execution of prompts, which is not supported by 
 
 ## Instructions
 
-Use a **fragment** starting with `#` to specify parameters.
-Do not use query parameters like `?key=value`; use `#key=value` instead.
+Please specify the parameters in the URL of Gemini using **fragment format** starting with `#`, as described below.  
+Do **not** use query format like `?key=value`; instead, use `#key=value`.  
 Use `&` to separate multiple parameters.
 
 ```plaintext
@@ -33,6 +33,19 @@ https://how-to-use
 
 Ctrl+C / Cmd+C: copy the last answer.
 ```
+
+> [!WARNING] Sharing URLs  
+> Although the extension also works with query format (`?key=value`), **if the extension is not installed**, the prompt may be sent **unencrypted to Gemini's servers**, which can result in it being logged.  
+> Even with fragment format (`#key=value`), **parameters may still be exposed to web analytics tools** if the extension is not installed.  
+>
+> If you're sharing prompts containing sensitive information, it's strongly recommended to replace the domain with  
+> [https://mypicto.github.io/gemini-prompt-runner](https://mypicto.github.io/gemini-prompt-runner).  
+> This will route users through a secure redirect page that checks for extension availability and safely handles parameters.  
+> *Note: This redirect page is an experimental feature and is not guaranteed to be permanently maintained.*
+>
+> **Example:**  
+> `https://gemini.google.com/app#ext-q=prompt`  
+> → `https://mypicto.github.io/gemini-prompt-runner/app#ext-q=prompt`
 
 | Parameter | Description | Value |
 | --- | --- | --- |

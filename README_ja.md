@@ -64,7 +64,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 > クエリ形式（`?key=value`）でも拡張機能は動作しますが、**拡張機能が未インストールの環境では暗号化されずにGeminiのサーバーへ送信**されるため、サーバーログに記録されるリスクがあります。  
 > フラグメント形式（`#key=value`）であっても、**未インストール環境ではWeb解析ツールの対象**になる可能性があります。  
 >
-> 機密性の高いプロンプトを共有する場合は、URLを [https://mypicto.github.io/gemini-prompt-runner](https://mypicto.github.io/gemini-prompt-runner) に置き換えることで、拡張機能の有無とパラメータ形式の検証を行うセキュアなページを経由できます。  
+> 機密性の高いプロンプトを共有する場合は、URLを [https://mypicto.github.io/gemini-prompt-runner](https://mypicto.github.io/gemini-prompt-runner) に置き換えることで、拡張機能が利用可能か検証するセキュアなページを経由できます。  
 > ※ このリダイレクトページは試験的な機能のため、恒常的な運用が保証されるものではありません。
 >
 > **例：**  

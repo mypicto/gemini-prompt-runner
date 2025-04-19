@@ -41,7 +41,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 >
 > If you're sharing prompts containing sensitive information, it's strongly recommended to replace the domain with  
 > [https://mypicto.github.io/gemini-prompt-runner](https://mypicto.github.io/gemini-prompt-runner).  
-> This will route users through a secure redirect page that checks for extension availability and safely handles parameters.  
+> This will route users through a secure redirect page that checks for extension availability.  
 > *Note: This redirect page is an experimental feature and is not guaranteed to be permanently maintained.*
 >
 > **Example:**  

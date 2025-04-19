@@ -34,7 +34,8 @@ https://how-to-use
 Ctrl+C / Cmd+C: copy the last answer.
 ```
 
-> [!WARNING] Sharing URLs  
+> [!WARNING]
+> #### Sharing URLs
 > Although the extension also works with query format (`?key=value`), **if the extension is not installed**, the prompt may be sent **unencrypted to Gemini's servers**, which can result in it being logged.  
 > Even with fragment format (`#key=value`), **parameters may still be exposed to web analytics tools** if the extension is not installed.  
 >

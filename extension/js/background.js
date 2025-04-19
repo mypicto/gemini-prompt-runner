@@ -89,8 +89,7 @@ class InternalMessageHandler {
 
   #extractFragmentParameters(url) {
     if (url.hash && url.hash.length > 1) {
-      const decodedHash = decodeURIComponent(url.hash.substring(1));
-      return new URLSearchParams(decodedHash);
+      return new URLSearchParams(url.hash.substring(1));
     }
     return new URLSearchParams();
   }

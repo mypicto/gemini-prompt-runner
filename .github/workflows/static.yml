@@ -33,6 +33,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Copy index.html to app.html and 404.html
+        run: |
+          cp ./docs/index.html ./docs/app.html
+          cp ./docs/index.html ./docs/404.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

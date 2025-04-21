@@ -1,0 +1,3 @@
+Always adhere to the SOLID principles when designing your classes, with particular emphasis on the Single Responsibility Principle (SRP).
+
+Each class should have one clearly defined responsibility. For example, Component classes should handle UI interactions, Service classes should encapsulate business logic, and Repository classes should manage data persistence. Ensure responsibilities are well-separated to maintain clarity and modularity in your architecture.

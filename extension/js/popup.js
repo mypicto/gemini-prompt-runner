@@ -137,6 +137,13 @@ class ManualUrlService {
 class UrlGenerateRepository {
   constructor() {
     this.storageKey = 'urlGenerateOptions';
+    this.defaultOptions = {
+      includeModel: true,
+      includePrompt: true,
+      autoSend: false,
+      requiredLogin: false,
+      redirectUrl: false
+    };
   }
 
   async saveOptions(options) {
@@ -148,13 +155,8 @@ class UrlGenerateRepository {
   async getOptions() {
     return new Promise((resolve) => {
       chrome.storage.local.get([this.storageKey], (result) => {
-        resolve(result[this.storageKey] || {
-          includeModel: true,
-          includePrompt: true,
-          autoSend: false,
-          requiredLogin: false,
-          redirectUrl: false
-        });
+        const savedOptions = result[this.storageKey] || {};
+        resolve({ ...this.defaultOptions, ...savedOptions });
       });
     });
   }

@@ -134,6 +134,32 @@ class ManualUrlService {
   }
 }
 
+class UrlGenerateRepository {
+  constructor() {
+    this.storageKey = 'urlGenerateOptions';
+  }
+
+  async saveOptions(options) {
+    return new Promise((resolve) => {
+      chrome.storage.local.set({ [this.storageKey]: options }, resolve);
+    });
+  }
+
+  async getOptions() {
+    return new Promise((resolve) => {
+      chrome.storage.local.get([this.storageKey], (result) => {
+        resolve(result[this.storageKey] || {
+          includeModel: true,
+          includePrompt: true,
+          autoSend: false,
+          requiredLogin: false,
+          redirectUrl: false
+        });
+      });
+    });
+  }
+}
+
 class UrlGenerateComponent {
   constructor() {
     this.includeModel = document.getElementById('includeModel');
@@ -203,6 +229,28 @@ class UrlGenerateComponent {
     });
   }
 
+  setOptions(options) {
+    if (this.includeModel) this.includeModel.checked = options.includeModel;
+    if (this.includePrompt) this.includePrompt.checked = options.includePrompt;
+    if (this.autoSend) this.autoSend.checked = options.autoSend;
+    if (this.requiredLogin) this.requiredLogin.checked = options.requiredLogin;
+    if (this.redirectUrl) this.redirectUrl.checked = options.redirectUrl;
+    
+    // オプション変更後にautoSendの状態を更新
+    this.updateAutoSendState();
+  }
+
+  attachOptionsChangeListener(callback) {
+    const checkboxes = [this.includeModel, this.includePrompt, this.autoSend, 
+                        this.requiredLogin, this.redirectUrl];
+    
+    checkboxes.forEach(checkbox => {
+      if (checkbox) {
+        checkbox.addEventListener('change', callback);
+      }
+    });
+  }
+
   attachClipboardInsertButtonClickListener(callback) {
     if (this.clipboardInsertButton) {
       this.clipboardInsertButton.addEventListener('click', callback);
@@ -215,12 +263,23 @@ class UrlGenerateService {
     this.component = component;
     this.clipboardService = clipboardService;
     this.localizeService = localizeService;
+    this.repository = new UrlGenerateRepository();
   }
 
   async init() {
+    // 保存されたオプションを読み込む
+    const savedOptions = await this.repository.getOptions();
+    this.component.setOptions(savedOptions);
+
+    // オプション変更時に保存
+    this.component.attachOptionsChangeListener(() => {
+      this.repository.saveOptions(this.component.getOptions());
+    });
+    
     this.component.attachIncludePromptChangeListener(() => this.component.updateAutoSendState());
     this.component.attachButtonClickListener(this.handleCopyButtonClick.bind(this));
     this.component.attachClipboardInsertButtonClickListener(this.handleClipboardInsertButtonClick.bind(this));
+    
     let url = await this.generateUrl();
     if (url === null) {
       this.component.disableOptions();

@@ -45,7 +45,7 @@
       "run_at": "document_start"
     }
   ],
-  "permissions": ["declarativeNetRequest", "webRequest"],
+  "permissions": ["declarativeNetRequest", "webRequest", "storage"],
   "host_permissions": ["*://gemini.google.com/*", "*://mypicto.github.io/gemini-prompt-runner*"],
   "declarative_net_request": {
     "rule_resources": [

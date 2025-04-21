@@ -16,10 +16,10 @@ class TabIconCache {
   }
 }
 
-class BackgroundHandler {
+class InternalMessageHandler {
   constructor() {
     this.pendingParameters = this.#generateEmptyParameters();
-    this.params = ['ext-q', 'ext-m', 'ext-send', 'ext-clipboard'];
+    this.params = ['ext-q', 'ext-m', 'ext-send', 'ext-clipboard', 'ext-required-login'];
     this.tabIconCache = new TabIconCache();
   }
   
@@ -35,16 +35,16 @@ class BackgroundHandler {
     return {
       prompts: null,
       model: null,
-      audosend: null,
-      clipboard: null
+      autosend: null,
+      clipboard: null,
+      requiredLogin: null
     };
   }
   
   #getUrlFilters() {
     const filters = [];
     this.params.forEach(param => {
-      filters.push(`*://gemini.google.com/*?${param}=*`);
-      filters.push(`*://gemini.google.com/*&${param}=*`);
+      filters.push(`*://gemini.google.com/*`);
     });
     return filters;
   }
@@ -75,14 +75,39 @@ class BackgroundHandler {
   
   #handleWebRequest(details) {
     const url = new URL(details.url);
-    if (this.params.some(param => url.searchParams.has(param))) {
-      this.pendingParameters = {
-        prompts: url.searchParams.getAll('ext-q'),
-        model: url.searchParams.get('ext-m'),
-        send: url.searchParams.get('ext-send'),
-        clipboard: url.searchParams.get('ext-clipboard')
-      };
+    const queryParams = this.#extractQueryParameters(url);
+    const fragmentParams = this.#extractFragmentParameters(url);
+
+    if (this.#hasTargetParameters(queryParams, fragmentParams)) {
+      this.pendingParameters = this.#mergeParameters(queryParams, fragmentParams);
     }
+  }
+
+  #extractQueryParameters(url) {
+    return url.searchParams;
+  }
+
+  #extractFragmentParameters(url) {
+    if (url.hash && url.hash.length > 1) {
+      return new URLSearchParams(url.hash.substring(1));
+    }
+    return new URLSearchParams();
+  }
+
+  #hasTargetParameters(queryParams, fragmentParams) {
+    return this.params.some(param => 
+      queryParams.has(param) || fragmentParams.has(param)
+    );
+  }
+
+  #mergeParameters(queryParams, fragmentParams) {
+    return {
+      prompts: [...queryParams.getAll('ext-q'), ...fragmentParams.getAll('ext-q')],
+      model: queryParams.get('ext-m') || fragmentParams.get('ext-m'),
+      send: queryParams.get('ext-send') || fragmentParams.get('ext-send'),
+      clipboard: queryParams.get('ext-clipboard') || fragmentParams.get('ext-clipboard'),
+      requiredLogin: queryParams.get('ext-required-login') || fragmentParams.get('ext-required-login')
+    };
   }
   
   #handleMessage(message, sender, sendResponse) {
@@ -126,5 +151,22 @@ class BackgroundHandler {
   }
 }
 
-const backgroundHandler = new BackgroundHandler();
-backgroundHandler.init();
+class ExternalMessageHandler {
+
+  init() {
+    chrome.runtime.onMessageExternal.addListener(this.handleExternalMessage.bind(this));
+  }
+
+  handleExternalMessage(request, sender, sendResponse) {
+    if (request.type === 'PING') {
+      sendResponse({status: 'ALIVE', version: chrome.runtime.getManifest().version});
+    }
+    return true;
+  }
+}
+
+const internalMessageHandler = new InternalMessageHandler();
+internalMessageHandler.init();
+
+const externalMessageHandler = new ExternalMessageHandler();
+externalMessageHandler.init();

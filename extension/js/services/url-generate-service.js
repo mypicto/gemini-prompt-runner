@@ -19,7 +19,8 @@ class UrlGenerateService {
           prompts: promptVal ? [promptVal] : null,
           modelQuery: modelQueryVal,
           isAutoSend: message.autoSend,
-          isUseClipboard: null
+          isUseClipboard: null,
+          isRequiredLogin: message.requiredLogin ? true : null
         });
         const urlString = queryParameter.buildUrl(window.location);
         sendResponse({ url: urlString });

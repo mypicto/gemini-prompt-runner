@@ -139,8 +139,11 @@ class UrlGenerateComponent {
     this.includeModel = document.getElementById('includeModel');
     this.includePrompt = document.getElementById('includePrompt');
     this.autoSend = document.getElementById('autoSend');
+    this.requiredLogin = document.getElementById('requiredLogin');
+    this.redirectUrl = document.getElementById('redirectUrl');
     this.urlGenerateButton = document.getElementById('urlGenerateButton');
     this.clipboardInsertButton = document.getElementById('clipboardInsertButton');
+    this.helpIcons = document.querySelectorAll('.help-icon');
   }
 
   attachButtonClickListener(callback) {
@@ -162,7 +165,9 @@ class UrlGenerateComponent {
     return {
       includeModel: this.includeModel.checked,
       includePrompt: this.includePrompt.checked,
-      autoSend: this.autoSend.checked
+      autoSend: this.autoSend.checked,
+      requiredLogin: this.requiredLogin.checked,
+      redirectUrl: this.redirectUrl.checked
     };
   }
 
@@ -189,7 +194,13 @@ class UrlGenerateComponent {
     this.includeModel.disabled = true;
     this.includePrompt.disabled = true;
     this.autoSend.disabled = true;
+    this.requiredLogin.disabled = true;
+    this.redirectUrl.disabled = true;
     this.clipboardInsertButton.disabled = true;
+    
+    this.helpIcons.forEach(icon => {
+      icon.classList.add('disabled');
+    });
   }
 
   attachClipboardInsertButtonClickListener(callback) {
@@ -231,7 +242,8 @@ class UrlGenerateService {
         action: "getGenerateUrl",
         includeModel: options.includeModel,
         includePrompt: options.includePrompt,
-        autoSend: options.autoSend
+        autoSend: options.autoSend,
+        requiredLogin: options.requiredLogin
       }, (resp) => {
         if (chrome.runtime.lastError) {
           resolve(null);
@@ -240,10 +252,11 @@ class UrlGenerateService {
         }
       });
     });
+    
     if (response && response.url) {
       return response.url;
     }
-    return null
+    return null;
   }
 
   async copyAndInteraction(url) {
@@ -259,10 +272,27 @@ class UrlGenerateService {
 
   async handleCopyButtonClick() {
     try {
-      const url = await this.generateUrl();
-      await this.copyAndInteraction(url);
+      let url = await this.generateUrl();
+      if (url) {
+        const options = this.component.getOptions();
+        if (options.redirectUrl) {
+          url = this.convertToRedirectUrl(url);
+        }
+        await this.copyAndInteraction(url);
+      }
     } catch (err) {
       console.error(err);
+    }
+  }
+
+  convertToRedirectUrl(originalUrl) {
+    try {
+      const url = new URL(originalUrl);
+      const redirectBaseUrl = 'https://mypicto.github.io/gemini-prompt-runner';
+      return `${redirectBaseUrl}${url.pathname}${url.hash}`;
+    } catch (err) {
+      console.error('Failed to convert URL:', err);
+      return originalUrl;
     }
   }
 

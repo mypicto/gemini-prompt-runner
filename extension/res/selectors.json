@@ -22,5 +22,8 @@
   },
   "copyButton": {
     "selector": "button[data-test-id=\"copy-button\"]"
+  },
+  "serviceLoginLink": {
+    "selector": "div.boqOnegoogleliteOgbOneGoogleBar a[href^=\"https://accounts.google.com/ServiceLogin\"]"
   }
 }

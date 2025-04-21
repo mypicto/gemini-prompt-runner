@@ -19,7 +19,7 @@ class IconStateService {
   #sendToBackground(iconPath) {
     chrome.runtime.sendMessage({ type: 'updateIcon', iconPath: iconPath }, (response) => {
       if (chrome.runtime.lastError) {
-        console.error('Error sending message to background:', chrome.runtime.lastError);
+        // ブラウザ起動から background script が読み込まれるまでは時間差があるため、異常系も十分に想定される。
       }
     });
   }

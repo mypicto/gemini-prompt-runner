@@ -1,8 +1,9 @@
 class QueryParameter {
   static CLIPBOARD_KEYWORD = '{{clipboard}}';
   static #PRIVATE_TOKEN = Symbol('QueryParameterToken');
+  #isQueryParameterDetected = false; // クエリパラメータ検出フラグを追加
 
-  constructor({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, isRequiredLogin = null, token = null} = {}) {
+  constructor({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, isRequiredLogin = null, isQueryParameterDetected = false, token = null} = {}) {
     if (token !== QueryParameter.#PRIVATE_TOKEN) {
       throw new Error('Invalid constructor call: Use static factory methods instead');
     }
@@ -12,6 +13,7 @@ class QueryParameter {
     this._isAutoSend = isAutoSend;
     this.isUseClipboard = isUseClipboard;
     this._isRequiredLogin = isRequiredLogin;
+    this.#isQueryParameterDetected = isQueryParameterDetected; // クエリパラメータ検出フラグを初期化
   }
 
   static async #fetchParameters() {
@@ -43,6 +45,7 @@ class QueryParameter {
       isAutoSend: isAutoSend,
       isUseClipboard: isUseClipboard,
       isRequiredLogin: isRequiredLogin,
+      isQueryParameterDetected: false, // URL生成からは常にfalse
       token: QueryParameter.#PRIVATE_TOKEN
     });
   }
@@ -57,6 +60,8 @@ class QueryParameter {
     const isRequiredLogin = response.requiredLogin !== null 
       ? QueryParameter.#convertToBoolean(response.requiredLogin) 
       : null;
+    // クエリパラメータ検出フラグを取得
+    const isQueryParameterDetected = response.isQueryParameterDetected || false;
 
     return new QueryParameter({
       prompts: promptTexts,
@@ -64,6 +69,7 @@ class QueryParameter {
       isAutoSend: isAutoSend,
       isUseClipboard: null,
       isRequiredLogin: isRequiredLogin,
+      isQueryParameterDetected: isQueryParameterDetected,
       token: QueryParameter.#PRIVATE_TOKEN
     });
   }
@@ -90,6 +96,7 @@ class QueryParameter {
       isAutoSend: isAutoSend,
       isUseClipboard: null,
       isRequiredLogin: isRequiredLogin,
+      isQueryParameterDetected: false, // フラグメントから生成された場合は常にfalse
       token: QueryParameter.#PRIVATE_TOKEN
     });
   }
@@ -113,6 +120,11 @@ class QueryParameter {
 
   isRequiredLogin() {
     return this._isRequiredLogin;
+  }
+  
+  // クエリパラメータが検出されたかどうかを返すメソッドを追加
+  isQueryParameterDetected() {
+    return this.#isQueryParameterDetected;
   }
   
   buildUrl(location) {

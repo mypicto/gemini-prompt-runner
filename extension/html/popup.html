@@ -10,6 +10,13 @@
     <img src="../images/icon256.png" alt="Extension Icon">
     <h1 id="appName">App Name</h1>
     <p id="appVersion">Version</p>
+    
+    <!-- 警告メッセージエリアを追加 -->
+    <div id="queryWarningContainer" class="warning-message hidden">
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-text" localize>__MSG_popupQueryWarning__</div>
+    </div>
+    
     <p class="manual-url" id="manualUrl" localize-attr="data-tooltip:__MSG_popupManuelTooltip__">
         <strong localize>__MSG_popupManuelHeader__</strong><br>
         https://how-to-use<span class="param-q">#ext-q</span>=enter-prompt-text<span class="param-m">&ext-m</span>=select-model<br>

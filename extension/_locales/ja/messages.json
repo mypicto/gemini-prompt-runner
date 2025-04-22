@@ -46,5 +46,8 @@
     },
     "promptReadmeURL": {
         "message": "res/prompt_readme_ja.txt"
+    },
+    "popupQueryWarning": {
+        "message": "クエリパラメータが使用されました。セキュリティのため、URLパラメータはURLフラグメント（#以降）に含めることをお勧めします。「URLを生成」ボタンを使用して、安全なURLを生成してください。"
     }
 }

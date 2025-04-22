@@ -18,6 +18,10 @@ class PopupApp {
       new ClipboardService(),
       this.localizeService
     );
+    
+    // 警告メッセージコンポーネントとサービスを追加
+    this.queryWarningComponent = new QueryWarningComponent();
+    this.queryWarningService = new QueryWarningService(this.queryWarningComponent);
   }
 
   initialize() {
@@ -26,6 +30,8 @@ class PopupApp {
     this.externalLinkService.init();
     this.manualUrlService.init();
     this.urlGenerateService.init();
+    // 警告メッセージ機能を初期化
+    this.queryWarningService.init();
   }
 }
 
@@ -363,6 +369,70 @@ class UrlGenerateService {
         chrome.tabs.sendMessage(tabs[0].id, {action:"insertClipboardKeyword"});
       }
     });
+  }
+}
+
+// 警告メッセージを表示するためのコンポーネントクラスを追加
+class QueryWarningComponent {
+  constructor() {
+    this.container = document.getElementById('queryWarningContainer');
+  }
+  
+  showWarning() {
+    if (this.container) {
+      this.container.classList.remove('hidden');
+    }
+  }
+  
+  hideWarning() {
+    if (this.container) {
+      this.container.classList.add('hidden');
+    }
+  }
+}
+
+// 警告表示ロジックを処理するサービスクラスを追加
+class QueryWarningService {
+  constructor(component) {
+    this.component = component;
+  }
+  
+  init() {
+    this.checkQueryParameterDetection();
+  }
+  
+  async checkQueryParameterDetection() {
+    try {
+      const tabs = await new Promise(resolve => 
+        chrome.tabs.query({ active: true, currentWindow: true }, resolve)
+      );
+      
+      if (!tabs || tabs.length === 0) return;
+      
+      const tab = tabs[0];
+      
+      // タブのURLがGeminiページでない場合は終了
+      if (!tab.url || !tab.url.includes('gemini.google.com')) return;
+      
+      chrome.tabs.sendMessage(
+        tab.id, 
+        { action: "checkQueryParameterDetection" }, 
+        (response) => {
+          if (chrome.runtime.lastError) {
+            console.error("Error checking query parameter detection:", chrome.runtime.lastError);
+            return;
+          }
+          
+          if (response && response.isQueryParameterDetected) {
+            this.component.showWarning();
+          } else {
+            this.component.hideWarning();
+          }
+        }
+      );
+    } catch (error) {
+      console.error("Error in checkQueryParameterDetection:", error);
+    }
   }
 }
 

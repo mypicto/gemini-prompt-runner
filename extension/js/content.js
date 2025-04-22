@@ -10,6 +10,7 @@ class Application {
     this.urlGenerateService = new UrlGenerateService(this.textarea, this.modelSelector);
     this.clipboardKeywordService = new ClipboardKeywordService(this.textarea);
     this.iconStateService = new IconStateService();
+    this.isQueryParameterDetected = false; // クエリパラメータ検出フラグを追加
   }
 
   init() {
@@ -18,11 +19,24 @@ class Application {
     this.copyService.addCopyShortcutListener();
     this.urlGenerateService.subscribeToListeners();
     this.clipboardKeywordService.subscribeToListeners();
+    
+    // メッセージリスナーをセットアップ
+    this.#setupMessageListeners();
 
     document.addEventListener('DOMContentLoaded', async () => {
       await this.selectorService.init();
       await UIStabilityMonitor.waitForUiStability();
       await this.#operateGemini();
+    });
+  }
+
+  // メッセージリスナーをセットアップするメソッドを追加
+  #setupMessageListeners() {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.action === "checkQueryParameterDetection") {
+        sendResponse({ isQueryParameterDetected: this.isQueryParameterDetected });
+        return true;
+      }
     });
   }
 
@@ -55,6 +69,14 @@ class Application {
     const isAutoSend = parameter.isAutoSend();
     const isOnGemPage = LocationChecker.isOnGemPage();
     const isRequiredLogin = parameter.isRequiredLogin();
+    
+    // クエリパラメータ検出フラグを取得
+    this.isQueryParameterDetected = parameter.isQueryParameterDetected();
+    
+    // クエリパラメータが検出された場合、警告アイコンを表示
+    if (this.isQueryParameterDetected) {
+      this.iconStateService.setWarningIcon();
+    }
 
     const options = {
       prompts,
@@ -66,11 +88,19 @@ class Application {
 
     try {
       this.progressCounter = await this.#buildProgressCounter(prompts);
-      this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
+      
+      // クエリパラメータが検出されていない場合のみプログレスアイコンを更新
+      if (!this.isQueryParameterDetected) {
+        this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
+      }
+      
       await this.#processAll(options);
     } finally {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      this.iconStateService.resetToDefault();
+      // クエリパラメータが検出された場合は警告アイコンを維持
+      if (!this.isQueryParameterDetected) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        this.iconStateService.resetToDefault();
+      }
     }
   }
 
@@ -165,7 +195,10 @@ class Application {
 
   #incrementProgress() {
     this.progressCounter.incrementCount();
-    this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
+    // クエリパラメータが検出されていない場合のみプログレスアイコンを更新
+    if (!this.isQueryParameterDetected) {
+      this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
+    }
   }
 }
 

@@ -46,5 +46,8 @@
     },
     "promptReadmeURL": {
         "message": "res/prompt_readme_en.txt"
+    },
+    "popupQueryWarning": {
+        "message": "Query parameters have been used. For security reasons, we recommend including URL parameters in the URL fragment (after #). Please use the 'Generate URL' button to create a secure URL."
     }
 }

@@ -37,7 +37,8 @@ class InternalMessageHandler {
       model: null,
       autosend: null,
       clipboard: null,
-      requiredLogin: null
+      requiredLogin: null,
+      isQueryParameterDetected: false  // クエリパラメータ検出フラグを追加
     };
   }
   
@@ -78,8 +79,13 @@ class InternalMessageHandler {
     const queryParams = this.#extractQueryParameters(url);
     const fragmentParams = this.#extractFragmentParameters(url);
 
+    // クエリパラメータが検出されたかどうかをチェック
+    const isQueryParameterDetected = this.#hasQueryParameters(queryParams);
+
     if (this.#hasTargetParameters(queryParams, fragmentParams)) {
       this.pendingParameters = this.#mergeParameters(queryParams, fragmentParams);
+      // クエリパラメータ検出フラグを設定
+      this.pendingParameters.isQueryParameterDetected = isQueryParameterDetected;
     }
   }
 
@@ -94,6 +100,11 @@ class InternalMessageHandler {
     return new URLSearchParams();
   }
 
+  // クエリパラメータを検出するメソッドを追加
+  #hasQueryParameters(queryParams) {
+    return this.params.some(param => queryParams.has(param));
+  }
+
   #hasTargetParameters(queryParams, fragmentParams) {
     return this.params.some(param => 
       queryParams.has(param) || fragmentParams.has(param)
@@ -106,7 +117,8 @@ class InternalMessageHandler {
       model: queryParams.get('ext-m') || fragmentParams.get('ext-m'),
       send: queryParams.get('ext-send') || fragmentParams.get('ext-send'),
       clipboard: queryParams.get('ext-clipboard') || fragmentParams.get('ext-clipboard'),
-      requiredLogin: queryParams.get('ext-required-login') || fragmentParams.get('ext-required-login')
+      requiredLogin: queryParams.get('ext-required-login') || fragmentParams.get('ext-required-login'),
+      isQueryParameterDetected: this.params.some(param => queryParams.has(param))  // クエリパラメータ検出フラグ
     };
   }
   

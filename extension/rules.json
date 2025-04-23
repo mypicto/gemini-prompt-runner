@@ -7,13 +7,28 @@
       "redirect": {
         "transform": {
           "queryTransform": {
-            "removeParams": ["ext-q", "ext-m", "ext-confirm", "ext-clipboard", "ext-send"]
-          }
+            "removeParams": ["ext-q", "ext-m", "ext-confirm", "ext-clipboard", "ext-send", "ext-required-login"]
+          },
+          "fragment": ""
         }
       }
     },
     "condition": {
       "urlFilter": "*://gemini.google.com/*",
+      "resourceTypes": ["main_frame"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "regexSubstitution": "https://gemini.google.com\\1"
+      }
+    },
+    "condition": {
+      "regexFilter": "^https://mypicto\\.github\\.io/gemini-prompt-runner(.*)",
       "resourceTypes": ["main_frame"]
     }
   }

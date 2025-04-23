@@ -6,12 +6,15 @@ class Application {
     this.textarea = new Textarea(this.selectorService);
     this.modelSelector = new ModelSelector(this.selectorService);
     this.sendButton = new SendButton(this.selectorService);
+    this.loginButton = new LoginButton(this.selectorService);
     this.urlGenerateService = new UrlGenerateService(this.textarea, this.modelSelector);
     this.clipboardKeywordService = new ClipboardKeywordService(this.textarea);
     this.iconStateService = new IconStateService();
   }
 
   init() {
+    this.#extractAndProtectSensitiveFragmentParams();
+
     this.copyService.addCopyShortcutListener();
     this.urlGenerateService.subscribeToListeners();
     this.clipboardKeywordService.subscribeToListeners();
@@ -21,6 +24,14 @@ class Application {
       await UIStabilityMonitor.waitForUiStability();
       await this.#operateGemini();
     });
+  }
+
+  #extractAndProtectSensitiveFragmentParams() {
+    const fragmentParams = this.#getFragmentParams();
+    if (QueryParameter.hasTargetParameters(fragmentParams)) {
+      this.fragmentParams = fragmentParams;
+      this.#removeUrlFragment();
+    }
   }
 
   async #waitForAnsweringToComplete() {
@@ -38,20 +49,50 @@ class Application {
   }
 
   async #operateGemini() {
-    const parameter = await QueryParameter.generateFromUrl();
+    const parameter = await this.#getQueryParameter();
     const prompts = parameter.getPrompts();
     const modelQuery = parameter.getModelQuery();
     const isAutoSend = parameter.isAutoSend();
     const isOnGemPage = LocationChecker.isOnGemPage();
+    const isRequiredLogin = parameter.isRequiredLogin();
+
+    const options = {
+      prompts,
+      modelQuery,
+      autoSend: isAutoSend,
+      onGemPage: isOnGemPage,
+      requiredLogin: isRequiredLogin
+    };
 
     try {
       this.progressCounter = await this.#buildProgressCounter(prompts);
       this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
-      await this.#processAll(prompts, modelQuery, isAutoSend, isOnGemPage);
+      await this.#processAll(options);
     } finally {
       await new Promise(resolve => setTimeout(resolve, 1000));
       this.iconStateService.resetToDefault();
     }
+  }
+
+  async #getQueryParameter() {
+    if (this.fragmentParams) {
+      return await QueryParameter.generateFromFragment(this.fragmentParams);
+    }
+    return await QueryParameter.generateFromBackground();
+  }
+
+  #getFragmentParams() {
+    const url = new URL(window.location.href);
+    const hash = url.hash;
+    if (hash && hash.length > 1) {
+      const decodedHash = decodeURIComponent(hash.substring(1));
+      return new URLSearchParams(decodedHash);
+    }
+    return new URLSearchParams();
+  }
+
+  #removeUrlFragment() {
+    history.replaceState(null, document.title, location.origin + location.pathname + location.search);
   }
 
   async #buildProgressCounter(prompts) {
@@ -63,15 +104,27 @@ class Application {
     return progressCounter;
   }
 
-  async #processAll(prompts, modelQuery, isAutoSend, isOnGemPage) {
-    if (modelQuery !== null && !isOnGemPage) {
+  async #processAll({ prompts, modelQuery, autoSend, onGemPage, requiredLogin }) {
+    if (requiredLogin && await this.validateLoginRequirement()) {
+      return;
+    }
+
+    if (modelQuery !== null && !onGemPage) {
       await this.#processModel(modelQuery);
     }
     this.#incrementProgress()
 
     if (prompts) {
-      await this.#processPrompts(prompts, isAutoSend);
+      await this.#processPrompts(prompts, autoSend);
     }
+  }
+
+  async validateLoginRequirement() {
+    if (await this.loginButton.exists()) {
+      await this.loginButton.click();
+      return true;
+    }
+    return false;
   }
 
   async #processModel(modelQuery) {

@@ -1,8 +1,8 @@
 class IconStateService {
   constructor() {
     this.defaultIcon = '../images/icon48.png';
-    this.warningIcon = '../images/icon48-warning.png'; // 警告アイコン用のパスを追加
-    this.isWarningActive = false; // 警告モードの状態を管理
+    this.warningIcon = '../images/icon48-warning.png';
+    this.isWarningActive = false;
 
     this.progressIcons = {
       10: '../images/progress10.png',
@@ -27,7 +27,6 @@ class IconStateService {
   }
 
   updateProgressIcon(progress) {
-    // 警告アイコンがアクティブな場合は進捗アイコンを表示しない
     if (this.isWarningActive) return;
     
     const normalizedProgress = Math.round(progress / 10) * 10;
@@ -41,14 +40,13 @@ class IconStateService {
     }
   }
 
-  // 警告アイコンを表示するメソッドを追加
   setWarningIcon() {
     this.isWarningActive = true;
     this.#sendToBackground(this.warningIcon);
   }
 
   resetToDefault() {
-    this.isWarningActive = false; // 警告モードをリセット
+    this.isWarningActive = false;
     this.#sendToBackground(this.defaultIcon);
   }
 }

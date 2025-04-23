@@ -1,7 +1,7 @@
 class QueryParameter {
   static CLIPBOARD_KEYWORD = '{{clipboard}}';
   static #PRIVATE_TOKEN = Symbol('QueryParameterToken');
-  #isQueryParameterDetected = false; // クエリパラメータ検出フラグを追加
+  #isQueryParameterDetected = false;
 
   constructor({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, isRequiredLogin = null, isQueryParameterDetected = false, token = null} = {}) {
     if (token !== QueryParameter.#PRIVATE_TOKEN) {
@@ -13,7 +13,7 @@ class QueryParameter {
     this._isAutoSend = isAutoSend;
     this.isUseClipboard = isUseClipboard;
     this._isRequiredLogin = isRequiredLogin;
-    this.#isQueryParameterDetected = isQueryParameterDetected; // クエリパラメータ検出フラグを初期化
+    this.#isQueryParameterDetected = isQueryParameterDetected;
   }
 
   static async #fetchParameters() {
@@ -45,7 +45,7 @@ class QueryParameter {
       isAutoSend: isAutoSend,
       isUseClipboard: isUseClipboard,
       isRequiredLogin: isRequiredLogin,
-      isQueryParameterDetected: false, // URL生成からは常にfalse
+      isQueryParameterDetected: false,
       token: QueryParameter.#PRIVATE_TOKEN
     });
   }
@@ -60,7 +60,6 @@ class QueryParameter {
     const isRequiredLogin = response.requiredLogin !== null 
       ? QueryParameter.#convertToBoolean(response.requiredLogin) 
       : null;
-    // クエリパラメータ検出フラグを取得
     const isQueryParameterDetected = response.isQueryParameterDetected || false;
 
     return new QueryParameter({
@@ -96,7 +95,7 @@ class QueryParameter {
       isAutoSend: isAutoSend,
       isUseClipboard: null,
       isRequiredLogin: isRequiredLogin,
-      isQueryParameterDetected: false, // フラグメントから生成された場合は常にfalse
+      isQueryParameterDetected: false,
       token: QueryParameter.#PRIVATE_TOKEN
     });
   }
@@ -122,7 +121,6 @@ class QueryParameter {
     return this._isRequiredLogin;
   }
   
-  // クエリパラメータが検出されたかどうかを返すメソッドを追加
   isQueryParameterDetected() {
     return this.#isQueryParameterDetected;
   }

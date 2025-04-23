@@ -226,7 +226,6 @@ footer {
   pointer-events: none;
 }
 
-/* 警告メッセージのスタイル */
 .warning-message {
   background-color: #fff3cd;
   border: 1px solid #ffeeba;

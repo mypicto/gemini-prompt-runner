@@ -19,7 +19,6 @@ class PopupApp {
       this.localizeService
     );
     
-    // 警告メッセージコンポーネントとサービスを追加
     this.queryWarningComponent = new QueryWarningComponent();
     this.queryWarningService = new QueryWarningService(this.queryWarningComponent);
   }
@@ -30,7 +29,6 @@ class PopupApp {
     this.externalLinkService.init();
     this.manualUrlService.init();
     this.urlGenerateService.init();
-    // 警告メッセージ機能を初期化
     this.queryWarningService.init();
   }
 }
@@ -244,7 +242,6 @@ class UrlGenerateComponent {
     if (this.requiredLogin) this.requiredLogin.checked = options.requiredLogin;
     if (this.redirectUrl) this.redirectUrl.checked = options.redirectUrl;
     
-    // オプション変更後にautoSendの状態を更新
     this.updateAutoSendState();
   }
 
@@ -275,11 +272,9 @@ class UrlGenerateService {
   }
 
   async init() {
-    // 保存されたオプションを読み込む
     const savedOptions = await this.repository.getOptions();
     this.component.setOptions(savedOptions);
 
-    // オプション変更時に保存
     this.component.attachOptionsChangeListener(() => {
       this.repository.saveOptions(this.component.getOptions());
     });
@@ -372,7 +367,6 @@ class UrlGenerateService {
   }
 }
 
-// 警告メッセージを表示するためのコンポーネントクラスを追加
 class QueryWarningComponent {
   constructor() {
     this.container = document.getElementById('queryWarningContainer');
@@ -391,7 +385,6 @@ class QueryWarningComponent {
   }
 }
 
-// 警告表示ロジックを処理するサービスクラスを追加
 class QueryWarningService {
   constructor(component) {
     this.component = component;
@@ -411,7 +404,6 @@ class QueryWarningService {
       
       const tab = tabs[0];
       
-      // タブのURLがGeminiページでない場合は終了
       if (!tab.url || !tab.url.includes('gemini.google.com')) return;
       
       chrome.tabs.sendMessage(

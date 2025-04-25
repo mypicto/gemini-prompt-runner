@@ -1,3 +1,6 @@
+import { QueryParameter } from './utils/query-parameter.js';
+import { IdentifierModelQuery } from './models/model-query.js';
+
 class PopupApp {
   constructor() {
     this.localizeService = new LocalizeService();

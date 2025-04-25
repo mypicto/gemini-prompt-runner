@@ -1,4 +1,6 @@
-class UrlGenerateService {
+import { QueryParameter } from '../utils/query-parameter.js'; 
+
+export class UrlGenerateService {
   constructor(textarea, modelSelector) {
     this.textarea = textarea;
     this.modelSelector = modelSelector;

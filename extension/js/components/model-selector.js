@@ -1,4 +1,6 @@
-class ModelSelector {
+import { NominalModelQuery } from '../models/model-query.js';
+
+export class ModelSelector {
   constructor(selectorManager) {
     this.selectorManager = selectorManager;
   }

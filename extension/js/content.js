@@ -1,3 +1,7 @@
+import { QueryParameter } from './utils/query-parameter.js';
+import { ModelSelector } from './components/model-selector.js';
+import { UrlGenerateService } from './services/url-generate-service.js';
+
 class Application {
   constructor() {
     this.selectorService = new SelectorService();
@@ -39,10 +43,10 @@ class Application {
   }
 
   #extractAndProtectSensitiveFragmentParams() {
-    const fragmentParams = this.#getFragmentParams();
-    if (QueryParameter.hasTargetParameters(fragmentParams)) {
-      this.fragmentParams = fragmentParams;
-      this.#removeUrlFragment();
+    const url = new URL(window.location.href);
+    if (QueryParameter.hasTargetParametersInUrl(url)) {
+      this.leakedParams = QueryParameter.generateFromUrl(url);
+      this.#removeQueryAndFragment();
     }
   }
 
@@ -99,24 +103,16 @@ class Application {
   }
 
   async #getQueryParameter() {
-    if (this.fragmentParams) {
-      return await QueryParameter.generateFromFragment(this.fragmentParams);
+    if (this.leakedParams) {
+      return this.leakedParams;
     }
     return await QueryParameter.generateFromBackground();
   }
 
-  #getFragmentParams() {
+  #removeQueryAndFragment() {
     const url = new URL(window.location.href);
-    const hash = url.hash;
-    if (hash && hash.length > 1) {
-      const decodedHash = decodeURIComponent(hash.substring(1));
-      return new URLSearchParams(decodedHash);
-    }
-    return new URLSearchParams();
-  }
-
-  #removeUrlFragment() {
-    history.replaceState(null, document.title, location.origin + location.pathname + location.search);
+    const sanitizedUrl = QueryParameter.removeQueryAndFragment(url);
+    history.replaceState(null, document.title, sanitizedUrl);
   }
 
   async #buildProgressCounter(prompts) {

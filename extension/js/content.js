@@ -102,11 +102,29 @@ class Application {
     }
   }
 
+  async fetchQueryParameterJson() {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage({ type: 'requestParameters' }, response => {
+        if (chrome.runtime.lastError) {
+          return reject(new Error(chrome.runtime.lastError.message));
+        }
+        if (!response) {
+          return reject(new Error('No response'));
+        }
+        if (response.error) {
+          return reject(new Error(response.error));
+        }
+        resolve(response);
+      });
+    });
+  }
+
   async #getQueryParameter() {
     if (this.leakedParams) {
       return this.leakedParams;
     }
-    return await QueryParameter.generateFromBackground();
+    const json = await this.fetchQueryParameterJson();
+    return QueryParameter.generateFromJson(json);
   }
 
   #removeQueryAndFragment() {

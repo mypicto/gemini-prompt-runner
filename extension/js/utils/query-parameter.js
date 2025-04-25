@@ -20,24 +20,6 @@ export class QueryParameter {
     this.#isQueryParameterDetected = isQueryParameterDetected;
   }
 
-  static async #fetchParameters() {
-    const response = await new Promise((resolve, reject) => {
-      chrome.runtime.sendMessage({ type: 'requestParameters' }, (response) => {
-        if (chrome.runtime.lastError) {
-          return reject(new Error(chrome.runtime.lastError.message));
-        }
-        if (!response) {
-          return reject(new Error('No response'));
-        }
-        if (response.error) {
-          return reject(new Error(response.error));
-        }
-        resolve(response);
-      });
-    });
-    return response;
-  }
-
   static async generate({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, isRequiredLogin = null} = {}) {
     const promptTexts = prompts
       ? await Promise.all(prompts.map(prompt => QueryParameter.#processPrompt(prompt, isUseClipboard)))
@@ -54,22 +36,18 @@ export class QueryParameter {
     });
   }
 
-  static async generateFromBackground() {
-    const json = await QueryParameter.#fetchParameters();
+  static generateFromJson(json) {
     const prompts = json.prompts;
-    const modelQuery = json.modelQuery ? QueryParameter.#processModel(json.modelQuery) : null;
-    const isAutoSend = json.send;
-    const isUseClipboard = json.clipboard;
-    const isRequiredLogin = json.requiredLogin;
-    const isQueryParameterDetected = json.queryParameterDetected;
-
+    const modelQuery = json.modelQuery
+      ? QueryParameter.#processModel(json.modelQuery)
+      : null;
     return new QueryParameter({
-      prompts: prompts,
-      modelQuery: modelQuery,
-      isAutoSend: isAutoSend,
-      isUseClipboard: isUseClipboard,
-      isRequiredLogin: isRequiredLogin,
-      isQueryParameterDetected: isQueryParameterDetected,
+      prompts,
+      modelQuery,
+      isAutoSend: json.send,
+      isUseClipboard: json.clipboard,
+      isRequiredLogin: json.requiredLogin,
+      isQueryParameterDetected: json.queryParameterDetected,
       token: QueryParameter.#PRIVATE_TOKEN
     });
   }

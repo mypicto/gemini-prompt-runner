@@ -70,7 +70,7 @@ class InternalMessageHandler {
   }
   
   #handleMessage(message, sender, sendResponse) {
-    if (message.type === 'requestParameters') {      
+    if (message.type === 'requestParameters') {
       sendResponse(this.pendingParameters);
       this.pendingParameters = QueryParameter.generate();
       return true;

@@ -56,7 +56,7 @@ export class QueryParameter {
     const urlObj = new URL(url);
     const queryParams = urlObj.searchParams;
     const fragmentParams = QueryParameter.#extractFragmentParameters(urlObj);
-    const isQueryParameterDetected = QueryParameter.hasTargetParameters(queryParams);
+    const isQueryParameterDetected = QueryParameter.#hasTargetParameters(queryParams);
     
     const prompts = [...queryParams.getAll('ext-q'), ...fragmentParams.getAll('ext-q')];
     const model = queryParams.get('ext-m') || fragmentParams.get('ext-m');
@@ -82,24 +82,10 @@ export class QueryParameter {
     });
   }
 
-  static #extractFragmentParameters(url) {
-    if (url.hash && url.hash.length > 1) {
-      return new URLSearchParams(url.hash.substring(1));
-    }
-    return new URLSearchParams();
-  }
-
-  static hasTargetParameters(urlOrParams) {
-    return QueryParameter.#PARAMETER_NAMES.some(param => urlOrParams.has(param));
-  }
-
   static hasTargetParametersInUrl(url) {
     const queryParams = url.searchParams;
     const fragmentParams = QueryParameter.#extractFragmentParameters(url);
-
-    return QueryParameter.#PARAMETER_NAMES.some(param =>
-      queryParams.has(param) || fragmentParams.has(param)
-    );
+    return this.#hasTargetParameters(queryParams) || this.#hasTargetParameters(fragmentParams);
   }
 
   static removeQueryAndFragment(url) {
@@ -175,6 +161,17 @@ export class QueryParameter {
     }
 
     return url.toString();
+  }
+
+  static #extractFragmentParameters(url) {
+    if (url.hash && url.hash.length > 1) {
+      return new URLSearchParams(url.hash.substring(1));
+    }
+    return new URLSearchParams();
+  }
+
+  static #hasTargetParameters(params) {
+    return QueryParameter.#PARAMETER_NAMES.some(param => params.has(param));
   }
 
   static async #processPrompt(promptText, clipboard) {

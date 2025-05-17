@@ -1,5 +1,6 @@
 import { QueryParameter } from './utils/query-parameter.js';
 import { IdentifierModelQuery } from './models/model-query.js';
+import { ClipboardService } from './services/clipboard-service.js';
 
 class PopupApp {
   constructor() {
@@ -127,7 +128,7 @@ class ManualUrlService {
       .then(response => response.text())
       .then(async text => {
         const locationMock = { origin: 'https://gemini.google.com', pathname: '/app' };
-        const queryParameter = await QueryParameter.generate({
+        const queryParameter = QueryParameter.generate({
           prompts: text ? [text] : null,
           modelQuery: new IdentifierModelQuery(0),
           isAutoSend: true,

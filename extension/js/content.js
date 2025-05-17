@@ -76,7 +76,7 @@ class Application {
 
   async #operateGemini() {
     const parameter = await this.#getQueryParameter();
-    const prompts = parameter.getPrompts();
+    const prompts = await parameter.buildPromptTexts();
     const modelQuery = parameter.getModelQuery();
     const isAutoSend = parameter.isAutoSend();
     const isOnGemPage = LocationChecker.isOnGemPage();

@@ -1,5 +1,6 @@
 import { IdentifierModelQuery } from '../models/model-query.js';
 import { NominalModelQuery } from '../models/model-query.js';
+import { ClipboardService } from '../services/clipboard-service.js';
 
 export class QueryParameter {
   static CLIPBOARD_KEYWORD = '{{clipboard}}';
@@ -20,13 +21,9 @@ export class QueryParameter {
     this.#isQueryParameterDetected = isQueryParameterDetected;
   }
 
-  static async generate({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, isRequiredLogin = null} = {}) {
-    const promptTexts = prompts
-      ? await Promise.all(prompts.map(prompt => QueryParameter.#processPrompt(prompt, isUseClipboard)))
-      : [];
-
+  static generate({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, isRequiredLogin = null} = {}) {
     return new QueryParameter({
-      prompts: promptTexts,
+      prompts: prompts,
       modelQuery: modelQuery,
       isAutoSend: isAutoSend,
       isUseClipboard: isUseClipboard,
@@ -96,8 +93,12 @@ export class QueryParameter {
     return url;
   }
 
-  getPrompts() {
-    return this.prompts;
+  async buildPromptTexts() {
+    const promptTexts = this.prompts
+      ? await Promise.all(this.prompts.map(prompt => QueryParameter.#processPrompt(prompt, this.isUseClipboard)))
+      : [];
+
+    return promptTexts;
   }
 
   getModelQuery() {
@@ -178,10 +179,11 @@ export class QueryParameter {
     if (promptText) {
       const keyword = QueryParameter.CLIPBOARD_KEYWORD;
       const isUseClipboard = QueryParameter.#convertToBoolean(clipboard);
+      const clipboardService = new ClipboardService();
       if (isUseClipboard && promptText.includes(keyword)) {
         let clipboardText = '';
         try {
-          clipboardText = await navigator.clipboard.readText() || '';
+          clipboardText = await clipboardService.read() || '';
         } catch (err) {
           clipboardText = '';
         }

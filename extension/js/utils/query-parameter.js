@@ -209,7 +209,7 @@ export class QueryParameter {
   }
 
   static #convertToBoolean(value) {
-    return (value === 'true' || value === '1');
+    return (value === 'true' || value === '1' || value === true);
   }
 }
 

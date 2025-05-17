@@ -1,4 +1,6 @@
 import { NominalModelQuery } from '../models/model-query.js';
+import { OperationCanceledError } from '../utils/operation-canceled-error.js';
+import { Model } from '../models/model.js';
 
 export class ModelSelector {
   constructor(selectorManager) {

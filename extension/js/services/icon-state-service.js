@@ -1,4 +1,4 @@
-class IconStateService {
+export class IconStateService {
   constructor() {
     this.defaultIcon = '../images/icon48.png';
     this.warningIcon = '../images/icon48-warning.png';

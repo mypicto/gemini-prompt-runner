@@ -1,4 +1,4 @@
-class ClipboardKeywordService {
+export class ClipboardKeywordService {
   constructor(textarea) {
     this.textarea = textarea;
   }

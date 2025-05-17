@@ -25,18 +25,6 @@
     {
       "matches": ["*://gemini.google.com/*"],
       "js": [
-        "js/utils/operation-canceled-error.js",
-        "js/utils/ui-stability-monitor.js",
-        "js/utils/location-checker.js",
-        "js/models/model.js",
-        "js/services/selector-service.js",
-        "js/services/copy-service.js",
-        "js/services/clipboard-keyword-service.js",
-        "js/services/icon-state-service.js",
-        "js/components/textarea.js",
-        "js/components/send-button.js",
-        "js/components/copy-button.js",
-        "js/components/login-button.js",
         "js/content-loader.js"
       ],
       "run_at": "document_start"
@@ -59,9 +47,21 @@
         "res/selectors.json",
         "res/prompt_readme.txt",
         "js/utils/query-parameter.js",
+        "js/utils/operation-canceled-error.js",
+        "js/utils/ui-stability-monitor.js",
+        "js/utils/location-checker.js",
         "js/models/model-query.js",
+        "js/models/model.js",
         "js/services/url-generate-service.js",
+        "js/services/selector-service.js",
+        "js/services/copy-service.js",
+        "js/services/clipboard-keyword-service.js",
+        "js/services/icon-state-service.js",
         "js/components/model-selector.js",
+        "js/components/textarea.js",
+        "js/components/send-button.js",
+        "js/components/copy-button.js",
+        "js/components/login-button.js",
         "js/content.js"
       ],
       "matches": ["*://gemini.google.com/*"]

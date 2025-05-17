@@ -1,4 +1,4 @@
-class SendButton {
+export class SendButton {
   constructor(selectorManager) {
     this.selectorManager = selectorManager;
   }

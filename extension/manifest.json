@@ -24,9 +24,7 @@
   "content_scripts": [
     {
       "matches": ["*://gemini.google.com/*"],
-      "js": [
-        "js/content-loader.js"
-      ],
+      "js": ["js/content-loader.js"],
       "run_at": "document_start"
     }
   ],
@@ -58,6 +56,7 @@
         "js/services/clipboard-keyword-service.js",
         "js/services/clipboard-service.js",
         "js/services/icon-state-service.js",
+        "js/services/localize-service.js",
         "js/components/model-selector.js",
         "js/components/textarea.js",
         "js/components/send-button.js",

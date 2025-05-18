@@ -1,6 +1,7 @@
 import { QueryParameter } from './utils/query-parameter.js';
 import { IdentifierModelQuery } from './models/model-query.js';
 import { ClipboardService } from './services/clipboard-service.js';
+import { LocalizeService } from './services/localize-service.js';
 
 class PopupApp {
   constructor() {

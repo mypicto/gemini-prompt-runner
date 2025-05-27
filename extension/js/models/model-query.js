@@ -1,3 +1,5 @@
+import { Model } from './model.js';
+
 export class ModelQuery {
   constructor() {
   }

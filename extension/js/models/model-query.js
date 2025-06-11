@@ -65,7 +65,7 @@ export class NominalModelQuery extends ModelQuery {
   }
 
   #normalizeModelName(name) {
-    name = name.replace(/\(.*\)/g, '');
+    name = name.replace(/[\(\（][^)\）]*[\)\）]/g, '');
     return name.toLowerCase().replace(/\s+/g, '');
   }
 }

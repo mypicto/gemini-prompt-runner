@@ -1,4 +1,4 @@
-class LoginButton {
+export class LoginButton {
   constructor(selectorManager) {
     this.selectorManager = selectorManager;
   }

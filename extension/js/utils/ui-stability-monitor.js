@@ -1,4 +1,4 @@
-class UIStabilityMonitor {
+export class UIStabilityMonitor {
   static async waitForUiStability(interval = 400) {
     return new Promise(resolve => {
       let isStable = false;

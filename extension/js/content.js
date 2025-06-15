@@ -1,3 +1,17 @@
+import { QueryParameter } from './utils/query-parameter.js';
+import { ModelSelector } from './components/model-selector.js';
+import { UrlGenerateService } from './services/url-generate-service.js';
+import { UIStabilityMonitor } from './utils/ui-stability-monitor.js';
+import { LocationChecker } from './utils/location-checker.js';
+import { SelectorService } from './services/selector-service.js';
+import { CopyService } from './services/copy-service.js';
+import { ClipboardKeywordService } from './services/clipboard-keyword-service.js';
+import { IconStateService } from './services/icon-state-service.js';
+import { Textarea } from './components/textarea.js';
+import { SendButton } from './components/send-button.js';
+import { CopyButton } from './components/copy-button.js';
+import { LoginButton } from './components/login-button.js';
+
 class Application {
   constructor() {
     this.selectorService = new SelectorService();
@@ -10,6 +24,7 @@ class Application {
     this.urlGenerateService = new UrlGenerateService(this.textarea, this.modelSelector);
     this.clipboardKeywordService = new ClipboardKeywordService(this.textarea);
     this.iconStateService = new IconStateService();
+    this.isQueryParameterDetected = false;
   }
 
   init() {
@@ -18,6 +33,8 @@ class Application {
     this.copyService.addCopyShortcutListener();
     this.urlGenerateService.subscribeToListeners();
     this.clipboardKeywordService.subscribeToListeners();
+    
+    this.#setupMessageListeners();
 
     document.addEventListener('DOMContentLoaded', async () => {
       await this.selectorService.init();
@@ -26,11 +43,20 @@ class Application {
     });
   }
 
+  #setupMessageListeners() {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.action === "checkQueryParameterDetection") {
+        sendResponse({ isQueryParameterDetected: this.isQueryParameterDetected });
+        return true;
+      }
+    });
+  }
+
   #extractAndProtectSensitiveFragmentParams() {
-    const fragmentParams = this.#getFragmentParams();
-    if (QueryParameter.hasTargetParameters(fragmentParams)) {
-      this.fragmentParams = fragmentParams;
-      this.#removeUrlFragment();
+    const url = new URL(window.location.href);
+    if (QueryParameter.hasTargetParametersInUrl(url)) {
+      this.leakedParams = QueryParameter.generateFromUrl(url);
+      this.#removeQueryAndFragment();
     }
   }
 
@@ -50,11 +76,17 @@ class Application {
 
   async #operateGemini() {
     const parameter = await this.#getQueryParameter();
-    const prompts = parameter.getPrompts();
+    const prompts = await parameter.buildPromptTexts();
     const modelQuery = parameter.getModelQuery();
     const isAutoSend = parameter.isAutoSend();
     const isOnGemPage = LocationChecker.isOnGemPage();
     const isRequiredLogin = parameter.isRequiredLogin();
+    
+    this.isQueryParameterDetected = parameter.isQueryParameterDetected();
+    
+    if (this.isQueryParameterDetected) {
+      this.iconStateService.setWarningIcon();
+    }
 
     const options = {
       prompts,
@@ -66,33 +98,49 @@ class Application {
 
     try {
       this.progressCounter = await this.#buildProgressCounter(prompts);
-      this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
+      
+      if (!this.isQueryParameterDetected) {
+        this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
+      }
+      
       await this.#processAll(options);
     } finally {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      this.iconStateService.resetToDefault();
+      if (!this.isQueryParameterDetected) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        this.iconStateService.resetToDefault();
+      }
     }
+  }
+
+  async fetchQueryParameterJson() {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage({ type: 'requestParameters' }, response => {
+        if (chrome.runtime.lastError) {
+          return reject(new Error(chrome.runtime.lastError.message));
+        }
+        if (!response) {
+          return reject(new Error('No response'));
+        }
+        if (response.error) {
+          return reject(new Error(response.error));
+        }
+        resolve(response);
+      });
+    });
   }
 
   async #getQueryParameter() {
-    if (this.fragmentParams) {
-      return await QueryParameter.generateFromFragment(this.fragmentParams);
+    if (this.leakedParams) {
+      return this.leakedParams;
     }
-    return await QueryParameter.generateFromBackground();
+    const json = await this.fetchQueryParameterJson();
+    return QueryParameter.generateFromJson(json);
   }
 
-  #getFragmentParams() {
+  #removeQueryAndFragment() {
     const url = new URL(window.location.href);
-    const hash = url.hash;
-    if (hash && hash.length > 1) {
-      const decodedHash = decodeURIComponent(hash.substring(1));
-      return new URLSearchParams(decodedHash);
-    }
-    return new URLSearchParams();
-  }
-
-  #removeUrlFragment() {
-    history.replaceState(null, document.title, location.origin + location.pathname + location.search);
+    const sanitizedUrl = QueryParameter.removeQueryAndFragment(url);
+    history.replaceState(null, document.title, sanitizedUrl);
   }
 
   async #buildProgressCounter(prompts) {
@@ -165,7 +213,9 @@ class Application {
 
   #incrementProgress() {
     this.progressCounter.incrementCount();
-    this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
+    if (!this.isQueryParameterDetected) {
+      this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
+    }
   }
 }
 

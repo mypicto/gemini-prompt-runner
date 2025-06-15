@@ -1,8 +1,14 @@
-class QueryParameter {
+import { IdentifierModelQuery } from '../models/model-query.js';
+import { NominalModelQuery } from '../models/model-query.js';
+import { ClipboardService } from '../services/clipboard-service.js';
+
+export class QueryParameter {
   static CLIPBOARD_KEYWORD = '{{clipboard}}';
   static #PRIVATE_TOKEN = Symbol('QueryParameterToken');
+  static #PARAMETER_NAMES = ['ext-q', 'ext-m', 'ext-send', 'ext-clipboard', 'ext-required-login'];
+  #isQueryParameterDetected = false;
 
-  constructor({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, isRequiredLogin = null, token = null} = {}) {
+  constructor({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, isRequiredLogin = null, isQueryParameterDetected = false, token = null} = {}) {
     if (token !== QueryParameter.#PRIVATE_TOKEN) {
       throw new Error('Invalid constructor call: Use static factory methods instead');
     }
@@ -12,95 +18,87 @@ class QueryParameter {
     this._isAutoSend = isAutoSend;
     this.isUseClipboard = isUseClipboard;
     this._isRequiredLogin = isRequiredLogin;
+    this.#isQueryParameterDetected = isQueryParameterDetected;
   }
 
-  static async #fetchParameters() {
-    const response = await new Promise((resolve, reject) => {
-      chrome.runtime.sendMessage({ type: 'requestParameters' }, (response) => {
-        if (chrome.runtime.lastError) {
-          return reject(new Error(chrome.runtime.lastError.message));
-        }
-        if (!response) {
-          return reject(new Error('No response'));
-        }
-        if (response.error) {
-          return reject(new Error(response.error));
-        }
-        resolve(response);
-      });
-    });
-    return response;
-  }
-
-  static async generate({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, isRequiredLogin = null} = {}) {
-    const promptTexts = prompts
-      ? await Promise.all(prompts.map(prompt => QueryParameter.#processPrompt(prompt, isUseClipboard)))
-      : [];
-
+  static generate({ prompts = null, modelQuery = null, isAutoSend = null, isUseClipboard = null, isRequiredLogin = null} = {}) {
     return new QueryParameter({
-      prompts: promptTexts,
+      prompts: prompts,
       modelQuery: modelQuery,
       isAutoSend: isAutoSend,
       isUseClipboard: isUseClipboard,
       isRequiredLogin: isRequiredLogin,
+      isQueryParameterDetected: false,
       token: QueryParameter.#PRIVATE_TOKEN
     });
   }
 
-  static async generateFromBackground() {
-    const response = await QueryParameter.#fetchParameters();
-    const promptTexts = response.prompts
-      ? await Promise.all(response.prompts.map(prompt => QueryParameter.#processPrompt(prompt, response.clipboard)))
-      : [];
-    const modelQuery = QueryParameter.#processModel(response.model);
-    const isAutoSend = QueryParameter.#convertToBoolean(response.send);
-    const isRequiredLogin = response.requiredLogin !== null 
-      ? QueryParameter.#convertToBoolean(response.requiredLogin) 
+  static generateFromJson(json) {
+    const prompts = json.prompts;
+    const modelQuery = json.modelQuery
+      ? QueryParameter.#processModel(json.modelQuery)
       : null;
-
     return new QueryParameter({
-      prompts: promptTexts,
+      prompts,
+      modelQuery,
+      isAutoSend: json.send,
+      isUseClipboard: json.clipboard,
+      isRequiredLogin: json.requiredLogin,
+      isQueryParameterDetected: json.queryParameterDetected,
+      token: QueryParameter.#PRIVATE_TOKEN
+    });
+  }
+  
+  static generateFromUrl(url) {
+    const urlObj = new URL(url);
+    const queryParams = urlObj.searchParams;
+    const fragmentParams = QueryParameter.#extractFragmentParameters(urlObj);
+    const isQueryParameterDetected = QueryParameter.#hasTargetParameters(queryParams);
+    
+    const prompts = [...queryParams.getAll('ext-q'), ...fragmentParams.getAll('ext-q')];
+    const model = queryParams.get('ext-m') || fragmentParams.get('ext-m');
+    const send = queryParams.get('ext-send') || fragmentParams.get('ext-send');
+    const clipboard = queryParams.get('ext-clipboard') || fragmentParams.get('ext-clipboard');
+    const requiredLogin = queryParams.get('ext-required-login') || fragmentParams.get('ext-required-login');
+    
+    const modelQuery = QueryParameter.#processModel(model);
+    const isAutoSend = QueryParameter.#convertToBoolean(send);
+    const isUseClipboard = QueryParameter.#convertToBoolean(clipboard);
+    const isRequiredLogin = requiredLogin !== null 
+      ? QueryParameter.#convertToBoolean(requiredLogin) 
+      : null;
+    
+    return new QueryParameter({
+      prompts: prompts,
       modelQuery: modelQuery,
       isAutoSend: isAutoSend,
-      isUseClipboard: null,
+      isUseClipboard: isUseClipboard,
       isRequiredLogin: isRequiredLogin,
+      isQueryParameterDetected: isQueryParameterDetected,
       token: QueryParameter.#PRIVATE_TOKEN
     });
   }
 
-  static async generateFromFragment(fragmentParams) {
-    const promptTexts = fragmentParams.getAll('ext-q');
-    const modelValue = fragmentParams.get('ext-m');
-    const sendValue = fragmentParams.get('ext-send');
-    const clipboardValue = fragmentParams.get('ext-clipboard');
-    const requiredLoginValue = fragmentParams.get('ext-required-login');
+  static hasTargetParametersInUrl(url) {
+    const queryParams = url.searchParams;
+    const fragmentParams = QueryParameter.#extractFragmentParameters(url);
+    return this.#hasTargetParameters(queryParams) || this.#hasTargetParameters(fragmentParams);
+  }
 
-    const processedPrompts = promptTexts.length > 0
-      ? await Promise.all(promptTexts.map(prompt => QueryParameter.#processPrompt(prompt, clipboardValue)))
+  static removeQueryAndFragment(url) {
+    for (const name of QueryParameter.#PARAMETER_NAMES) {
+      url.searchParams.delete(name);
+    }
+    url.hash = '';
+    return url;
+  }
+
+  async buildPromptTexts() {
+    const promptTexts = this.prompts
+      ? await Promise.all(this.prompts.map(prompt => QueryParameter.#processPrompt(prompt, this.isUseClipboard)))
       : [];
-    const modelQuery = QueryParameter.#processModel(modelValue);
-    const isAutoSend = QueryParameter.#convertToBoolean(sendValue);
-    const isRequiredLogin = requiredLoginValue !== null 
-      ? QueryParameter.#convertToBoolean(requiredLoginValue) 
-      : null;
 
-    return new QueryParameter({
-      prompts: processedPrompts,
-      modelQuery: modelQuery,
-      isAutoSend: isAutoSend,
-      isUseClipboard: null,
-      isRequiredLogin: isRequiredLogin,
-      token: QueryParameter.#PRIVATE_TOKEN
-    });
-  }
-
-  static hasTargetParameters(urlOrParams) {
-    const targetParams = ['ext-q', 'ext-m', 'ext-send', 'ext-clipboard', 'ext-required-login'];
-    return targetParams.some(param => urlOrParams.has(param));
-  }
-
-  getPrompts() {
-    return this.prompts;
+    return promptTexts;
   }
 
   getModelQuery() {
@@ -113,6 +111,23 @@ class QueryParameter {
 
   isRequiredLogin() {
     return this._isRequiredLogin;
+  }
+  
+  isQueryParameterDetected() {
+    return this.#isQueryParameterDetected;
+  }
+
+  toJSON() {
+    const json = {
+      __type: 'QueryParameter',
+      prompts: this.prompts,
+      modelQuery: this.modelQuery ? this.modelQuery.getIdentifierString() : null,
+      send: this._isAutoSend,
+      clipboard: this.isUseClipboard,
+      requiredLogin: this._isRequiredLogin,
+      queryParameterDetected: this.#isQueryParameterDetected
+    };
+    return json;
   }
   
   buildUrl(location) {
@@ -149,14 +164,26 @@ class QueryParameter {
     return url.toString();
   }
 
+  static #extractFragmentParameters(url) {
+    if (url.hash && url.hash.length > 1) {
+      return new URLSearchParams(url.hash.substring(1));
+    }
+    return new URLSearchParams();
+  }
+
+  static #hasTargetParameters(params) {
+    return QueryParameter.#PARAMETER_NAMES.some(param => params.has(param));
+  }
+
   static async #processPrompt(promptText, clipboard) {
     if (promptText) {
       const keyword = QueryParameter.CLIPBOARD_KEYWORD;
       const isUseClipboard = QueryParameter.#convertToBoolean(clipboard);
+      const clipboardService = new ClipboardService();
       if (isUseClipboard && promptText.includes(keyword)) {
         let clipboardText = '';
         try {
-          clipboardText = await navigator.clipboard.readText() || '';
+          clipboardText = await clipboardService.read() || '';
         } catch (err) {
           clipboardText = '';
         }
@@ -184,7 +211,7 @@ class QueryParameter {
   }
 
   static #convertToBoolean(value) {
-    return (value === 'true' || value === '1');
+    return (value === 'true' || value === '1' || value === true);
   }
 }
 

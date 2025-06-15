@@ -46,5 +46,8 @@
     },
     "promptReadmeURL": {
         "message": "res/prompt_readme_ja.txt"
+    },
+    "popupQueryWarning": {
+        "message": "クエリパラメータの使用が検出されました。パラメータ指定にはURLフラグメントの使用を推奨します。URL中の '?' を '#' に変更してください。"
     }
 }

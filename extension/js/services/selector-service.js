@@ -1,4 +1,4 @@
-class SelectorService {
+export class SelectorService {
   constructor() {
     this.data = {};
   }

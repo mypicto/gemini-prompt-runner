@@ -1,4 +1,4 @@
-class LocalizeService {
+export class LocalizeService {
   constructor() {
     this.localizeElements = document.querySelectorAll('[localize]');
     this.localizeAttrElements = document.querySelectorAll('[localize-attr]');

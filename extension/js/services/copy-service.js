@@ -1,4 +1,4 @@
-class CopyService {
+export class CopyService {
   constructor(selectorManager, copyButton) {
     this.selectorManager = selectorManager;
     this.copyButton = copyButton;

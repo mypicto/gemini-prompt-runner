@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Prompt Runner for Google Gemini",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
   "icons": {
@@ -18,34 +18,17 @@
     "default_popup": "html/popup.html"
   },
   "background": {
-    "service_worker": "js/background.js"
+    "service_worker": "js/background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
       "matches": ["*://gemini.google.com/*"],
-      "js": [
-        "js/utils/query-parameter.js",
-        "js/utils/operation-canceled-error.js",
-        "js/utils/ui-stability-monitor.js",
-        "js/utils/location-checker.js",
-        "js/models/model.js",
-        "js/models/model-query.js",
-        "js/services/selector-service.js",
-        "js/services/copy-service.js",
-        "js/services/url-generate-service.js",
-        "js/services/clipboard-keyword-service.js",
-        "js/services/icon-state-service.js",
-        "js/components/textarea.js",
-        "js/components/send-button.js",
-        "js/components/copy-button.js",
-        "js/components/model-selector.js",
-        "js/components/login-button.js",
-        "js/content.js"
-      ],
+      "js": ["js/content-loader.js"],
       "run_at": "document_start"
     }
   ],
-  "permissions": ["declarativeNetRequest", "webRequest"],
+  "permissions": ["declarativeNetRequest", "webRequest", "storage"],
   "host_permissions": ["*://gemini.google.com/*", "*://mypicto.github.io/gemini-prompt-runner*"],
   "declarative_net_request": {
     "rule_resources": [
@@ -58,7 +41,29 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["res/selectors.json", "res/prompt_readme.txt"],
+      "resources": [
+        "res/selectors.json",
+        "res/prompt_readme.txt",
+        "js/utils/query-parameter.js",
+        "js/utils/operation-canceled-error.js",
+        "js/utils/ui-stability-monitor.js",
+        "js/utils/location-checker.js",
+        "js/models/model-query.js",
+        "js/models/model.js",
+        "js/services/url-generate-service.js",
+        "js/services/selector-service.js",
+        "js/services/copy-service.js",
+        "js/services/clipboard-keyword-service.js",
+        "js/services/clipboard-service.js",
+        "js/services/icon-state-service.js",
+        "js/services/localize-service.js",
+        "js/components/model-selector.js",
+        "js/components/textarea.js",
+        "js/components/send-button.js",
+        "js/components/copy-button.js",
+        "js/components/login-button.js",
+        "js/content.js"
+      ],
       "matches": ["*://gemini.google.com/*"]
     }
   ],

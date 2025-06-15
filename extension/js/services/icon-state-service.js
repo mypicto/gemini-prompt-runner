@@ -1,6 +1,8 @@
-class IconStateService {
+export class IconStateService {
   constructor() {
     this.defaultIcon = '../images/icon48.png';
+    this.warningIcon = '../images/icon48-warning.png';
+    this.isWarningActive = false;
 
     this.progressIcons = {
       10: '../images/progress10.png',
@@ -25,6 +27,8 @@ class IconStateService {
   }
 
   updateProgressIcon(progress) {
+    if (this.isWarningActive) return;
+    
     const normalizedProgress = Math.round(progress / 10) * 10;
     const progressValue = Math.max(10, Math.min(100, normalizedProgress));
     
@@ -36,7 +40,13 @@ class IconStateService {
     }
   }
 
+  setWarningIcon() {
+    this.isWarningActive = true;
+    this.#sendToBackground(this.warningIcon);
+  }
+
   resetToDefault() {
+    this.isWarningActive = false;
     this.#sendToBackground(this.defaultIcon);
   }
 }

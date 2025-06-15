@@ -1,4 +1,4 @@
-class Textarea {
+export class Textarea {
   constructor(selectorManager) {
     this.selectorManager = selectorManager;
   }

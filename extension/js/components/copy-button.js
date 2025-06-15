@@ -1,4 +1,4 @@
-class CopyButton {
+export class CopyButton {
   constructor(selectorManager) {
     this.selectorManager = selectorManager;
   }

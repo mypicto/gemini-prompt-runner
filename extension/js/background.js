@@ -1,3 +1,5 @@
+import { QueryParameter } from './utils/query-parameter.js';
+
 class TabIconCache {
   constructor() {
     this.iconPaths = {};
@@ -18,8 +20,7 @@ class TabIconCache {
 
 class InternalMessageHandler {
   constructor() {
-    this.pendingParameters = this.#generateEmptyParameters();
-    this.params = ['ext-q', 'ext-m', 'ext-send', 'ext-clipboard', 'ext-required-login'];
+    this.pendingParameters = QueryParameter.generate();
     this.tabIconCache = new TabIconCache();
   }
   
@@ -30,22 +31,10 @@ class InternalMessageHandler {
     this.#registerTabActivationListener();
     this.#registerTabRemovedListener();
   }
-
-  #generateEmptyParameters() {
-    return {
-      prompts: null,
-      model: null,
-      autosend: null,
-      clipboard: null,
-      requiredLogin: null
-    };
-  }
   
   #getUrlFilters() {
     const filters = [];
-    this.params.forEach(param => {
-      filters.push(`*://gemini.google.com/*`);
-    });
+    filters.push(`*://gemini.google.com/*`);
     return filters;
   }
   
@@ -75,45 +64,15 @@ class InternalMessageHandler {
   
   #handleWebRequest(details) {
     const url = new URL(details.url);
-    const queryParams = this.#extractQueryParameters(url);
-    const fragmentParams = this.#extractFragmentParameters(url);
-
-    if (this.#hasTargetParameters(queryParams, fragmentParams)) {
-      this.pendingParameters = this.#mergeParameters(queryParams, fragmentParams);
+    if (QueryParameter.hasTargetParametersInUrl(url)) {
+      this.pendingParameters = QueryParameter.generateFromUrl(details.url);
     }
-  }
-
-  #extractQueryParameters(url) {
-    return url.searchParams;
-  }
-
-  #extractFragmentParameters(url) {
-    if (url.hash && url.hash.length > 1) {
-      return new URLSearchParams(url.hash.substring(1));
-    }
-    return new URLSearchParams();
-  }
-
-  #hasTargetParameters(queryParams, fragmentParams) {
-    return this.params.some(param => 
-      queryParams.has(param) || fragmentParams.has(param)
-    );
-  }
-
-  #mergeParameters(queryParams, fragmentParams) {
-    return {
-      prompts: [...queryParams.getAll('ext-q'), ...fragmentParams.getAll('ext-q')],
-      model: queryParams.get('ext-m') || fragmentParams.get('ext-m'),
-      send: queryParams.get('ext-send') || fragmentParams.get('ext-send'),
-      clipboard: queryParams.get('ext-clipboard') || fragmentParams.get('ext-clipboard'),
-      requiredLogin: queryParams.get('ext-required-login') || fragmentParams.get('ext-required-login')
-    };
   }
   
   #handleMessage(message, sender, sendResponse) {
     if (message.type === 'requestParameters') {
       sendResponse(this.pendingParameters);
-      this.pendingParameters = this.#generateEmptyParameters();
+      this.pendingParameters = QueryParameter.generate();
       return true;
     }
   }

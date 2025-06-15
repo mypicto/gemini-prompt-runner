@@ -46,5 +46,8 @@
     },
     "promptReadmeURL": {
         "message": "res/prompt_readme_en.txt"
+    },
+    "popupQueryWarning": {
+        "message": "Query parameters detected. It is recommended to use URL fragments for parameter specification. Please replace '?' with '#' in the URL."
     }
 }

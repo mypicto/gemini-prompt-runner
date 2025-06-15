@@ -1,4 +1,4 @@
-class OperationCanceledError extends Error {
+export class OperationCanceledError extends Error {
   constructor(message) {
     super(message);
     this.name = 'OperationCanceledError';

@@ -1,0 +1,244 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    color: #1a73e8;
+    margin-bottom: 10px;
+    font-size: 28px;
+    font-weight: 500;
+}
+
+header p {
+    color: #666;
+    font-size: 16px;
+}
+
+main {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* .actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+} */
+
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+    background: #1a73e8;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1557b0;
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #dadce0;
+}
+
+/* .btn-secondary:hover {
+    background: #e8eaed;
+} */
+
+.settings-grid {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.setting-item {
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 20px;
+    background: #fafafa;
+}
+
+.setting-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.setting-title {
+    font-weight: 600;
+    color: #1a73e8;
+    font-size: 16px;
+}
+
+/* .setting-status {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+} */
+
+/* .status-default {
+    background: #e8f0fe;
+    color: #1a73e8;
+} */
+
+/* .status-custom {
+    background: #fef7e0;
+    color: #f9ab00;
+} */
+
+.setting-field {
+    margin-bottom: 15px;
+}
+
+.setting-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+}
+
+.setting-field input,
+.setting-field textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+.setting-field textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.setting-field input:focus,
+.setting-field textarea:focus {
+    outline: none;
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+/* .setting-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+} */
+
+/* .btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+} */
+
+/* .btn-danger {
+    background: #ea4335;
+    color: white;
+} */
+
+/* .btn-danger:hover {
+    background: #d33b2c;
+} */
+
+.save-section {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #dadce0;
+}
+
+.save-status {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: none;
+}
+
+.save-status.success {
+    background: #e6f4ea;
+    color: #137333;
+    display: block;
+}
+
+.save-status.error {
+    background: #fce8e6;
+    color: #d93025;
+    display: block;
+}
+
+.test-result {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.test-success {
+    background: #e6f4ea;
+    color: #137333;
+}
+
+.test-error {
+    background: #fce8e6;
+    color: #d93025;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    /* .actions {
+        flex-direction: column;
+    } */
+    
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}

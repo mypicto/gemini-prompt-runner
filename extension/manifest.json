@@ -17,6 +17,7 @@
     },
     "default_popup": "html/popup.html"
   },
+  "options_page": "html/options.html",
   "background": {
     "service_worker": "js/background.js",
     "type": "module"
@@ -52,6 +53,7 @@
         "js/models/model.js",
         "js/services/url-generate-service.js",
         "js/services/selector-service.js",
+        "js/services/selector-storage-service.js",
         "js/services/copy-service.js",
         "js/services/clipboard-keyword-service.js",
         "js/services/clipboard-service.js",

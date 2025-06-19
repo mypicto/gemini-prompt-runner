@@ -1,11 +1,45 @@
 export class SelectorService {
   constructor() {
     this.data = {};
+    this.storageKey = 'selectorSettings';
   }
 
   async init() {
+    // Load default settings from file
     const res = await fetch(chrome.runtime.getURL('res/selectors.json'));
-    this.data = await res.json();
+    const defaultData = await res.json();
+    
+    // Load custom settings from storage
+    try {
+      const result = await chrome.storage.sync.get(this.storageKey);
+      const customSettings = result[this.storageKey] || {};
+      
+      // Merge custom settings with defaults (custom takes priority)
+      this.data = this.mergeSettings(defaultData, customSettings);
+    } catch (error) {
+      console.warn('Failed to load custom selector settings, using defaults:', error);
+      this.data = defaultData;
+    }
+  }
+
+  /**
+   * Merge custom settings with defaults
+   * @param {Object} defaults - Default settings
+   * @param {Object} custom - Custom settings
+   * @returns {Object} Merged settings
+   */
+  mergeSettings(defaults, custom) {
+    const merged = { ...defaults };
+    
+    for (const [key, value] of Object.entries(custom)) {
+      if (defaults.hasOwnProperty(key)) {
+        merged[key] = { ...defaults[key], ...value };
+      } else {
+        merged[key] = value;
+      }
+    }
+    
+    return merged;
   }
 
   async getElement(id, timeout = 1000, contextNode = document) {
@@ -18,26 +52,9 @@ export class SelectorService {
     do {
       let baseElement = contextNode;
       if (entry.selector && baseElement) {
-        baseElement = baseElement.querySelector(entry.selector);
+        return baseElement.querySelector(entry.selector);
       }
-
-      if (baseElement) {
-        if (entry.xpath) {
-          const result = document.evaluate(
-            entry.xpath,
-            baseElement,
-            null,
-            XPathResult.FIRST_ORDERED_NODE_TYPE,
-            null
-          );
-          const subElement = result.singleNodeValue;
-          if (subElement) {
-            return subElement;
-          }
-        } else {
-          return baseElement;
-        }
-      }
+      
       await new Promise(r => setTimeout(r, 100));
     } while (Date.now() - startTime < timeout);
     throw new Error(`Timeout: Could not find element for ID "${id}"`);

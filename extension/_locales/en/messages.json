@@ -49,5 +49,17 @@
     },
     "popupQueryWarning": {
         "message": "Query parameters detected. It is recommended to use URL fragments for parameter specification. Please replace '?' with '#' in the URL."
+    },
+    "optionsTitle": {
+        "message": "Selector Settings"
+    },
+    "optionsDescription": {
+        "message": "Customize CSS selectors for Google Gemini UI elements"
+    },
+    "resetToDefaults": {
+        "message": "Reset to Defaults"
+    },
+    "saveSettings": {
+        "message": "Save Settings"
     }
 }

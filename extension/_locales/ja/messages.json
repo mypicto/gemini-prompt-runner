@@ -49,5 +49,17 @@
     },
     "popupQueryWarning": {
         "message": "クエリパラメータの使用が検出されました。パラメータ指定にはURLフラグメントの使用を推奨します。URL中の '?' を '#' に変更してください。"
+    },
+    "optionsTitle": {
+        "message": "セレクター設定"
+    },
+    "optionsDescription": {
+        "message": "Google Gemini UI要素のCSSセレクターをカスタマイズします"
+    },
+    "resetToDefaults": {
+        "message": "デフォルトに戻す"
+    },
+    "saveSettings": {
+        "message": "設定を保存"
     }
 }

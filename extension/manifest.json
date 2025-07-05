@@ -17,6 +17,10 @@
     },
     "default_popup": "html/popup.html"
   },
+  "options_ui": {
+    "page": "html/options.html",
+    "open_in_tab": true
+  },
   "background": {
     "service_worker": "js/background.js",
     "type": "module"
@@ -50,7 +54,9 @@
         "js/utils/location-checker.js",
         "js/models/model-query.js",
         "js/models/model.js",
+        "js/repositories/selector-repository.js",
         "js/services/url-generate-service.js",
+        "js/services/selector-domain-service.js",
         "js/services/selector-service.js",
         "js/services/copy-service.js",
         "js/services/clipboard-keyword-service.js",
@@ -62,7 +68,8 @@
         "js/components/send-button.js",
         "js/components/copy-button.js",
         "js/components/login-button.js",
-        "js/content.js"
+        "js/content.js",
+        "js/options.js"
       ],
       "matches": ["*://gemini.google.com/*"]
     }

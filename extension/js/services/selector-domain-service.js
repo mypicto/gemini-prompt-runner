@@ -4,6 +4,16 @@ export class SelectorDomainService {
   constructor() {
     this.repository = new SelectorRepository();
     this.defaultData = {};
+    this.mutexes = {
+      customSelectors: Promise.resolve(),
+      selectorStatus: Promise.resolve()
+    };
+  }
+
+  async withMutex(key, operation) {
+    const mutex = this.mutexes[key];
+    this.mutexes[key] = mutex.then(operation, operation);
+    return this.mutexes[key];
   }
 
   async init() {
@@ -12,53 +22,58 @@ export class SelectorDomainService {
   }
 
   async updateCustomSelector(id, selector) {
-    const customSelectors = await this.repository.getCustomSelectors();
-    customSelectors[id] = selector;
-    
-    await this.repository.saveCustomSelectors(customSelectors);
+    await this.withMutex('customSelectors', async () => {
+      const customSelectors = await this.repository.getCustomSelectors();
+      customSelectors[id] = selector;
+      await this.repository.saveCustomSelectors(customSelectors);
+    });
     await this.resetSelectorStatus(id);
   }
 
   async resetToDefault(id) {
-    const customSelectors = await this.repository.getCustomSelectors();
-    delete customSelectors[id];
-    
-    await this.repository.saveCustomSelectors(customSelectors);
+    await this.withMutex('customSelectors', async () => {
+      const customSelectors = await this.repository.getCustomSelectors();
+      delete customSelectors[id];
+      await this.repository.saveCustomSelectors(customSelectors);
+    });
     await this.resetSelectorStatus(id);
   }
 
   async resetSelectorStatus(id) {
-    const selectorStatus = await this.repository.getSelectorStatus();
-    selectorStatus[id] = {
-      lastSuccessTime: null,
-      hasError: false,
-      errorMessage: ''
-    };
-    await this.repository.saveSelectorStatus(selectorStatus);
-  }
-
-  async updateSelectorStatus(id, success, errorMessage = '') {
-    const selectorStatus = await this.repository.getSelectorStatus();
-    
-    if (!selectorStatus[id]) {
+    await this.withMutex('selectorStatus', async () => {
+      const selectorStatus = await this.repository.getSelectorStatus();
       selectorStatus[id] = {
         lastSuccessTime: null,
         hasError: false,
         errorMessage: ''
       };
-    }
+      await this.repository.saveSelectorStatus(selectorStatus);
+    });
+  }
 
-    if (success) {
-      selectorStatus[id].lastSuccessTime = Date.now();
-      selectorStatus[id].hasError = false;
-      selectorStatus[id].errorMessage = '';
-    } else {
-      selectorStatus[id].hasError = true;
-      selectorStatus[id].errorMessage = errorMessage;
-    }
+  async updateSelectorStatus(id, success, errorMessage = '') {
+    await this.withMutex('selectorStatus', async () => {
+      const selectorStatus = await this.repository.getSelectorStatus();
+      
+      if (!selectorStatus[id]) {
+        selectorStatus[id] = {
+          lastSuccessTime: null,
+          hasError: false,
+          errorMessage: ''
+        };
+      }
 
-    console.log(`[${id}] Model menu button status updated: ${JSON.stringify(selectorStatus[id])}`);
-    await this.repository.saveSelectorStatus(selectorStatus);
+      if (success) {
+        selectorStatus[id].lastSuccessTime = Date.now();
+        selectorStatus[id].hasError = false;
+        selectorStatus[id].errorMessage = '';
+      } else {
+        selectorStatus[id].hasError = true;
+        selectorStatus[id].errorMessage = errorMessage;
+      }
+
+      await this.repository.saveSelectorStatus(selectorStatus);
+    });
   }
 
   async getMergedSelectors() {
@@ -101,7 +116,11 @@ export class SelectorDomainService {
   }
 
   async clearAllCustomSelectors() {
-    await this.repository.clearCustomSelectors();
-    await this.repository.clearSelectorStatus();
+    await this.withMutex('customSelectors', async () => {
+      await this.repository.clearCustomSelectors();
+    });
+    await this.withMutex('selectorStatus', async () => {
+      await this.repository.clearSelectorStatus();
+    });
   }
 }

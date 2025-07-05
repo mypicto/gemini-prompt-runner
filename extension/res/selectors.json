@@ -15,7 +15,7 @@
     "selector": "button.bard-mode-list-button"
   },
   "modelListLabel": {
-    "selector": "span.gds-label-l"
+    "selector": "span.mode-title"
   },
   "moreMenuButton": {
     "selector": "button.more-menu-button"

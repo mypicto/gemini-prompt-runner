@@ -22,21 +22,30 @@ export class SelectorDomainService {
   }
 
   async updateCustomSelector(id, selector) {
+    let selectorChanged = false;
     await this.withMutex('customSelectors', async () => {
       const customSelectors = await this.repository.getCustomSelectors();
+      const currentSelector = customSelectors[id] || '';
+      selectorChanged = currentSelector !== selector;
       customSelectors[id] = selector;
       await this.repository.saveCustomSelectors(customSelectors);
     });
-    await this.resetSelectorStatus(id);
+    if (selectorChanged) {
+      await this.resetSelectorStatus(id);
+    }
   }
 
   async resetToDefault(id) {
+    let selectorChanged = false;
     await this.withMutex('customSelectors', async () => {
       const customSelectors = await this.repository.getCustomSelectors();
+      selectorChanged = customSelectors[id] !== undefined;
       delete customSelectors[id];
       await this.repository.saveCustomSelectors(customSelectors);
     });
-    await this.resetSelectorStatus(id);
+    if (selectorChanged) {
+      await this.resetSelectorStatus(id);
+    }
   }
 
   async resetSelectorStatus(id) {
@@ -116,11 +125,14 @@ export class SelectorDomainService {
   }
 
   async clearAllCustomSelectors() {
+    let changedIds = [];
     await this.withMutex('customSelectors', async () => {
+      const customSelectors = await this.repository.getCustomSelectors();
+      changedIds = Object.keys(customSelectors).filter(id => customSelectors[id] !== undefined);
       await this.repository.clearCustomSelectors();
     });
-    await this.withMutex('selectorStatus', async () => {
-      await this.repository.clearSelectorStatus();
-    });
+    for (const id of changedIds) {
+      await this.resetSelectorStatus(id);
+    }
   }
 }

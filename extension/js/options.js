@@ -176,8 +176,6 @@ class OptionsPage {
     }
 
     async resetTimestampForSelector(selectorId) {
-        await this.selectorService.resetSelectorStatus(selectorId);
-        
         const selectorItem = document.getElementById(selectorId).closest('.selector-item');
         const timestampElement = document.getElementById(`${selectorId}-timestamp`);
         const errorElement = document.getElementById(`${selectorId}-error`);

@@ -63,6 +63,8 @@
         "js/services/clipboard-service.js",
         "js/services/icon-state-service.js",
         "js/services/localize-service.js",
+        "js/services/dom-query-service.js",
+        "js/services/retry-service.js",
         "js/components/model-selector.js",
         "js/components/textarea.js",
         "js/components/send-button.js",

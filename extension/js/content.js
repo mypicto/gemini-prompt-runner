@@ -35,12 +35,21 @@ class Application {
     this.clipboardKeywordService.subscribeToListeners();
     
     this.#setupMessageListeners();
+    this.#initializeDomHandling();
+  }
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      await this.selectorService.init();
-      await UIStabilityMonitor.waitForUiStability();
-      await this.#operateGemini();
-    });
+  #initializeDomHandling() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', this.#initializeApp.bind(this));
+    } else {
+      this.#initializeApp();
+    }
+  }
+
+  async #initializeApp() {
+    await this.selectorService.init();
+    await UIStabilityMonitor.waitForUiStability();
+    await this.#operateGemini();
   }
 
   #setupMessageListeners() {

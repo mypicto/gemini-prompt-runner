@@ -15,14 +15,20 @@ export class CopyService {
     if (!isShortcut) return;
     if (this.isSelectionEmpty()) {
       try {
-        await this.copyButton.clickMoreMenu();
-        await this.copyButton.clickCopyButton();
+        this.#copyUseCase();
       } catch (error) {
         if (!(error.message && error.message.startsWith('Timeout:'))) {
           console.error('Error handling copy shortcut:', error);
         }
       }
     }
+  }
+
+  async #copyUseCase() {
+    if (!(await this.copyButton.existCopyButton())) {
+      await this.copyButton.clickMoreMenu();
+    }
+    await this.copyButton.clickCopyButton();
   }
 
   addCopyShortcutListener() {

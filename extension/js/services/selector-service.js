@@ -28,7 +28,8 @@ export class SelectorService {
     await this.domainService.updateSelectorStatus(id, success, errorMessage);
   }
 
-  existsElement(selector, contextNode = document) {
+  existsElement(id, contextNode = document) {
+    const selector = this.#getSelectorString(id);
     return this.domQueryService.existsElement(selector, contextNode);
   }
 

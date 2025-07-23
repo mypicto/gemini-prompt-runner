@@ -25,10 +25,15 @@ export class CopyService {
   }
 
   async #copyUseCase() {
-    if (!(await this.copyButton.existCopyButton())) {
-      await this.copyButton.clickMoreMenu();
+    if (this.copyButton.existCopyButton()) {
+      await this.copyButton.clickCopyButton();
+      return;
     }
-    await this.copyButton.clickCopyButton();
+
+    if (this.copyButton.existMoreMenu()) {
+      await this.copyButton.clickMoreMenu();
+      await this.copyButton.clickCopyButton();
+    }
   }
 
   addCopyShortcutListener() {

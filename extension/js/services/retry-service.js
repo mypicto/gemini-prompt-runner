@@ -4,13 +4,9 @@ export class RetryService {
     const startTime = Date.now();
     
     do {
-      try {
-        const result = await condition();
-        if (result) {
-          return result;
-        }
-      } catch (error) {
-        throw error;
+      const result = await condition();
+      if (result) {
+        return result;
       }
       await this.#delay(interval);
     } while (Date.now() - startTime < timeout);

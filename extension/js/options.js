@@ -20,7 +20,7 @@ class OptionsPage {
 
     async loadDefaultSelectors() {
         try {
-            this.defaultSelectors = await this.selectorService.getDefaultSelectors()
+            this.defaultSelectors = await this.selectorService.getDefaultSelectors();
         } catch (error) {
             console.error('Failed to load default selectors:', error);
             this.showStatus('Failed to load default selectors', 'error');

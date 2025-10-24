@@ -125,7 +125,6 @@ class OptionsPage {
     updateStatusDisplay() {
         Object.keys(this.defaultSelectors).forEach(async selectorId => {
             const status = await this.selectorService.getSelectorStatus(selectorId);
-            console.log(`[${selectorId}] Status:`, status);
             const selectorItem = document.getElementById(selectorId).closest('.selector-item');
             const timestampElement = document.getElementById(`${selectorId}-timestamp`);
             const errorElement = document.getElementById(`${selectorId}-error`);

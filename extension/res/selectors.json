@@ -6,7 +6,7 @@
     "selector": "button.send-button"
   },
   "modelMenuButton": {
-    "selector": "button.gds-mode-switch-button"
+    "selector": "bard-mode-switcher button"
   },
   "currentModelLabel": {
     "selector": "div.logo-pill-label-container > span"

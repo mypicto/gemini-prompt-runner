@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="optionsTitle">Options - Prompt Runner for Google Gemini</title>
+    <link rel="stylesheet" href="../css/options.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 data-i18n="optionsTitle">Options - Prompt Runner for Google Gemini</h1>
+            <p data-i18n="optionsDescription">Customize CSS selectors used by the extension. Leave fields blank to use default values.</p>
+        </header>
+
+        <main>
+            <form id="optionsForm">
+                <div class="section">
+                    <h2 data-i18n="selectorSettings">Selector Settings</h2>
+                    
+                    <div class="selector-group">
+                        <div class="selector-item">
+                            <label for="textareaContainer" data-i18n="textareaContainerLabel">Textarea Container:</label>
+                            <div class="input-group">
+                                <input type="text" id="textareaContainer" name="textareaContainer" placeholder="Default: rich-textarea.text-input-field_textarea > div">
+                                <button type="button" class="reset-btn" data-selector="textareaContainer" data-i18n="resetBtn">Reset</button>
+                            </div>
+                            <div class="selector-status">
+                                <span class="timestamp" id="textareaContainer-timestamp"></span>
+                                <span class="error-message" id="textareaContainer-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="selector-item">
+                            <label for="sendButton" data-i18n="sendButtonLabel">Send Button:</label>
+                            <div class="input-group">
+                                <input type="text" id="sendButton" name="sendButton" placeholder="Default: button.send-button">
+                                <button type="button" class="reset-btn" data-selector="sendButton" data-i18n="resetBtn">Reset</button>
+                            </div>
+                            <div class="selector-status">
+                                <span class="timestamp" id="sendButton-timestamp"></span>
+                                <span class="error-message" id="sendButton-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="selector-item">
+                            <label for="modelMenuButton" data-i18n="modelMenuButtonLabel">Model Menu Button:</label>
+                            <div class="input-group">
+                                <input type="text" id="modelMenuButton" name="modelMenuButton" placeholder="Default: button.gds-mode-switch-button">
+                                <button type="button" class="reset-btn" data-selector="modelMenuButton" data-i18n="resetBtn">Reset</button>
+                            </div>
+                            <div class="selector-status">
+                                <span class="timestamp" id="modelMenuButton-timestamp"></span>
+                                <span class="error-message" id="modelMenuButton-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="selector-item">
+                            <label for="currentModelLabel" data-i18n="currentModelLabelLabel">Current Model Label:</label>
+                            <div class="input-group">
+                                <input type="text" id="currentModelLabel" name="currentModelLabel" placeholder="Default: div.logo-pill-label-container > span">
+                                <button type="button" class="reset-btn" data-selector="currentModelLabel" data-i18n="resetBtn">Reset</button>
+                            </div>
+                            <div class="selector-status">
+                                <span class="timestamp" id="currentModelLabel-timestamp"></span>
+                                <span class="error-message" id="currentModelLabel-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="selector-item">
+                            <label for="modelListButton" data-i18n="modelListButtonLabel">Model List Button:</label>
+                            <div class="input-group">
+                                <input type="text" id="modelListButton" name="modelListButton" placeholder="Default: button.bard-mode-list-button">
+                                <button type="button" class="reset-btn" data-selector="modelListButton" data-i18n="resetBtn">Reset</button>
+                            </div>
+                            <div class="selector-status">
+                                <span class="timestamp" id="modelListButton-timestamp"></span>
+                                <span class="error-message" id="modelListButton-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="selector-item">
+                            <label for="modelListLabel" data-i18n="modelListLabelLabel">Model List Label:</label>
+                            <div class="input-group">
+                                <input type="text" id="modelListLabel" name="modelListLabel" placeholder="Default: span.mode-title">
+                                <button type="button" class="reset-btn" data-selector="modelListLabel" data-i18n="resetBtn">Reset</button>
+                            </div>
+                            <div class="selector-status">
+                                <span class="timestamp" id="modelListLabel-timestamp"></span>
+                                <span class="error-message" id="modelListLabel-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="selector-item">
+                            <label for="moreMenuButton" data-i18n="moreMenuButtonLabel">More Menu Button:</label>
+                            <div class="input-group">
+                                <input type="text" id="moreMenuButton" name="moreMenuButton" placeholder="Default: button.more-menu-button">
+                                <button type="button" class="reset-btn" data-selector="moreMenuButton" data-i18n="resetBtn">Reset</button>
+                            </div>
+                            <div class="selector-status">
+                                <span class="timestamp" id="moreMenuButton-timestamp"></span>
+                                <span class="error-message" id="moreMenuButton-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="selector-item">
+                            <label for="copyButton" data-i18n="copyButtonLabel">Copy Button:</label>
+                            <div class="input-group">
+                                <input type="text" id="copyButton" name="copyButton" placeholder="Default: button[data-test-id=\"copy-button\"]">
+                                <button type="button" class="reset-btn" data-selector="copyButton" data-i18n="resetBtn">Reset</button>
+                            </div>
+                            <div class="selector-status">
+                                <span class="timestamp" id="copyButton-timestamp"></span>
+                                <span class="error-message" id="copyButton-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="selector-item">
+                            <label for="serviceLoginLink" data-i18n="serviceLoginLinkLabel">Service Login Link:</label>
+                            <div class="input-group">
+                                <input type="text" id="serviceLoginLink" name="serviceLoginLink" placeholder="Default: div.boqOnegoogleliteOgbOneGoogleBar a[href^=\"https://accounts.google.com/ServiceLogin\"]">
+                                <button type="button" class="reset-btn" data-selector="serviceLoginLink" data-i18n="resetBtn">Reset</button>
+                            </div>
+                            <div class="selector-status">
+                                <span class="timestamp" id="serviceLoginLink-timestamp"></span>
+                                <span class="error-message" id="serviceLoginLink-error"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button type="button" id="saveBtn" class="save-btn" data-i18n="saveBtn">Save</button>
+                    <button type="button" id="resetAllBtn" class="reset-all-btn" data-i18n="resetAllBtn">Reset All to Default</button>
+                </div>
+            </form>
+        </main>
+
+        <div id="status" class="status hidden"></div>
+    </div>
+
+    <script type="module" src="../js/options.js"></script>
+</body>
+</html>

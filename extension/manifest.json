@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Prompt Runner for Google Gemini",
-  "version": "1.5.3",
+  "version": "1.6.0",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
   "icons": {
@@ -16,6 +16,10 @@
       "128": "images/icon128.png"
     },
     "default_popup": "html/popup.html"
+  },
+  "options_ui": {
+    "page": "html/options.html",
+    "open_in_tab": true
   },
   "background": {
     "service_worker": "js/background.js",
@@ -50,19 +54,24 @@
         "js/utils/location-checker.js",
         "js/models/model-query.js",
         "js/models/model.js",
+        "js/repositories/selector-repository.js",
         "js/services/url-generate-service.js",
+        "js/services/selector-domain-service.js",
         "js/services/selector-service.js",
         "js/services/copy-service.js",
         "js/services/clipboard-keyword-service.js",
         "js/services/clipboard-service.js",
         "js/services/icon-state-service.js",
         "js/services/localize-service.js",
+        "js/services/dom-query-service.js",
+        "js/services/retry-service.js",
         "js/components/model-selector.js",
         "js/components/textarea.js",
         "js/components/send-button.js",
         "js/components/copy-button.js",
         "js/components/login-button.js",
-        "js/content.js"
+        "js/content.js",
+        "js/options.js"
       ],
       "matches": ["*://gemini.google.com/*"]
     }

@@ -11,8 +11,8 @@ export class LoginButton {
     }
   }
 
-  async exists() {
-    const element = await this.#findElement();
+  exists() {
+    const element = this.selectorManager.existsElement('serviceLoginLink');
     return !!element;
   }
 

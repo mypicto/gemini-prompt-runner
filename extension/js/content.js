@@ -177,7 +177,7 @@ class Application {
   }
 
   async validateLoginRequirement() {
-    if (await this.loginButton.exists()) {
+    if (this.loginButton.exists()) {
       await this.loginButton.click();
       return true;
     }

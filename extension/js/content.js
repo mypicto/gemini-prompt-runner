@@ -35,12 +35,21 @@ class Application {
     this.clipboardKeywordService.subscribeToListeners();
     
     this.#setupMessageListeners();
+    this.#initializeDomHandling();
+  }
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      await this.selectorService.init();
-      await UIStabilityMonitor.waitForUiStability();
-      await this.#operateGemini();
-    });
+  #initializeDomHandling() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', this.#initializeApp.bind(this));
+    } else {
+      this.#initializeApp();
+    }
+  }
+
+  async #initializeApp() {
+    await this.selectorService.init();
+    await UIStabilityMonitor.waitForUiStability();
+    await this.#operateGemini();
   }
 
   #setupMessageListeners() {
@@ -168,7 +177,7 @@ class Application {
   }
 
   async validateLoginRequirement() {
-    if (await this.loginButton.exists()) {
+    if (this.loginButton.exists()) {
       await this.loginButton.click();
       return true;
     }

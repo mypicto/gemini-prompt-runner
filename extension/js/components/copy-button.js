@@ -3,6 +3,14 @@ export class CopyButton {
     this.selectorManager = selectorManager;
   }
 
+  existMoreMenu() {
+    return this.selectorManager.existsElement('moreMenuButton');
+  }
+
+  existCopyButton() {
+    return this.selectorManager.existsElement('copyButton');
+  }
+
   async clickMoreMenu() {
     const moreMenuButtons = await this.selectorManager.getElements('moreMenuButton', 0);
     if (moreMenuButtons && moreMenuButtons.length > 0) {

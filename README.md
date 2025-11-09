@@ -100,10 +100,10 @@ Ctrl+C / Cmd+C: copy the last answer.
   https://gemini.google.com/app#ext-m=2
   ```
 
-* Start a chat with Deep Research model
+* Start a chat with 2.5 Flash model
 
   ```url
-  https://gemini.google.com/app#ext-m=DeepResearch
+  https://gemini.google.com/app#ext-m=2.5flash
   ```
 
 * Summarize text from clipboard

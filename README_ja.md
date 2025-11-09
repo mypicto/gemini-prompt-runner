@@ -98,10 +98,10 @@ Ctrl+C / Cmd+C: copy the last answer.
   https://gemini.google.com/app#ext-m=1
   ```
 
-* Deep Research モデルでチャットを開始
+* 2.5 Flash モデルでチャットを開始
 
   ```url
-  https://gemini.google.com/app#ext-m=DeepResearch
+  https://gemini.google.com/app#ext-m=2.5flash
   ```
 
 * クリップボードのテキストを要約する

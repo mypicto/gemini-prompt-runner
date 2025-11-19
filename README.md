@@ -100,7 +100,7 @@ Ctrl+C / Cmd+C: copy the last answer.
   https://gemini.google.com/app#ext-m=2
   ```
 
-* Start a chat with 2.5 Flash model
+* Start a chat with Fast model
 
   ```url
   https://gemini.google.com/app#ext-m=fast

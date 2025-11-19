@@ -103,7 +103,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 * Start a chat with 2.5 Flash model
 
   ```url
-  https://gemini.google.com/app#ext-m=2.5flash
+  https://gemini.google.com/app#ext-m=fast
   ```
 
 * Summarize text from clipboard

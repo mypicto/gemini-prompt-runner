@@ -1,19 +1,39 @@
 export class UIStabilityMonitor {
-  static async waitForUiStability(interval = 400) {
+  /**
+   * 単一責任: UI が「使える状態」になるまで待つ。
+   * readyCheck が true を返した時点で即終了し、timeoutMs でフェイルセーフ。
+   */
+  static async waitForUiStability({
+    readyCheck = () => true,
+    pollIntervalMs = 400,
+    timeoutMs = 12000,
+  } = {}) {
     return new Promise(resolve => {
-      let isStable = false;
-      const observer = new MutationObserver((mutations) => {
-        isStable = false;
-      });
-      observer.observe(document.body, { attributes: true, childList: true, subtree: true });
-      const checkInterval = setInterval(() => {
-        if (isStable) {
-          clearInterval(checkInterval);
-          observer.disconnect();
+      let resolved = false;
+
+      const intervalId = setInterval(() => {
+        if (resolved) return;
+        let ready = false;
+        try {
+          ready = !!readyCheck();
+        } catch (err) {
+          ready = false;
+        }
+
+        if (ready) {
+          resolved = true;
+          clearInterval(intervalId);
+          clearTimeout(timeoutId);
           resolve();
         }
-        isStable = true;
-      }, interval);
+      }, pollIntervalMs);
+
+      const timeoutId = setTimeout(() => {
+        if (resolved) return;
+        resolved = true;
+        clearInterval(intervalId);
+        resolve();
+      }, timeoutMs);
     });
   }
 }

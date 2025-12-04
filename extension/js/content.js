@@ -48,7 +48,7 @@ class Application {
 
   async #initializeApp() {
     await this.selectorService.init();
-    await UIStabilityMonitor.waitForUiStability();
+    await this.#waitForUiStability();
     await this.#operateGemini();
   }
 
@@ -188,7 +188,7 @@ class Application {
     const currentModelQuery = await this.modelSelector.getCurrentModelQuery();
     if (!currentModelQuery.equalsQuery(modelQuery)) {
       await this.modelSelector.selectModel(modelQuery);
-      await UIStabilityMonitor.waitForUiStability();
+      await this.#waitForUiStability();
     }
   }
 
@@ -211,7 +211,7 @@ class Application {
     await this.textarea.setPrompt(prompt);
 
     if (isAutoSend) {
-      await UIStabilityMonitor.waitForUiStability();
+      await this.#waitForUiStability();
       this.#incrementProgress()
 
       await this.sendButton.submit();
@@ -225,6 +225,28 @@ class Application {
     if (!this.isQueryParameterDetected) {
       this.iconStateService.updateProgressIcon(this.progressCounter.getProgress());
     }
+  }
+
+  #areKeyElementsReady() {
+    // Minimal set of UI parts required before we operate.
+    const requiredSelectors = ['textareaContainer', 'sendButton', 'modelMenuButton'];
+    try {
+      const missing = requiredSelectors.filter(id => !this.selectorService.existsElement(id));
+      if (missing.length === 0) {
+        return true;
+      }
+      return false;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  async #waitForUiStability() {
+    await UIStabilityMonitor.waitForUiStability({
+      readyCheck: () => this.#areKeyElementsReady(),
+      pollIntervalMs: 400,
+      timeoutMs: 6000
+    });
   }
 }
 

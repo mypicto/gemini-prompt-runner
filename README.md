@@ -94,10 +94,10 @@ Ctrl+C / Cmd+C: copy the last answer.
   https://gemini.google.com/app#ext-q=Today%27s+weather+forecast.&ext-send=1
   ```
 
-* Start a chat with the 3rd model
+* Start a chat with the 1st model
 
   ```url
-  https://gemini.google.com/app#ext-m=2
+  https://gemini.google.com/app#ext-m=0
   ```
 
 * Start a chat with Fast model

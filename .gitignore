@@ -3,3 +3,5 @@
 *.crx
 gemini-prompt-runner.zip
 extension/_metadata/*
+
+.serena/

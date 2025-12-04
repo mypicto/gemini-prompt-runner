@@ -92,10 +92,10 @@ Ctrl+C / Cmd+C: copy the last answer.
   https://gemini.google.com/app#ext-q=%E4%BB%8A%E6%97%A5%E3%81%AE%E5%A4%A9%E6%B0%97%E4%BA%88%E5%A0%B1%E3%80%82&ext-send=1
   ```
 
-* 2番目のモデルでチャットを開始
+* 1番目のモデルでチャットを開始
 
   ```url
-  https://gemini.google.com/app#ext-m=1
+  https://gemini.google.com/app#ext-m=0
   ```
 
 * Fast モデルでチャットを開始

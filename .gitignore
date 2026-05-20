@@ -5,3 +5,5 @@ gemini-prompt-runner.zip
 extension/_metadata/*
 
 .serena/
+
+.playwright-user-data/

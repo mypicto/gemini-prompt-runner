@@ -7,3 +7,6 @@ extension/_metadata/*
 .serena/
 
 .playwright-user-data/
+.playwright-mcp/
+
+.claude/settings.local.json

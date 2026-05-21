@@ -3,7 +3,7 @@
     "selector": "rich-textarea.text-input-field_textarea > div"
   },
   "sendButton": {
-    "selector": "button.send-button"
+    "selector": "gem-icon-button.send-button"
   },
   "modelMenuButton": {
     "selector": "bard-mode-switcher button"
@@ -12,16 +12,13 @@
     "selector": "div.logo-pill-label-container > span"
   },
   "modelListButton": {
-    "selector": "button.bard-mode-list-button"
+    "selector": "gem-menu-item[role=\"menuitem\"]"
   },
   "modelListLabel": {
-    "selector": "span.mode-title"
-  },
-  "moreMenuButton": {
-    "selector": "button.more-menu-button"
+    "selector": "span.label"
   },
   "copyButton": {
-    "selector": "button[data-test-id=\"copy-button\"]"
+    "selector": "copy-button [data-test-id=\"copy-button\"]"
   },
   "serviceLoginLink": {
     "selector": "div.boqOnegoogleliteOgbOneGoogleBar a[href^=\"https://accounts.google.com/ServiceLogin\"]"

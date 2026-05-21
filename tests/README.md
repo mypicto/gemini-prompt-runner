@@ -35,7 +35,7 @@ Gemini はログインが必要なため、`.playwright-user-data/` (`.gitignore
 | --- | --- | --- |
 | `scenarios/01-baseline.md` | `textareaContainer`, `sendButton`, `modelMenuButton`, `currentModelLabel` | ログイン済み・通常チャット画面 |
 | `scenarios/02-model-list.md` | `modelListButton`, `modelListLabel` | ログイン済み + モデルメニュー展開 |
-| `scenarios/03-copy-menu.md` | `moreMenuButton`, `copyButton` | プロンプト送信 → 応答完了後 |
+| `scenarios/03-copy-menu.md` | `copyButton` | プロンプト送信 → 応答完了後 |
 | `scenarios/04-login-link.md` | `serviceLoginLink` | **未ログイン** 状態 (別 user-data-dir または incognito) |
 | `scenarios/05-model-switch.md` | `ModelSelector.selectModel` フロー全体 + `NominalModelQuery` 名称正規化 + 切替後 `currentModelLabel` の変化 | ログイン済 + モデル選択肢が 2 つ以上 |
 

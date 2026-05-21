@@ -270,7 +270,7 @@ CLAUDE.md / `tests/README.md` の規約: **以下のいずれかを編集した�
 | --- | --- | --- |
 | `scenarios/01-baseline.md` | `textareaContainer`, `sendButton`, `modelMenuButton`, `currentModelLabel` の取得 | ログイン済・通常チャット画面 |
 | `scenarios/02-model-list.md` | `modelListButton`, `modelListLabel` (メニュー展開後) | ログイン済 + モデルメニュー展開 |
-| `scenarios/03-copy-menu.md` | `moreMenuButton`, `copyButton` (応答後) / `sendButton.submit` / `sendButton.isAnswering` | プロンプト送信 → 応答完了後 |
+| `scenarios/03-copy-menu.md` | `copyButton` (応答後) / `sendButton.submit` / `sendButton.isAnswering` | プロンプト送信 → 応答完了後 |
 | `scenarios/04-login-link.md` | `serviceLoginLink` | **未ログイン** 状態 (別 user-data-dir または incognito) |
 | `scenarios/05-model-switch.md` | `ModelSelector.selectModel` フル E2E + `NominalModelQuery` 正規化 + `currentModelLabel` 切替 | ログイン済 + モデル選択肢 2 つ以上 |
 

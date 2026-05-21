@@ -1,11 +1,10 @@
-# Scenario 03: Copy Menu (応答後のコピー周辺)
+# Scenario 03: Copy Button (応答後のコピー操作)
 
 ## 目的
-プロンプトを送信し、応答が完了した後に出現する「more menu」と「copy button」を確認する。`extension/js/components/copy-button.js` が依存する 2 セレクタの検証。
+プロンプトを送信し、応答が完了した後に `message-actions` 内に表示されるコピーボタンを確認する。`extension/js/components/copy-button.js` が依存するセレクタの検証。
 
 ## 検証対象セレクタ ID
-- `moreMenuButton` (応答メッセージのオーバーフローメニュー)
-- `copyButton` (「more menu」を開いた後に現れるコピー項目)
+- `copyButton` (応答メッセージのコピー項目)
 
 ## 前提
 - Google アカウントログイン済み
@@ -35,32 +34,16 @@
    ```
    - 期待: `"done"`
 
-8. **moreMenuButton を probe**:
+8. **copyButton を probe**:
    ```
    mcp__playwright__browser_evaluate({ function:
-     "() => window.__t.probe('moreMenuButton', 3000)"
+     "() => window.__t.probe('copyButton', 3000)"
    })
    ```
    - 期待: `found: true`
 
-9. **moreMenu を開く**:
-   ```
-   mcp__playwright__browser_evaluate({ function:
-     "async () => { await window.__t.copyButton.clickMoreMenu(); return 'opened'; }"
-   })
-   ```
-   - 直後に `browser_wait_for({ time: 1 })`
-
-10. **copyButton を probe**:
-    ```
-    mcp__playwright__browser_evaluate({ function:
-      "() => window.__t.probe('copyButton', 3000)"
-    })
-    ```
-    - 期待: `found: true`
-
 ## 失敗時
 
 - 応答自体が来ていない可能性: `browser_snapshot()` で確認
-- `moreMenuButton` のクラス名が変わっていないか調査
 - Gemini が「コピー」を表すアイコンの `data-test-id` を変更していないか確認 (現状 `"copy-button"`)
+- `copy-button` カスタム要素自体が無くなっていないか調査

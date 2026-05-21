@@ -2,6 +2,7 @@ import selectorsJson from '../../extension/res/selectors.json';
 import { SelectorService } from '../../extension/js/services/selector-service.js';
 import { SelectorDomainService } from '../../extension/js/services/selector-domain-service.js';
 import { ModelSelector } from '../../extension/js/components/model-selector.js';
+import { NominalModelQuery } from '../../extension/js/models/model-query.js';
 import { SendButton } from '../../extension/js/components/send-button.js';
 import { Textarea } from '../../extension/js/components/textarea.js';
 import { CopyButton } from '../../extension/js/components/copy-button.js';
@@ -58,6 +59,7 @@ export async function bootstrap() {
     textarea,
     copyButton,
     loginButton,
+    NominalModelQuery,
     probe,
     probeAll
   };

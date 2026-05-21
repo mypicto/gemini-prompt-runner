@@ -4,5 +4,15 @@
     "allow": [
       "mcp__playwright__*"
     ]
+  },
+  "sandbox": {
+    "filesystem": {
+      "allowWrite": [
+        "~/Library/Caches/ms-playwright"
+      ]
+    },
+    "excludedCommands": [
+      "npx @playwright/mcp"
+    ]
   }
 }

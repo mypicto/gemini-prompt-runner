@@ -27,12 +27,6 @@ export class CopyService {
   async #copyUseCase() {
     if (this.copyButton.existCopyButton()) {
       await this.copyButton.clickCopyButton();
-      return;
-    }
-
-    if (this.copyButton.existMoreMenu()) {
-      await this.copyButton.clickMoreMenu();
-      await this.copyButton.clickCopyButton();
     }
   }
 

@@ -100,10 +100,10 @@ Ctrl+C / Cmd+C: copy the last answer.
   https://gemini.google.com/app#ext-m=0
   ```
 
-* Start a chat with Fast model
+* Start a chat with 3.5Flash model
 
   ```url
-  https://gemini.google.com/app#ext-m=fast
+  https://gemini.google.com/app#ext-m=3.5Flash
   ```
 
 * Summarize text from clipboard

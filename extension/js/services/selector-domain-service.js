@@ -1,8 +1,12 @@
 import { SelectorRepository } from '../repositories/selector-repository.js';
 
 export class SelectorDomainService {
-  constructor() {
-    this.repository = new SelectorRepository();
+  constructor({ repository, defaultSelectorsLoader } = {}) {
+    this.repository = repository ?? new SelectorRepository();
+    this.defaultSelectorsLoader = defaultSelectorsLoader ?? (async () => {
+      const res = await fetch(chrome.runtime.getURL('res/selectors.json'));
+      return res.json();
+    });
     this.defaultData = {};
     this.mutexes = {
       customSelectors: Promise.resolve(),
@@ -17,8 +21,7 @@ export class SelectorDomainService {
   }
 
   async init() {
-    const res = await fetch(chrome.runtime.getURL('res/selectors.json'));
-    this.defaultData = await res.json();
+    this.defaultData = await this.defaultSelectorsLoader();
   }
 
   async updateCustomSelector(id, selector) {

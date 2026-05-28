@@ -41,7 +41,7 @@ export class Textarea {
 
   async setPrompt(prompt) {
     const container = await this.#findTextareaContainer();
-    container.innerHTML = "";
+    container.replaceChildren();
     const lines = prompt.split("\n");
     lines.forEach(line => {
       const p = this.#createParagraph(line);
@@ -102,7 +102,6 @@ export class Textarea {
     
     if (lastParagraph) {
       const existingText = this. #extractLineFromParagraph(lastParagraph);
-      lastParagraph.innerHTML = "";
       lastParagraph.textContent = existingText + text;
     } else {
       const p = this.#createParagraph(text);

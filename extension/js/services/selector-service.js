@@ -3,10 +3,10 @@ import { DomQueryService } from './dom-query-service.js';
 import { RetryService } from './retry-service.js';
 
 export class SelectorService {
-  constructor() {
-    this.domainService = new SelectorDomainService();
-    this.domQueryService = new DomQueryService();
-    this.retryService = new RetryService();
+  constructor({ domainService, domQueryService, retryService } = {}) {
+    this.domainService = domainService ?? new SelectorDomainService();
+    this.domQueryService = domQueryService ?? new DomQueryService();
+    this.retryService = retryService ?? new RetryService();
 
     this.data = {};
   }

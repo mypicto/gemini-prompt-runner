@@ -19,5 +19,5 @@
 
     "allowJs": true
   },
-  "include": ["extension/js", "tests/src", "tests/unit"]
+  "include": ["src", "tests/src", "tests/unit", "tests/contract"]
 }

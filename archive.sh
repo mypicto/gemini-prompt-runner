@@ -1,31 +1,21 @@
 #!/bin/bash
+# Chrome Web Store 提出用 zip を生成する。
+# 事前に `npm run build` 済みであること (`npm run package` が build → 本スクリプトを保証する)。
+set -euo pipefail
 
-extension_dir="extension"
-tmp_dir="tmp"
 current_dir_name="$(basename "$(pwd)")"
-archive_dir="${tmp_dir}/${current_dir_name}"
 zip_name="${current_dir_name}.zip"
+staging="tmp/${current_dir_name}"
 
-# 除外するファイルやディレクトリのパターンを定義
-exclude_patterns=(
-  "*/*archive.sh"
-  "*/*.DS_Store"
-  "*/*.git/*"
-  "*/*.gitignore"
-)
+if [ ! -f dist/manifest.json ]; then
+  echo "error: dist/ がありません。先に npm run build を実行してください" >&2
+  exit 1
+fi
 
-# 除外パターンを引数として渡す
-exclude_args=""
-for pattern in "${exclude_patterns[@]}"; do
-  exclude_args+=" -x $pattern"
-done
+rm -rf tmp "$zip_name"
+mkdir -p "$staging"
+cp -r dist/* "$staging/"
+cp LICENSE "$staging/"
 
-mkdir -p "${archive_dir}"
-cp -r "$extension_dir"/* "${archive_dir}/"
-cp -r "LICENSE" "${archive_dir}/"
-
-cd "tmp" || exit
-zip -r -X "../$zip_name" . $exclude_args
-cd ..
-
-rm -rf "tmp"
+(cd tmp && zip -r -X "../$zip_name" . -x "*.DS_Store")
+rm -rf tmp

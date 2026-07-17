@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { RetryService } from '../../extension/js/services/retry-service.js';
+import { RetryService } from '../../src/services/retry-service.js';
 
 describe('RetryService.retryUntilSuccess', () => {
   beforeEach(() => {

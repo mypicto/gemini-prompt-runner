@@ -3,8 +3,8 @@ import {
   IdentifierModelQuery,
   NominalModelQuery,
   FallbackModelQuery,
-} from '../../extension/js/models/model-query.js';
-import { Model } from '../../extension/js/models/model.js';
+} from '../../src/models/model-query.js';
+import { Model } from '../../src/models/model.js';
 
 describe('NominalModelQuery', () => {
   it('大文字小文字と空白を無視して一致する', () => {

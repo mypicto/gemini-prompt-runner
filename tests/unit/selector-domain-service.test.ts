@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { SelectorDomainService } from '../../extension/js/services/selector-domain-service.js';
+import { SelectorDomainService } from '../../src/services/selector-domain-service.js';
 import { MemorySelectorRepository } from '../src/stubs/memory-selector-repository.js';
 
 const DEFAULTS = {

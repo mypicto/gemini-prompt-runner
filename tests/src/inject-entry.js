@@ -1,13 +1,13 @@
-import selectorsJson from '../../extension/res/selectors.json';
-import { SelectorService } from '../../extension/js/services/selector-service.js';
-import { SelectorDomainService } from '../../extension/js/services/selector-domain-service.js';
-import { ModelSelector } from '../../extension/js/components/model-selector.js';
-import { NominalModelQuery, FallbackModelQuery } from '../../extension/js/models/model-query.js';
-import { QueryParameter } from '../../extension/js/utils/query-parameter.js';
-import { SendButton } from '../../extension/js/components/send-button.js';
-import { Textarea } from '../../extension/js/components/textarea.js';
-import { CopyButton } from '../../extension/js/components/copy-button.js';
-import { LoginButton } from '../../extension/js/components/login-button.js';
+import selectorsJson from '../../public/res/selectors.json';
+import { SelectorService } from '../../src/services/selector-service.js';
+import { SelectorDomainService } from '../../src/services/selector-domain-service.js';
+import { ModelSelector } from '../../src/components/model-selector.js';
+import { NominalModelQuery, FallbackModelQuery } from '../../src/models/model-query.js';
+import { QueryParameter } from '../../src/utils/query-parameter.js';
+import { SendButton } from '../../src/components/send-button.js';
+import { Textarea } from '../../src/components/textarea.js';
+import { CopyButton } from '../../src/components/copy-button.js';
+import { LoginButton } from '../../src/components/login-button.js';
 import { MemorySelectorRepository } from './stubs/memory-selector-repository.js';
 
 export async function bootstrap() {

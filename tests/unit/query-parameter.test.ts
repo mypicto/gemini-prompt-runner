@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { QueryParameter } from '../../extension/js/utils/query-parameter.js';
+import { QueryParameter } from '../../src/utils/query-parameter.js';
 import {
   IdentifierModelQuery,
   NominalModelQuery,
   FallbackModelQuery,
-} from '../../extension/js/models/model-query.js';
+} from '../../src/models/model-query.js';
 
 // 現行挙動の固定 (characterization)。仕様変更時はテストを先に更新してから実装を変える。
 

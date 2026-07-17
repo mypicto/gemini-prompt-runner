@@ -3,6 +3,7 @@
 *.crx
 gemini-prompt-runner.zip
 extension/_metadata/*
+node_modules/
 
 .serena/
 

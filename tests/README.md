@@ -38,6 +38,7 @@ Gemini はログインが必要なため、`.playwright-user-data/` (`.gitignore
 | `scenarios/03-copy-menu.md` | `copyButton` | プロンプト送信 → 応答完了後 |
 | `scenarios/04-login-link.md` | `serviceLoginLink` | **未ログイン** 状態 (別 user-data-dir または incognito) |
 | `scenarios/05-model-switch.md` | `ModelSelector.selectModel` フロー全体 + `NominalModelQuery` 名称正規化 + 切替後 `currentModelLabel` の変化 | ログイン済 + モデル選択肢が 2 つ以上 |
+| `scenarios/06-model-fallback.md` | `FallbackModelQuery` の候補順フォールバック + `QueryParameter` のカンマ区切りパース/ラウンドトリップ | ログイン済 + モデル選択肢が 2 つ以上 |
 
 各シナリオの Markdown には Claude が実行すべき MCP コマンドの並びが書いてあります。Claude に「`tests/scenarios/01-baseline.md` を実行して」と指示するだけで、navigate → 注入 → probe → 結果報告 まで一気通貫で行います。
 

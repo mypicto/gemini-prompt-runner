@@ -186,7 +186,7 @@ class Application {
 
   async #processModel(modelQuery) {
     const currentModelQuery = await this.modelSelector.getCurrentModelQuery();
-    if (!currentModelQuery.equalsQuery(modelQuery)) {
+    if (!modelQuery.equalsQuery(currentModelQuery)) {
       await this.modelSelector.selectModel(modelQuery);
       await this.#waitForUiStability();
     }

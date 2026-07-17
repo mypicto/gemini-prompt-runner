@@ -1,5 +1,6 @@
 import { IdentifierModelQuery } from '../models/model-query.js';
 import { NominalModelQuery } from '../models/model-query.js';
+import { FallbackModelQuery } from '../models/model-query.js';
 import { ClipboardService } from '../services/clipboard-service.js';
 
 export class QueryParameter {
@@ -201,9 +202,17 @@ export class QueryParameter {
     if (QueryParameter.#isInteger(model)) {
       const modelIndex = parseInt(model, 10);
       return new IdentifierModelQuery(modelIndex);
-    } else {
-      return new NominalModelQuery(model);
     }
+    const names = model.split(',')
+      .map(name => name.trim())
+      .filter(name => name !== '');
+    if (names.length === 0) {
+      return null;
+    }
+    if (names.length === 1) {
+      return new NominalModelQuery(names[0]);
+    }
+    return new FallbackModelQuery(names.map(name => new NominalModelQuery(name)));
   }
 
   static #isInteger(value) {

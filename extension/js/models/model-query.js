@@ -8,6 +8,15 @@ export class ModelQuery {
     throw new Error('Not implemented');
   }
 
+  findModel(models) {
+    for (const model of models) {
+      if (this.equalsModel(model)) {
+        return model;
+      }
+    }
+    return null;
+  }
+
   getIdentifierString() {
     throw new Error('Not implemented');
   }
@@ -67,5 +76,40 @@ export class NominalModelQuery extends ModelQuery {
   #normalizeModelName(name) {
     name = name.replace(/[\(\（][^)\）]*[\)\）]/g, '');
     return name.toLowerCase().replace(/\s+/g, '');
+  }
+}
+
+export class FallbackModelQuery extends ModelQuery {
+  constructor(queries) {
+    super();
+    if (!Array.isArray(queries) || queries.length === 0) {
+      throw new Error('FallbackModelQuery requires a non-empty array of ModelQuery');
+    }
+    this.queries = queries;
+  }
+
+  equalsModel(model) {
+    return this.queries.some(query => query.equalsModel(model));
+  }
+
+  findModel(models) {
+    for (const query of this.queries) {
+      const model = query.findModel(models);
+      if (model) {
+        return model;
+      }
+    }
+    return null;
+  }
+
+  getIdentifierString() {
+    return this.queries.map(query => query.getIdentifierString()).join(',');
+  }
+
+  equalsQuery(query) {
+    if (query instanceof FallbackModelQuery) {
+      return this.getIdentifierString() === query.getIdentifierString();
+    }
+    return this.queries.some(candidate => candidate.equalsQuery(query));
   }
 }

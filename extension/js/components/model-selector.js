@@ -13,14 +13,17 @@ export class ModelSelector {
   
   async #findModelListButton(modelQuery) {
     const buttons = await this.selectorManager.getElements('modelListButton');
+    const models = [];
     for (const [index, button] of buttons.entries()) {
-      const label = await this.selectorManager.getElement('modelListLabel', 1000, button);
-      const model = new Model(index, label.textContent);
-      if (modelQuery.equalsModel(model)) {
-        return button;
+      try {
+        const label = await this.selectorManager.getElement('modelListLabel', 1000, button);
+        models.push(new Model(index, label.textContent));
+      } catch (error) {
+        console.debug(`Skipping model list button without label: ${error.message}`);
       }
     }
-    return null;
+    const matched = modelQuery.findModel(models);
+    return matched ? buttons[matched.index] : null;
   }
   
   async selectModel(modelQuery) {

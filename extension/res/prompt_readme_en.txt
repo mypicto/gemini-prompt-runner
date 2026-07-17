@@ -53,13 +53,18 @@ Ctrl+C / Cmd+C: copy the last answer.
 | Parameter | Description | Value |
 | --- | --- | --- |
 | `ext-q` | Prompt string to execute | URL-encoded text (insert clipboard text with `{{clipboard}}` keyword) |
-| `ext-m` | Index of the model to select | Integer starting from 0 (order as displayed in UI) or model name (as displayed in UI) |
+| `ext-m` | Model to select | Integer starting from 0 (order as displayed in UI) or model name (as displayed in UI). Multiple model names can be listed with commas as fallback candidates |
 | `ext-clipboard` | Replace the {{clipboard}} keyword in `ext-q` with the clipboard text | `true/false` or `0/1` |
 | `ext-send` | Auto-sending for prompt | `true/false` or `0/1` |
 | `ext-required-login` | Prevents prompt execution if the user is not logged into Gemini when opening the URL | `true/false` or `0/1` |
 
 > [!TIP]
 > By enabling `ext-send` and specifying multiple `ext-q` values, you can send multiple prompts consecutively.
+
+> [!TIP]
+> Model names displayed in the Gemini UI are localized, so a single name may not match in every language.
+> Like the CSS `font-family` property, `ext-m` accepts multiple comma-separated candidates, which are tried in order until one matches (e.g. `ext-m=Fast,3.5Flash`).
+> Fallback is not supported for index specification: the value is treated as an index only when the entire value is a single integer, and numeric-looking items in a comma-separated list are treated as model names.
 
 ## Examples
 
@@ -79,6 +84,12 @@ Ctrl+C / Cmd+C: copy the last answer.
 
   ```url
   https://gemini.google.com/app#ext-m=DeepResearch
+  ```
+
+* Start a chat with Fast model, falling back to 3.5Flash model if not found
+
+  ```url
+  https://gemini.google.com/app#ext-m=Fast,3.5Flash
   ```
 
 * Summarize text from clipboard

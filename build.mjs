@@ -23,13 +23,17 @@ const configs = [
   {
     ...common,
     format: 'esm',
-    entryPoints: ['src/background.js', 'src/popup.js', 'src/options.js'],
+    entryPoints: [
+      { in: 'src/background/main.ts', out: 'background' },
+      { in: 'src/popup/main.ts', out: 'popup' },
+      { in: 'src/options/main.ts', out: 'options' },
+    ],
   },
   {
     // content script は classic script として実行されるため ESM 不可
     ...common,
     format: 'iife',
-    entryPoints: ['src/content.js'],
+    entryPoints: [{ in: 'src/content/main.ts', out: 'content' }],
   },
 ];
 

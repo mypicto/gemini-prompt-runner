@@ -4,20 +4,20 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["chrome"],
+    "types": ["chrome", "node"],
 
     "strict": true,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
 
+    "resolveJsonModule": true,
     "useDefineForClassFields": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noEmit": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true
 
-    "allowJs": true
   },
   "include": ["src", "tests/src", "tests/unit", "tests/contract"]
 }

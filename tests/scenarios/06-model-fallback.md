@@ -4,7 +4,7 @@
 
 `ext-m` のカンマ区切り複数候補指定 (`FallbackModelQuery`) を検証する:
 
-- `QueryParameter.#processModel` のパース: 単一整数 → `IdentifierModelQuery`、カンマ区切り → `FallbackModelQuery`
+- `QueryParameter.parseModel` のパース: 単一整数 → `IdentifierModelQuery`、カンマ区切り → `FallbackModelQuery`
 - `FallbackModelQuery.findModel` の **候補順優先** マッチ (CSS `font-family` と同じ挙動)
 - 存在しない候補のスキップと実在候補へのフォールバック
 - 全候補不一致時に `OperationCanceledError` が握り潰され現在モデルが不変であること
@@ -19,9 +19,9 @@
 
 ## 検証対象ロジック
 
-- `FallbackModelQuery` (`extension/js/models/model-query.js`): `findModel` / `equalsQuery` / `getIdentifierString`
-- `QueryParameter.#processModel` のカンマ分割 (`extension/js/utils/query-parameter.js`)
-- `ModelSelector.#findModelListButton` の全列挙 + `findModel` 委譲
+- `FallbackModelQuery` (`src/shared/core/model-query.ts`): `findModel` / `equalsQuery` / `getIdentifierString`
+- `QueryParameter.parseModel` のカンマ分割 (`src/shared/core/query-parameter.ts`)
+- `ModelMenu.#selectItem` の全列挙 + `findModel` 委譲
 
 ## 前提
 
@@ -95,10 +95,11 @@
 11. **切替後のモデル名を確認**:
     ```
     mcp__playwright__browser_evaluate({ function:
-      "async () => { const after = await window.__t.modelSelector.getCurrentModelQuery(); const target = new window.__t.NominalModelQuery(window.__target); return { before: window.__before, after: after.name, target: window.__target, switched: after.name !== window.__before, matchesTarget: after.equalsQuery(target) }; }"
+      "async () => { const after = await window.__t.modelSelector.getCurrentModelQuery(); const target = new window.__t.NominalModelQuery(window.__target); return { before: window.__before, after: after.name, target: window.__target, switched: after.name !== window.__before, matchesTarget: target.matchesCurrent(after) }; }"
     })
     ```
     - 期待: `switched: true`, `matchesTarget: true` (存在しない先頭候補をスキップし 2 番目の候補が選ばれた)
+    - 注: 切替後の確認は `equalsQuery` (厳密一致) ではなく `matchesCurrent` を使う — `currentModelLabel` は短縮表記のことがあるため (SKILL.md §5.6 参照)
 
 12. **候補順優先を確認** (元のモデルと target を両方候補に、元のモデルを先頭に):
     ```
@@ -111,7 +112,7 @@
     ```
     ```
     mcp__playwright__browser_evaluate({ function:
-      "async () => { const after = await window.__t.modelSelector.getCurrentModelQuery(); const first = new window.__t.NominalModelQuery(window.__before); return { after: after.name, matchesFirstCandidate: after.equalsQuery(first) }; }"
+      "async () => { const after = await window.__t.modelSelector.getCurrentModelQuery(); const first = new window.__t.NominalModelQuery(window.__before); return { after: after.name, matchesFirstCandidate: first.matchesCurrent(after) }; }"
     })
     ```
     - 期待: `matchesFirstCandidate: true` (両候補ともメニューに実在するが、**先頭候補** が選ばれる)
@@ -138,13 +139,13 @@
 ## 失敗時の対応
 
 - **ステップ 6 で `fallbackParsed: false` など**
-  - `tests/dist/inject-bundle.js` が古い可能性。`cd tests && npm run build` で再ビルドして再注入
+  - `tests/dist/inject-bundle.js` が古い可能性。ルートで `npm run build:inject` で再ビルドして再注入
 - **ステップ 11 で `switched: false`**
   - Scenario 05 の失敗時の対応と同じ手順で `modelListButton` / `modelListLabel` の解決を確認
-  - `ModelSelector.#findModelListButton` は全ボタンのラベルを列挙してから `findModel` に委譲するため、ラベル欠落ボタンは console.debug でスキップされる。`browser_console_messages` でログを確認
+  - `ModelMenu.#selectItem` は全ボタンのラベルを列挙してから `findModel` に委譲するため、ラベル欠落ボタンは console.debug でスキップされる。`browser_console_messages` でログを確認
 - **ステップ 12 で `matchesFirstCandidate: false`**
-  - `FallbackModelQuery.findModel` の候補順ループが崩れている可能性 (メニュー順が優先されてしまうバグ)。`extension/js/models/model-query.js` を確認
+  - `FallbackModelQuery.findModel` の候補順ループが崩れている可能性 (メニュー順が優先されてしまうバグ)。`src/shared/core/model-query.ts` を確認
 - **ステップ 13 で `unchanged: false`**
   - 存在しないはずの名前が正規化で実在モデルと衝突している可能性。候補名をよりランダムな文字列に変えて再実行
 
-修正案を提示するに留め、`extension/res/selectors.json` の書き換えは行わない (ユーザ判断)。
+修正案を提示するに留め、`src/shared/config/selectors.json` の書き換えは行わない (ユーザ判断)。

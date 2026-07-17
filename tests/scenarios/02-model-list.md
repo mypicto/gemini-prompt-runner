@@ -1,7 +1,7 @@
 # Scenario 02: Model List (モデルメニュー展開後の要素)
 
 ## 目的
-モデル切替メニューを開いた後にのみ DOM に現れる要素を確認する。`ModelSelector#selectModel` の前段で必要なセレクタ群。
+モデル切替メニューを開いた後にのみ DOM に現れる要素を確認する。`ModelMenu#selectModel` の前段で必要なセレクタ群。
 
 ## 検証対象セレクタ ID
 - `modelListButton` (各モデル選択肢)

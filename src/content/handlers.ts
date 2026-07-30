@@ -14,7 +14,7 @@ export function createGenerateUrlHandler(deps: {
   return async (request) => {
     const prompt = request.includePrompt ? await deps.textarea.getPrompt() : null;
     const modelQuery = request.includeModel
-      ? await deps.modelMenu.getCurrentModelQuery()
+      ? await deps.modelMenu.getSelectedModelQuery()
       : null;
     const parameter = QueryParameter.generate({
       prompts: prompt ? [prompt] : null,

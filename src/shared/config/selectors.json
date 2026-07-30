@@ -17,6 +17,9 @@
   "modelListLabel": {
     "selector": "span.label"
   },
+  "modelListSelectedItem": {
+    "selector": "gem-menu-item[role=\"menuitem\"].selected"
+  },
   "copyButton": {
     "selector": "copy-button [data-test-id=\"copy-button\"]"
   },

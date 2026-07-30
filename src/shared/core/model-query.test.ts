@@ -26,6 +26,14 @@ describe('NominalModelQuery', () => {
     expect(query.equalsModel(new Model(0, '3.5 Flash'))).toBe(false);
   });
 
+  it('選択項目のフルラベルから作った ext-m は同じ項目へ round-trip する', () => {
+    // getSelectedModelQuery が項目ラベルを読む前提: 生成した識別子が同項目に厳密一致する。
+    // 特にヘッダが別表記になる Thinking ("思考モード" 表示 / 項目は "3.6 Thinking") で重要
+    const item = new Model(0, '3.6 Thinking');
+    const generated = new NominalModelQuery(item.name).getIdentifierString();
+    expect(new NominalModelQuery(generated).equalsModel(item)).toBe(true);
+  });
+
   it('equalsQuery は正規化後の識別子で比較する', () => {
     expect(new NominalModelQuery('FLASH').equalsQuery(new NominalModelQuery('flash'))).toBe(true);
     expect(new NominalModelQuery('flash').equalsQuery(new NominalModelQuery('pro'))).toBe(false);

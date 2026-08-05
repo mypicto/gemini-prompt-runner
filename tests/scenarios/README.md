@@ -28,4 +28,4 @@
 | sendButton | ❌ | - | - | Timeout: ... |
 ```
 
-失敗が出たら、Claude は対応する `extension/res/selectors.json` のエントリと、Playwright スナップショット (`browser_snapshot`) で見えている実 DOM を突き合わせて、想定セレクタの修正案を提示します。
+失敗が出たら、Claude は対応する `src/shared/config/selectors.json` のエントリと、Playwright スナップショット (`browser_snapshot`) で見えている実 DOM を突き合わせて、想定セレクタの修正案を提示します。

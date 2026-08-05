@@ -1,7 +1,7 @@
 # Scenario 04: Login Link (未ログイン状態のリンク)
 
 ## 目的
-ログアウト状態の Gemini ページに表示される Google ログインリンクを確認する。`extension/js/components/login-button.js` が依存するセレクタ。
+ログアウト状態の Gemini ページに表示される Google ログインリンクを確認する。`src/content/page/login-link.ts` (`LoginLink` — `exists()` / `click()`) が依存するセレクタ。
 
 ## 検証対象セレクタ ID
 - `serviceLoginLink` (`a[href^="https://accounts.google.com/ServiceLogin"]`)

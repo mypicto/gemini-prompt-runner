@@ -62,6 +62,10 @@ npm run package    # build + zip 生成 (.crx 配布用)
 
 ## リリース手順
 
+以下はパッケージング手順のみ。ブランチ運用/リリースチャネルの流れ
+(`ver/x.x.x` → develop → GitHub prerelease + ストア審査 → 承認後 prerelease 解除 → main) は
+`.claude/skills/release-workflow` を参照。
+
 1. `public/manifest.json` の `version` を更新
 2. `npm run check` が green であること
 3. `npm run package` で zip 生成

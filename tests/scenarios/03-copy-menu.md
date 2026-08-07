@@ -1,7 +1,7 @@
 # Scenario 03: Copy Button (応答後のコピー操作)
 
 ## 目的
-プロンプトを送信し、応答が完了した後に `message-actions` 内に表示されるコピーボタンを確認する。`extension/js/components/copy-button.js` が依存するセレクタの検証。
+プロンプトを送信し、応答が完了した後に `message-actions` 内に表示されるコピーボタンを確認する。`src/content/page/response-copy-button.ts` (`ResponseCopyButton` — `exists()` / `clickLatest()`) が依存するセレクタの検証。
 
 ## 検証対象セレクタ ID
 - `copyButton` (応答メッセージのコピー項目)

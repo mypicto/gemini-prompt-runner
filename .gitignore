@@ -2,7 +2,8 @@
 *.pem
 *.crx
 gemini-prompt-runner.zip
-extension/_metadata/*
+node_modules/
+dist/
 
 .serena/
 
@@ -10,3 +11,5 @@ extension/_metadata/*
 .playwright-mcp/
 
 .claude/settings.local.json
+
+.vscode/

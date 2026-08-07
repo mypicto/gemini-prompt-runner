@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="optionsTitle">Options - Prompt Runner for Google Gemini</title>
+    <link rel="stylesheet" href="../css/options.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 data-i18n="optionsTitle">Options - Prompt Runner for Google Gemini</h1>
+            <p data-i18n="optionsDescription">Customize CSS selectors used by the extension. Leave fields blank to use default values.</p>
+        </header>
+
+        <main>
+            <form id="optionsForm">
+                <div class="section">
+                    <h2 data-i18n="selectorSettings">Selector Settings</h2>
+                    
+                    <!-- セレクタ入力行は src/options/selector-form-view.ts が
+                         SELECTOR_IDS から動的生成する -->
+                    <div class="selector-group"></div>
+                </div>
+
+                <div class="actions">
+                    <button type="button" id="saveBtn" class="save-btn" data-i18n="saveBtn">Save</button>
+                    <button type="button" id="resetAllBtn" class="reset-all-btn" data-i18n="resetAllBtn">Reset All to Default</button>
+                </div>
+            </form>
+        </main>
+
+        <div id="status" class="status hidden"></div>
+    </div>
+
+    <script type="module" src="../js/options.js"></script>
+</body>
+</html>

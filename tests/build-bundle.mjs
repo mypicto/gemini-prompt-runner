@@ -5,7 +5,7 @@ import { dirname, resolve } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 await build({
-  entryPoints: [resolve(__dirname, 'src/inject-entry.js')],
+  entryPoints: [resolve(__dirname, 'src/inject-entry.ts')],
   outfile: resolve(__dirname, 'dist/inject-bundle.js'),
   bundle: true,
   format: 'iife',

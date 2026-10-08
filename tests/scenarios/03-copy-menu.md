@@ -45,5 +45,6 @@
 ## 失敗時
 
 - 応答自体が来ていない可能性: `browser_snapshot()` で確認
-- Gemini が「コピー」を表すアイコンの `data-test-id` を変更していないか確認 (現状 `"copy-button"`)
+- `message-actions` > `copy-button` > `gem-icon-button` > `button[aria-label="コピー"]` の構造が変わっていないか確認
+  (2026-10 に内側の `data-test-id="copy-button"` が廃止されたため、セレクタは `message-actions copy-button button` に変更済み)
 - `copy-button` カスタム要素自体が無くなっていないか調査

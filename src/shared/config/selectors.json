@@ -21,7 +21,7 @@
     "selector": "gem-menu-item[role=\"menuitem\"].selected"
   },
   "copyButton": {
-    "selector": "copy-button [data-test-id=\"copy-button\"]"
+    "selector": "message-actions copy-button button"
   },
   "serviceLoginLink": {
     "selector": "div.boqOnegoogleliteOgbOneGoogleBar a[href^=\"https://accounts.google.com/ServiceLogin\"]"

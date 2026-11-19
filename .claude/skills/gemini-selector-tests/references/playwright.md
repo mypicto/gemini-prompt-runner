@@ -109,7 +109,16 @@ mcp__playwright__browser_evaluate({ function:
 
 シナリオの `mcp__playwright__browser_evaluate({ function: "..." })` / `browser_wait_for` / `browser_snapshot` をそのまま呼ぶ。
 
-## 6. トラブルシュート
+## 6. UI 言語の切り替え
+
+```
+mcp__playwright__browser_navigate({ url: "https://gemini.google.com/app?hl=en" })   // 英語 UI
+mcp__playwright__browser_navigate({ url: "https://gemini.google.com/app?hl=ja" })   // 日本語 UI (元の言語に戻す)
+```
+
+遷移すると `window.__t` は消えるので、3〜4 章の注入と bootstrap をやり直す。
+
+## 7. トラブルシュート
 
 | 症状 | 対処 |
 |---|---|

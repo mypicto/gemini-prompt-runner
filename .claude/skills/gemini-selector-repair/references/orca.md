@@ -47,6 +47,16 @@ orca screenshot --json   # 返った result.path を Read で開いて目視す�
 
 DOM 構造を見たいときは `orca snapshot --json` (アクセシビリティツリー) も使える。
 
+## UI 言語の切り替え
+
+```bash
+orca tab list --json                                            # 戻り先として現在の URL を控える
+orca goto --url "https://gemini.google.com/app?hl=en" --json    # 英語 UI
+orca goto --url "https://gemini.google.com/app?hl=ja" --json    # 日本語 UI (元の言語に戻す)
+```
+
+`goto` の結果にアクセシビリティツリーが返るので、表示言語が切り替わったか (ボタン名などが英語か) はそこで分かる。会話ページを開いていた場合は、最後に控えた URL へ戻す。
+
 ## 未ログインのページ
 
 1. 隔離プロファイルを作って開く (サンドボックスで止まることがある):

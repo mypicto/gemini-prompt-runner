@@ -44,6 +44,15 @@ mcp__playwright__browser_take_screenshot()
 
 DOM 構造は `mcp__playwright__browser_snapshot()` (アクセシビリティツリー) でも確認できる。
 
+## UI 言語の切り替え
+
+```
+mcp__playwright__browser_navigate({ url: "https://gemini.google.com/app?hl=en" })   // 英語 UI
+mcp__playwright__browser_navigate({ url: "https://gemini.google.com/app?hl=ja" })   // 日本語 UI (元の言語に戻す)
+```
+
+切り替わったかは `mcp__playwright__browser_snapshot()` のボタン名などで確かめる。遷移するとページ上の変数 (`window.__t` など) は消える。
+
 ## 未ログインのページ
 
 別の `--user-data-dir` か incognito で起動したブラウザを使う (`.mcp.json` の変更はユーザーに依頼する)。難しければ、Cookie 無しの `curl` で HTML を取り、`scripts/check-login-link.py` で検査する。

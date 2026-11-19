@@ -53,6 +53,7 @@ orca eval --expression "typeof window.__t" --json   # "object" なら注入済�
 | `browser_snapshot()` | `orca snapshot --json` (アクセシビリティツリー)。DOM の詳細は `orca eval` で `outerHTML` やテキストを返す |
 | `browser_take_screenshot()` | `orca screenshot --json` → 返った `path` を Read で見る |
 | `browser_click` | `orca click --element <@ref>` (ref は `orca snapshot` から)。単純なら `orca eval` で `.click()` |
+| UI 言語の切り替え | `orca goto --url "https://gemini.google.com/app?hl=en" --json` (英語)。戻すときは `?hl=ja`。遷移で `window.__t` は消えるので再注入を依頼する |
 
 注意:
 - `--expression` はシェルのシングルクォートで囲む。式の中ではダブルクォートだけを使う (シングルクォートを含むならダブルクォート囲みにして `"` と `$` をエスケープ)

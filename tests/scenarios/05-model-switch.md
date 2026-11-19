@@ -19,7 +19,7 @@
 ## 検証対象ロジック
 
 - `normalizeModelName` (`src/shared/core/model-query.ts`): 括弧内除去・小文字化・空白除去
-- `NominalModelQuery#matchesCurrent`: 現在モデルラベルの短縮表記 (`"Flash"`) とメニューのフル表記 (`"3.5 Flash"`) を、バージョン番号プレフィックスを除いて一致判定 (equalsQuery より緩い「切替後確認」用)
+- `NominalModelQuery#matchesCurrent`: 現在モデルラベルの短縮表記 (`"Pro"` / `"Hydrogen 思考モード"`) とメニューのフル表記 (`"3.1 Pro"` / `"4 Hydrogen 思考モード"`) を、バージョン番号プレフィックスを除いて一致判定 (equalsQuery より緩い「切替後確認」用)
 - `ModelMenu.selectModel` 全体フロー (`OperationCanceledError` を握り潰す挙動を含む)
 
 ## 前提
@@ -37,7 +37,7 @@
      "async () => { const q = await window.__t.modelSelector.getCurrentModelQuery(); window.__before = q.name; return window.__before; }"
    })
    ```
-   - 期待: 空文字でないモデル名 (例: `"Fast"`)
+   - 期待: 空文字でないモデル名 (例: `"Hydrogen 思考モード"`。ヘッダは短縮表記)
 
 7. **メニューを開いて target モデル名を選定**:
    ```
@@ -50,10 +50,11 @@
    ```
    ```
    mcp__playwright__browser_evaluate({ function:
-     "async () => { const buttons = await window.__t.selectorService.getElements('modelListButton'); const names = []; for (const b of buttons) { const lab = b.querySelector(window.__t.selectors.modelListLabel.selector); if (lab) names.push(lab.textContent.trim()); } const target = names.find(n => n && n !== window.__before); window.__target = target; return { names, target }; }"
+     "async () => { const buttons = await window.__t.selectorService.getElements('modelListButton'); const names = []; for (const b of buttons) { const lab = b.querySelector(window.__t.selectors.modelListLabel.selector); if (lab) names.push(lab.textContent.trim()); } const before = new window.__t.NominalModelQuery(window.__before); const target = names.find(n => n && !new window.__t.NominalModelQuery(n).matchesCurrent(before)); window.__target = target; return { names, target }; }"
    })
    ```
-   - 期待: `names` に 2 つ以上のエントリ、`target` が `before` と異なる文字列
+   - 期待: `names` に 2 つ以上のエントリ (例: `["4 Hydrogen", "4 Hydrogen 思考モード", "3.1 Pro"]`)、`target` が現在のモデルとは別のモデル
+   - 注: ヘッダは短縮表記 (`"Hydrogen 思考モード"`) なので、`n !== before` の文字列比較だと同じモデルのフル表記 (`"4 Hydrogen 思考モード"`) を別モデルと誤認する。`matchesCurrent` で現在モデルを除外する
 
 8. **メニューを閉じる** (selectModel 内で再度 `#openList` が走るため、いったん閉じておくと UI 状態が素直):
    ```
@@ -84,7 +85,7 @@
       "async () => { const after = await window.__t.modelSelector.getCurrentModelQuery(); const target = new window.__t.NominalModelQuery(window.__target); return { before: window.__before, after: after.name, target: window.__target, switched: after.name !== window.__before, matchesTarget: target.matchesCurrent(after) }; }"
     })
     ```
-    - 注: 検証は `after.equalsQuery(target)` ではなく **`target.matchesCurrent(after)`** を使う。`currentModelLabel` は短縮表記 (`"Flash"`) のことがあり、`equalsQuery` の厳密一致ではフル表記の target (`"3.5 Flash"`) と一致しない。`matchesCurrent` はバージョン番号プレフィックスを除いて比較する (かつて既知バグだったが修正済み — SKILL.md §5.6 参照)。
+    - 注: 検証は `after.equalsQuery(target)` ではなく **`target.matchesCurrent(after)`** を使う。`currentModelLabel` は短縮表記 (`"Pro"`) のことがあり、`equalsQuery` の厳密一致ではフル表記の target (`"3.1 Pro"`) と一致しない。`matchesCurrent` はバージョン番号プレフィックスを除いて比較する (かつて既知バグだったが修正済み — `gemini-selector-tests` スキルの「環境に依存しない注意点」参照)。
 
 12. **URL 生成の round-trip 検証** (`getSelectedModelQuery` → `ext-m` → 別モデルへ切替 → 生成 URL で再選択):
     ```
@@ -93,9 +94,9 @@
     })
     ```
     - `getSelectedModelQuery` はメニューを一瞬開いて選択中項目 (`.selected`) のフルラベルを読み、閉じる (実行中にドロップダウンが開閉する)。
-    - **round-trip の判定は `getSelectedModelQuery().getIdentifierString()` (選択中項目のフルラベル) 同士で比較する。** ヘッダ基準の `matchesCurrent` は使わない — 思考モードはヘッダが `"思考モード"`、項目が `"3.6 Thinking"` で対応が無く、選択に成功しても `matchesCurrent` は false を返すため round-trip の判定に使えない。
-    - 期待: `carriesFullLabel: true` (URL の `ext-m` が項目フルラベル由来。例 `"3.1pro"` / `"3.6thinking"`)、`switchedAway: true` (別モデルへ確実に離れた)、`roundTrips: true` (生成 URL をパースし直して `selectModel` → 元の項目へ戻る)。
-    - `startId` (項目フル: 例 `"3.6thinking"`) と `headerId` (ヘッダ短縮/ローカライズ: 例 `"思考モード"`) は異なりうる。**旧実装は `headerId` を `ext-m` にしていたため項目照合 (`equalsModel`) に一致せず、特に思考モードは全く選択できなかった。** 本ステップはその修正を固定する。
+    - **round-trip の判定は `getSelectedModelQuery().getIdentifierString()` (選択中項目のフルラベル) 同士で比較する。** ヘッダ基準の `matchesCurrent` は使わない — ヘッダと項目の表記がバージョン番号以外でも食い違うことがあり (過去の例: ヘッダ `"思考モード"` / 項目 `"3.6 Thinking"`)、その場合は選択に成功しても `matchesCurrent` が false を返すため round-trip の判定に使えない。
+    - 期待: `carriesFullLabel: true` (URL の `ext-m` が項目フルラベル由来。例 `"3.1pro"` / `"4hydrogen思考モード"`)、`switchedAway: true` (別モデルへ確実に離れた)、`roundTrips: true` (生成 URL をパースし直して `selectModel` → 元の項目へ戻る)。
+    - `startId` (項目フル: 例 `"4hydrogen思考モード"`) と `headerId` (ヘッダ短縮: 例 `"hydrogen思考モード"`) は異なりうる。**旧実装は `headerId` を `ext-m` にしていたため項目照合 (`equalsModel`) に一致せず、特に思考モードは全く選択できなかった。** 本ステップはその修正を固定する。
 
 ## 期待結果
 
@@ -116,7 +117,7 @@
     ```
     "async () => { const buttons = await window.__t.selectorService.getElements('modelListButton'); for (const b of buttons) { const lab = b.querySelector(window.__t.selectors.modelListLabel.selector); if (lab && lab.textContent.trim().toLowerCase().replace(/\\s+/g,'') === window.__target.toLowerCase().replace(/\\s+/g,'')) return 'match-found'; } return 'no-match'; }"
     ```
-  - 上で `no-match` が返るなら、ラベルに括弧表記（例 `"Fast (新)"`）が混じっている可能性。`src/shared/core/model-query.ts` の `normalizeModelName` の挙動を再確認
+  - 上で `no-match` が返るなら、ラベルに括弧表記（例 `"3.1 Pro (新)"`）が混じっている可能性。`src/shared/core/model-query.ts` の `normalizeModelName` の挙動を再確認
 
 - **`matchesTarget: false` だが `switched: true`**
   - 切替自体は起きたが target と異なるモデルが選ばれた

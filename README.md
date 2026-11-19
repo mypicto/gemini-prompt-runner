@@ -88,7 +88,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 
 > [!TIP]
 > Model names displayed in the Gemini UI are localized, so a single name may not match in every language.
-> Like the CSS `font-family` property, `ext-m` accepts multiple comma-separated candidates, which are tried in order until one matches (e.g. `ext-m=Fast,3.5Flash`).
+> Like the CSS `font-family` property, `ext-m` accepts multiple comma-separated candidates, which are tried in order until one matches (e.g. `ext-m=4HydrogenThinking,4Hydrogen思考モード` selects the thinking model in both English and Japanese UIs).
 > Fallback is not supported for index specification: the value is treated as an index only when the entire value is a single integer, and numeric-looking items in a comma-separated list are treated as model names.
 
 ## Examples
@@ -105,16 +105,16 @@ Ctrl+C / Cmd+C: copy the last answer.
   https://gemini.google.com/app#ext-m=0
   ```
 
-* Start a chat with 3.5Flash model
+* Start a chat with 4Hydrogen model
 
   ```url
-  https://gemini.google.com/app#ext-m=3.5Flash
+  https://gemini.google.com/app#ext-m=4Hydrogen
   ```
 
-* Start a chat with Fast model, falling back to 3.5Flash model if not found
+* Start a chat with 3.1Pro model, falling back to 4Hydrogen model if not found
 
   ```url
-  https://gemini.google.com/app#ext-m=Fast,3.5Flash
+  https://gemini.google.com/app#ext-m=3.1Pro,4Hydrogen
   ```
 
 * Summarize text from clipboard

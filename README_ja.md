@@ -86,7 +86,7 @@ Ctrl+C / Cmd+C: copy the last answer.
 
 > [!TIP]
 > Gemini UI 上のモデル名はローカライズされるため、単一の名前ではどの言語環境でも一致するとは限りません。
-> CSS の `font-family` プロパティのように、`ext-m` にはカンマ区切りで複数の候補を指定でき、先頭から順に試して最初に一致したモデルが選択されます（例: `ext-m=Fast,3.5Flash`）。
+> CSS の `font-family` プロパティのように、`ext-m` にはカンマ区切りで複数の候補を指定でき、先頭から順に試して最初に一致したモデルが選択されます（例: `ext-m=4HydrogenThinking,4Hydrogen思考モード` で英語・日本語どちらの UI でも思考モデルを選択）。
 > インデックス指定はフォールバック非対応です。値全体が単一の整数のときのみインデックスとして扱われ、カンマ区切りリスト内の数値に見える要素はモデル名として扱われます。
 
 ## サンプル
@@ -103,16 +103,16 @@ Ctrl+C / Cmd+C: copy the last answer.
   https://gemini.google.com/app#ext-m=0
   ```
 
-* 3.5Flash モデルでチャットを開始
+* 4Hydrogen モデルでチャットを開始
 
   ```url
-  https://gemini.google.com/app#ext-m=3.5Flash
+  https://gemini.google.com/app#ext-m=4Hydrogen
   ```
 
-* Fast モデルが見つからない場合は 3.5Flash モデルにフォールバックしてチャットを開始
+* 3.1Pro モデルが見つからない場合は 4Hydrogen モデルにフォールバックしてチャットを開始
 
   ```url
-  https://gemini.google.com/app#ext-m=Fast,3.5Flash
+  https://gemini.google.com/app#ext-m=3.1Pro,4Hydrogen
   ```
 
 * クリップボードのテキストを要約する

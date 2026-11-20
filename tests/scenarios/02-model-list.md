@@ -5,7 +5,7 @@
 
 ## 検証対象セレクタ ID
 - `modelListButton` (各モデル選択肢)
-- `modelListLabel` (モデル名ラベル — `modelListButton` 内)
+- `modelListLabel` (モデル名ラベル — `modelListButton` 内の `div.sublabel`。`span.label` は用途説明 ("複雑な問題" 等) なので使わない)
 - `modelListSelectedItem` (現在選択中の項目 — `.selected` クラス付き。URL 生成でフルラベルを読む出所)
 
 ## 前提
@@ -48,14 +48,14 @@
       "async () => { const sel = await window.__t.selectorService.getElement('modelListSelectedItem'); const full = sel.querySelector(window.__t.selectors.modelListLabel.selector).textContent.trim(); const header = (await window.__t.modelSelector.getCurrentModelQuery()).name; return { full, header, differs: full !== header }; }"
     })
     ```
-    - 期待: `full` が項目のフル表記 (例 `"3.1 Pro"` / `"3.6 Thinking"`)、`header` が短縮/ローカライズ表記 (例 `"Pro"` / `"思考モード"`)。多くのモデルで `differs: true`
+    - 期待: `full` が項目のフル表記 (例 `"3.1 Pro"` / `"4 Hydrogen 思考モード"`)、`header` が短縮表記 (例 `"Hydrogen 思考モード"`)。多くのモデルで `differs: true`
 
 ## 期待結果
 
 - `modelListButton`: `found: true`、複数要素が存在
 - `modelListLabel`: `found: true`、最初のラベルが取得できる
 - `modelListSelectedItem`: `found: true`、選択中の 1 項目のみ (`.selected`)
-- (オプション) モデル名一覧 (例: `["3.6 Flash", "3.6 Thinking", "3.1 Pro"]`) が取れる
+- (オプション) モデル名一覧 (例: `["4 Hydrogen", "4 Hydrogen 思考モード", "3.1 Pro"]`) が取れる
 - ステップ 10: 選択中項目のフルラベルが取得でき、ヘッダの短縮表記と (多くの場合) 異なる
 
 ## 失敗時

@@ -12,13 +12,13 @@
     "selector": "div.logo-pill-label-container > span"
   },
   "modelListButton": {
-    "selector": "gem-menu-item[role=\"menuitem\"]"
+    "selector": "gem-menu-item[role=\"menuitemradio\"]"
   },
   "modelListLabel": {
-    "selector": "span.label"
+    "selector": "div.sublabel"
   },
   "modelListSelectedItem": {
-    "selector": "gem-menu-item[role=\"menuitem\"].selected"
+    "selector": "gem-menu-item[role=\"menuitemradio\"].selected"
   },
   "copyButton": {
     "selector": "message-actions copy-button button"

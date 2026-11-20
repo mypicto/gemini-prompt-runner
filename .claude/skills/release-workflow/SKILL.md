@@ -41,6 +41,19 @@ Chrome 拡張のリリースは **ストア審査という非同期の外部ゲ�
 **すべてのリリース (パッチ含む) でこのゲートを通す。** 例外を作らない
 (ストア提出には必ず審査があるため)。
 
+### 0. 最新化してからブランチを切る
+```bash
+git fetch origin
+git switch develop && git merge --ff-only origin/develop
+git log --oneline develop..origin/main   # main だけにあるコミット (空が正常)
+git switch -c ver/X.Y.Z
+```
+- ローカルの develop / main は古いことがある。fetch せずに切ると、リモートの先行に気づかないまま
+  作業し、後の push が `rejected (fetch first)` になる。
+- `develop..origin/main` にコミットが出たら、ドキュメント修正などが **main に直接入っている**。
+  切る前に `git merge --ff-only origin/main` (できなければ `git merge origin/main`) で develop に
+  取り込み、develop を push してから `ver/X.Y.Z` を切る。放置すると main への昇格時にずれが表面化する。
+
 ### 1. 準備 (`ver/X.Y.Z` ブランチ上)
 - `public/manifest.json` の `version` を更新 (バージョン源。develop/main で直接上げない)
 - `npm run check` が green
@@ -49,7 +62,9 @@ Chrome 拡張のリリースは **ストア審査という非同期の外部ゲ�
 
 ### 2. develop へ統合
 ```bash
-git switch develop && git merge --no-ff ver/X.Y.Z
+git fetch origin
+git switch develop && git merge --ff-only origin/develop   # 作業中に進んだ develop を取り込む
+git merge --no-ff ver/X.Y.Z
 git push origin develop
 ```
 
@@ -74,9 +89,15 @@ Chrome ウェブストアの審査完了を待つ。ここは自分の手を離�
 gh release edit verX.Y.Z --prerelease=false --latest
 
 # main へ昇格 (main = 公開中のストア版)
-git switch main && git merge --no-ff develop
+git fetch origin
+git switch main && git merge --ff-only origin/main   # 審査待ちの間に進んだ main を取り込む
+git merge --no-ff develop
 git push origin main
 ```
+- `merge --ff-only origin/main` が失敗したら、ローカル main に未 push のコミットがある。
+  `git log origin/main..main` で中身を確認してから対処する (`reset --hard` で消さない)。
+- 審査待ちの間に main へ直接入ったコミットがあれば、昇格後に main を develop へマージして
+  develop を揃えておく (`git switch develop && git merge --ff-only main && git push origin develop`)。
 
 ## 注意点 / why
 

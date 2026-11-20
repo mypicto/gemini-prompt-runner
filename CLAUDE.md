@@ -94,7 +94,7 @@ Bash ツールのコマンドはサンドボックス内で動きます。外で
 ### このリポジトリでの補足
 
 - `.claude/settings.json` の `sandbox` は、`filesystem.allowWrite` に `~/Library/Caches/ms-playwright`（Playwright ブラウザのキャッシュ）、`excludedCommands` に `npx @playwright/mcp` が入っている。後者は字面の完全一致でしか外に出ない（実測: 引数なしの `npx @playwright/mcp` は外、`npx @playwright/mcp --version` や `npx @playwright/mcp install-browser chrome-for-testing` は内側）。Playwright MCP サーバは `.mcp.json` から Claude Code が起動するもので、Bash ツールのサンドボックスとは別。
-- `npx <パッケージ>` はサンドボックス内だと `~/.npm/_cacache` に書けず `EPERM` で失敗する。npm が出す「root-owned files … `sudo chown -R …` を実行せよ」はサンドボックスによる誤誘導なので、所有者の変更はしない。Playwright ブラウザのインストールなど npx が要る作業は、ユーザーに `!` での実行を頼む（手順は `.claude/skills/playwright-selector-tests`）。
+- `npx <パッケージ>` はサンドボックス内だと `~/.npm/_cacache` に書けず `EPERM` で失敗する。npm が出す「root-owned files … `sudo chown -R …` を実行せよ」はサンドボックスによる誤誘導なので、所有者の変更はしない。Playwright ブラウザのインストールなど npx が要る作業は、ユーザーに `!` での実行を頼む（手順は `.claude/skills/gemini-selector-tests/references/playwright.md`）。
 - `.claude/skills/` には Bash から書き込めないので、Edit / Write ツールで編集する。
 - `.claude/settings.json` の `sandbox` 設定はチームが決める。Claude は必要性と登録する字面を提案するに留め、編集はユーザーの指示があるときだけ行う。
 
